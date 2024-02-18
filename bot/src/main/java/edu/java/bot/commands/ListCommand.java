@@ -8,8 +8,8 @@ import java.util.Optional;
 import java.util.Set;
 
 public class ListCommand extends Command {
-    private final String FILLED_LIST_MESSAGE = "Список отслеживаемых ссылок:";
-    private final String EMPTY_LIST_LINKS_MESSAGE = "У вас нет отслеживаемых ссылок";
+    private static final String FILLED_LIST_MESSAGE = "Список отслеживаемых ссылок:";
+    private static final String EMPTY_LIST_LINKS_MESSAGE = "У вас нет отслеживаемых ссылок";
 
     public ListCommand(UserDAO userDAO) {
         super(userDAO);

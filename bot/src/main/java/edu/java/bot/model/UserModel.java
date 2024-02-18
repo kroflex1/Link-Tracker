@@ -1,8 +1,8 @@
 package edu.java.bot.model;
 
-import lombok.Getter;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
 
 public class UserModel {
     private final Long id;

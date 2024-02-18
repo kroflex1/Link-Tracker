@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public class InMemoryUserDAO implements UserDAO {
 
-    private static final Map<Long, UserModel> users = new HashMap<>();
+    private final Map<Long, UserModel> users = new HashMap<>();
 
     @Override
     public void addUser(Long userId) {

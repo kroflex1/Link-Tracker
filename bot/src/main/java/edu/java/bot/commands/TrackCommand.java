@@ -8,7 +8,7 @@ import edu.java.bot.handler.StackOverflowHandler;
 import edu.java.bot.handler.UrlHandler;
 
 public class TrackCommand extends CompositeCommand {
-    private final String OK_MESSAGE = "Теперь ваша ссылка отслеживается";
+    private static final String OK_MESSAGE = "Теперь ваша ссылка отслеживается";
     private final UrlHandler urlHandler;
 
     public TrackCommand(UserDAO userDAO) {

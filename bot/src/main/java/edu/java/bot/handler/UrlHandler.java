@@ -10,7 +10,7 @@ public abstract class UrlHandler {
         this.nextUrlHandler = urlHandler;
     }
 
-    public UrlHandler getNextUrlHandler(){
+    public UrlHandler getNextUrlHandler() {
         return nextUrlHandler;
     }
 
