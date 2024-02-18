@@ -1,4 +1,4 @@
-package UrlHandler;
+package edu.java.bot.UrlHandler;
 
 import edu.java.bot.handler.StackOverflowHandler;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -1,4 +1,4 @@
-package UrlHandler;
+package edu.java.bot.UrlHandler;
 
 import edu.java.bot.handler.GitHubHandler;
 import org.junit.jupiter.params.ParameterizedTest;
