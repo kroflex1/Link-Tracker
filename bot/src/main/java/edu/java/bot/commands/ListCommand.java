@@ -3,6 +3,8 @@ package edu.java.bot.commands;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.DAO.UserDAO;
+import edu.java.bot.model.UserModel;
+import java.util.Optional;
 import java.util.Set;
 
 public class ListCommand extends Command {
@@ -26,12 +28,13 @@ public class ListCommand extends Command {
     @Override
     public SendMessage handle(Update update) {
         Long userID = update.message().from().id();
-        Set<String> links = userDAO.getUserById(userID).get().getLinks();
-        if (links.isEmpty()) {
+        Optional<UserModel> user = userDAO.getUserById(userID);
+        if (user.isEmpty() || user.get().getLinks().isEmpty()) {
             return new SendMessage(update.message().chat().id(), EMPTY_LIST_LINKS_MESSAGE);
         }
+        Set<String> links = user.get().getLinks();
         StringBuilder text = new StringBuilder(FILLED_LIST_MESSAGE).append("\n");
-        for (String url : userDAO.getUserById(userID).get().getLinks()) {
+        for (String url : links) {
             text.append(url).append("\n");
         }
         return new SendMessage(update.message().chat().id(), text.toString());
