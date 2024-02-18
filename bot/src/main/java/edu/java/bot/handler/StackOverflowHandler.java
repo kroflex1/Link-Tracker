@@ -1,17 +1,17 @@
 package edu.java.bot.handler;
 
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StackOverflowHandler extends UrlHandler {
     @Override
     protected boolean checkUrl(URL url) {
-        if (!url.getProtocol().equals("https")) {
-            return false;
-        }
-        if (!url.getHost().equals("stackoverflow.com")) {
-            return false;
-        }
-        return !url.getPath().isEmpty();
+        Pattern searchPattern = Pattern.compile("https://stackoverflow\\.com/search\\?q=[a-zA-Z0-9%]+");
+        Pattern questionPattern = Pattern.compile("https://stackoverflow\\.com/questions/\\d+(/.+)?");
+        Matcher searchMatcher = searchPattern.matcher(url.toString());
+        Matcher questionMatcher = questionPattern.matcher(url.toString());
+        return searchMatcher.matches() || questionMatcher.matches();
     }
 
     @Override

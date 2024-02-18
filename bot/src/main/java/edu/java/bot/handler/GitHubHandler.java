@@ -1,21 +1,19 @@
 package edu.java.bot.handler;
 
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GitHubHandler extends UrlHandler {
     @Override
     protected boolean checkUrl(URL url) {
-        if (!url.getProtocol().equals("https")) {
-            return false;
-        }
-        if (!url.getHost().equals("github.com")) {
-            return false;
-        }
-        return !url.getPath().isEmpty();
+        Pattern pattern = Pattern.compile("https://github\\.com/[a-zA-Z0-9-]+/[a-zA-Z0-9-]+/?");
+        Matcher matcher = pattern.matcher(url.toString());
+        return matcher.matches();
     }
 
     @Override
     public String formatDescription() {
-        return "GitHub: https://github.com/<parameters>";
+        return "GitHub: https://github.com/<username>/<repository>";
     }
 }
