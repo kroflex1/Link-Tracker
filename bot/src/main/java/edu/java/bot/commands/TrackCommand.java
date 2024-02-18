@@ -34,7 +34,11 @@ public class TrackCommand extends CompositeCommand {
 
     @Override
     public SendMessage handle(Update update) {
-        String link = update.message().text().split(" ")[1];
+        String[] partsOfCommand = update.message().text().split(" ");
+        if (partsOfCommand.length != 2) {
+            return new SendMessage(update.message().chat().id(), getWrongLinkFormatMessage());
+        }
+        String link = partsOfCommand[1];
         if (!urlHandler.isValidLink(link)) {
             return new SendMessage(update.message().chat().id(), getWrongLinkFormatMessage());
         }

@@ -14,7 +14,7 @@ public class CommandMessageProcessor extends UserMessageProcessor {
     @Override
     public SendMessage process(Update update) {
         for (Command command : commands) {
-            if (command.supports(update)) {
+            if (!update.message().text().isEmpty() && command.supports(update)) {
                 return command.handle(update);
             }
         }

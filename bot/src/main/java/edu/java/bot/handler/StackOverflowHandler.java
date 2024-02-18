@@ -16,6 +16,6 @@ public class StackOverflowHandler extends UrlHandler {
 
     @Override
     public String formatDescription() {
-        return "StackOverflowHandler: https://stackoverflow.com/<parameters>";
+        return "StackOverflowHandler:\n\thttps://stackoverflow.com/search?q=<param>\n\thttps://stackoverflow.com/questions/<param>/<param>";
     }
 }

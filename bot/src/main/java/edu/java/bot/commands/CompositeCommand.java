@@ -12,7 +12,11 @@ public abstract class CompositeCommand extends Command {
 
     @Override
     public boolean supports(Update update) {
-        String firstPartOfCommand = update.message().text().split(" ")[0];
+        String[] partsOfCommand = update.message().text().split(" ");
+        if (partsOfCommand.length != 2) {
+            return false;
+        }
+        String firstPartOfCommand = partsOfCommand[0];
         return update.message() != null && firstPartOfCommand.equals(command());
     }
 }

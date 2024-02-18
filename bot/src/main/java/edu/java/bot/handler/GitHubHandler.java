@@ -14,6 +14,6 @@ public class GitHubHandler extends UrlHandler {
 
     @Override
     public String formatDescription() {
-        return "GitHub: https://github.com/<username>/<repository>";
+        return "GitHub:\n\thttps://github.com/<username>/<repository>";
     }
 }
