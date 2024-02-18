@@ -5,6 +5,7 @@ import edu.java.bot.handler.StackOverflowHandler;
 import edu.java.bot.handler.UrlHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UrlHandlerTest {
@@ -26,13 +27,12 @@ public class UrlHandlerTest {
     @ValueSource(strings = {
         "",
         "github.com",
-        "https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c",
-        "https://stackoverflow.com/questions/1642028",
-        "https://stackoverflow.com/search?q=unsupported%20link"
+        "https://stackoverflow.com/questions",
+        "https://github.com/spring-projects/spring-framework/tree/main/framework-bom"
     })
     public void testUrlHandlerChainCheckInvalidURL(String link) {
         UrlHandler urlHandler = new GitHubHandler();
         urlHandler.setNextUrlHandler(new StackOverflowHandler());
-        assertTrue(urlHandler.isValidLink(link));
+        assertFalse(urlHandler.isValidLink(link));
     }
 }
