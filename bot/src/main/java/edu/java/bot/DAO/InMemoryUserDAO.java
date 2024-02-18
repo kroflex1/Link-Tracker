@@ -8,14 +8,10 @@ import java.util.Optional;
 public class InMemoryUserDAO implements UserDAO {
 
     private static final Map<Long, UserModel> users = new HashMap<>();
-    private final static String NO_USER_WITH_ID_MESSAGE = "User with this ID has not been detected";
-    private final static String ALREADY_REGISTERED_USER_MESSAGE = "User with this ID is already in the database";
 
     @Override
-    public void addUser(Long userId) throws IllegalArgumentException {
-        if (users.containsKey(userId)) {
-            throw new IllegalArgumentException(ALREADY_REGISTERED_USER_MESSAGE);
-        } else {
+    public void addUser(Long userId) {
+        if (!users.containsKey(userId)) {
             users.put(userId, new UserModel(userId));
         }
     }
@@ -30,19 +26,17 @@ public class InMemoryUserDAO implements UserDAO {
 
     @Override
     public void addTrackedLink(Long userId, String url) throws IllegalArgumentException {
-        if (users.containsKey(userId)) {
-            users.get(userId).addLink(url);
-        } else {
-            throw new IllegalArgumentException(NO_USER_WITH_ID_MESSAGE);
+        if (!users.containsKey(userId)) {
+            addUser(userId);
         }
+        users.get(userId).addLink(url);
     }
 
     @Override
-    public void removeTrackedLink(Long userId, String url) throws IllegalArgumentException {
+    public void removeTrackedLink(Long userId, String url) {
         if (users.containsKey(userId)) {
-            users.get(userId).removeLink(url);
-        } else {
-            throw new IllegalArgumentException(NO_USER_WITH_ID_MESSAGE);
+            addUser(userId);
         }
+        users.get(userId).removeLink(url);
     }
 }

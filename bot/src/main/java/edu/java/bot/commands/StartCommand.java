@@ -23,10 +23,7 @@ public class StartCommand extends Command {
 
     @Override
     public SendMessage handle(Update update) {
-        if (isUserRegistered(update.message().from().id())) {
-            return new SendMessage(update.message().chat().id(), USER_ALREADY_REGISTERED_MESSAGE);
-        }
-        registerUser(update.message().chat().id());
+        userDAO.addUser(update.message().from().id());
         return new SendMessage(
             update.message().chat().id(),
             "Привет, чтобы получить список доступных команд, используй /help"

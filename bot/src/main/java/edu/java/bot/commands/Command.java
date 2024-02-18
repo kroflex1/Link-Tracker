@@ -26,12 +26,4 @@ public abstract class Command {
     public BotCommand toApiCommand() {
         return new BotCommand(command(), description());
     }
-
-
-    protected boolean isUserRegistered(Long userId){
-        return !userDAO.getUserById(userId).isEmpty();
-    }
-    protected void registerUser(Long userId) {
-        userDAO.addUser(userId);
-    }
 }

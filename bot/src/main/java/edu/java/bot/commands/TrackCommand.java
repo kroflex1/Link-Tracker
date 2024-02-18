@@ -33,9 +33,6 @@ public class TrackCommand extends CompositeCommand {
     public SendMessage handle(Update update) {
         String url = update.message().text().split(" ")[1];
         Long userId = update.message().from().id();
-        if (!isUserRegistered(userId)) {
-            registerUser(userId);
-        }
         userDAO.addTrackedLink(userId, url);
         return new SendMessage(update.message().chat().id(), OK_MESSAGE);
     }
