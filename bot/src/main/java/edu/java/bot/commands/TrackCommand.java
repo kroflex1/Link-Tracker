@@ -3,8 +3,6 @@ package edu.java.bot.commands;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.DAO.UserDAO;
-import edu.java.bot.model.UserModel;
-import java.util.Optional;
 
 public class TrackCommand extends CompositeCommand {
     private final String OK_MESSAGE = "Теперь ваша ссылка отслеживается";

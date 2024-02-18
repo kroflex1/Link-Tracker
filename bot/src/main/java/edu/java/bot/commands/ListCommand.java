@@ -3,7 +3,6 @@ package edu.java.bot.commands;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.DAO.UserDAO;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Set;
 
 public class ListCommand extends Command {
