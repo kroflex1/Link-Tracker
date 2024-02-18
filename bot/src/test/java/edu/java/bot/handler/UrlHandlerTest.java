@@ -1,8 +1,5 @@
-package edu.java.bot.UrlHandler;
+package edu.java.bot.handler;
 
-import edu.java.bot.handler.GitHubHandler;
-import edu.java.bot.handler.StackOverflowHandler;
-import edu.java.bot.handler.UrlHandler;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import static org.junit.jupiter.api.Assertions.assertFalse;
