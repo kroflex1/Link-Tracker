@@ -16,19 +16,16 @@ import org.springframework.stereotype.Controller;
 public class BotController implements UpdatesListener {
     private final TelegramBot telegramBot;
     private final UserMessageProcessor userMessageProcessor;
-    private final Logger log;
 
     public BotController(@Autowired TelegramBot telegramBot, @Autowired UserMessageProcessor userMessageProcessor) {
         this.telegramBot = telegramBot;
         this.telegramBot.setUpdatesListener(this);
         this.userMessageProcessor = userMessageProcessor;
-        log = Logger.getLogger(BotController.class.getName());
     }
 
     @Override
     public int process(List<Update> list) {
         for (Update update : list) {
-            log.info(update.message().text());
             SendMessage sendMessage = userMessageProcessor.process(update);
             execute(sendMessage);
         }
