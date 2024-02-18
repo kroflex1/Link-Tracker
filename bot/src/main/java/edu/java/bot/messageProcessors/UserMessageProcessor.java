@@ -15,6 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class UserMessageProcessor {
     protected final List<? extends Command> commands;
 
+    public Command getHelpCommand() {
+        for (Command command : commands) {
+            if (command instanceof HelpCommand) {
+                return command;
+            }
+        }
+        return null;
+    }
+
     public UserMessageProcessor(@Autowired UserDAO userDAO) {
         this.commands = List.of(
             new StartCommand(userDAO),

@@ -5,6 +5,7 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.request.SetMyCommands;
 import com.pengrad.telegrambot.response.BaseResponse;
 import edu.java.bot.messageProcessors.UserMessageProcessor;
 import java.util.List;
@@ -19,6 +20,7 @@ public class BotController implements UpdatesListener {
     public BotController(@Autowired TelegramBot telegramBot, @Autowired UserMessageProcessor userMessageProcessor) {
         this.telegramBot = telegramBot;
         this.telegramBot.setUpdatesListener(this);
+        this.telegramBot.execute(new SetMyCommands(userMessageProcessor.getHelpCommand().toApiCommand()));
         this.userMessageProcessor = userMessageProcessor;
     }
 
