@@ -1,6 +1,5 @@
 package edu.java.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
@@ -17,4 +16,10 @@ public class RepositoryInformation {
     @JsonSetter("pushed_at")
     private OffsetDateTime lastUpdateTime;
     private GithubActivity lastActivity;
+
+    public enum GithubActivity {
+        PUSH,
+        BRANCH_CREATION,
+        UNKNOWN;
+    }
 }

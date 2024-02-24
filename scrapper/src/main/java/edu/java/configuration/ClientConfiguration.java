@@ -5,6 +5,7 @@ import edu.java.client.StackOverflowClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 
 @Configuration
 public class ClientConfiguration {
@@ -15,7 +16,11 @@ public class ClientConfiguration {
 
     @Bean
     public GitHubClient gitHubClient() {
-        return new GitHubClient(githubUrl, githubToken);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer" + githubToken);
+        headers.add("User-Agent", "LinkTrackerBot");
+        headers.add("Accept", "application/json");
+        return new GitHubClient(githubUrl, headers);
     }
 
     @Bean StackOverflowClient stackOverflowClient() {

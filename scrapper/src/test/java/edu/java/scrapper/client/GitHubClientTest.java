@@ -4,12 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import edu.java.client.GitHubClient;
-import edu.java.dto.GithubActivity;
 import edu.java.dto.RepositoryInformation;
 import java.time.OffsetDateTime;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @WireMockTest(httpPort = 8080)
 public class GitHubClientTest {
-    private static final GitHubClient GITHUB_CLIENT = new GitHubClient("http://localhost:8080", "sometoken");
+    private static final GitHubClient GITHUB_CLIENT = new GitHubClient("http://localhost:8080", new HttpHeaders());
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final String OWNER_NAME = "alex";
     private static final String REPOSITORY_NAME = "java-work";
@@ -33,13 +33,19 @@ public class GitHubClientTest {
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
                 .withBody(OBJECT_MAPPER.writeValueAsString(firstParameters))));
+
         stubFor(get(urlPathMatching(String.join("/", "/repos", OWNER_NAME, REPOSITORY_NAME, "activity")))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
                 .withBody("[{\"activity_type\":\"push\"}]")));
+
         RepositoryInformation expected =
-            new RepositoryInformation(REPOSITORY_NAME, OffsetDateTime.parse(UPDATE_TIME), GithubActivity.PUSH);
+            new RepositoryInformation(
+                REPOSITORY_NAME,
+                OffsetDateTime.parse(UPDATE_TIME),
+                RepositoryInformation.GithubActivity.PUSH
+            );
         RepositoryInformation actual = GITHUB_CLIENT.getRepositoryInformation(OWNER_NAME, REPOSITORY_NAME);
         assertEquals(expected, actual);
     }
@@ -71,6 +77,6 @@ public class GitHubClientTest {
                 .withHeader("Content-Type", "application/json")
                 .withBody("[{\"activity_type\":\"unknown_activity\"}]")));
         RepositoryInformation actual = GITHUB_CLIENT.getRepositoryInformation(OWNER_NAME, REPOSITORY_NAME);
-        assertEquals(GithubActivity.UNKNOWN, actual.getLastActivity());
+        assertEquals(RepositoryInformation.GithubActivity.UNKNOWN, actual.getLastActivity());
     }
 }

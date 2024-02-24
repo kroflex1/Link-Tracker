@@ -4,55 +4,43 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.java.dto.GithubActivity;
 import edu.java.dto.RepositoryInformation;
+import java.util.HashMap;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Validated
-public class GitHubClient {
+public class GitHubClient extends HttpClient {
     private static final String DEFAULT_URL = "https://api.github.com";
     private static final String NOT_FOUND_REPOSITORY_MESSAGE = "Repository was not found, or it is private";
-    private static final Map<String, GithubActivity> githubActivityMapper = Map.of(
-        "branch_creation", GithubActivity.BRANCH_CREATION,
-        "push", GithubActivity.PUSH
+    private static final Map<String, RepositoryInformation.GithubActivity> githubActivityMapper = Map.of(
+        "branch_creation", RepositoryInformation.GithubActivity.BRANCH_CREATION,
+        "push", RepositoryInformation.GithubActivity.PUSH
     );
-    private final String githubToken;
-    private final WebClient webClient;
-    private final String baseUrl;
-    private final ObjectMapper objectMapper;
 
-    public GitHubClient(String githubToken) {
-        this(DEFAULT_URL, githubToken);
+    public GitHubClient(HttpHeaders headers) {
+        this(DEFAULT_URL, headers);
     }
 
-    public GitHubClient(String baseUrl, String githubToken) {
-        this.baseUrl = baseUrl;
-        this.githubToken = githubToken;
-        this.webClient = WebClient
-            .builder()
-            .baseUrl(baseUrl)
-            .defaultHeaders(httpHeaders -> {
-                httpHeaders.set("Authorization", "Bearer" + this.githubToken);
-                httpHeaders.set("User-Agent", "LinkTrackerBot");
-                httpHeaders.set("Accept", "application/json");
-            })
-            .build();
-        this.objectMapper = new ObjectMapper();
+    public GitHubClient(String baseUrl, HttpHeaders headers) {
+        super(baseUrl, headers);
         this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         this.objectMapper.findAndRegisterModules();
     }
 
     public RepositoryInformation getRepositoryInformation(@NotNull String owner, @NotNull String repositoryName)
         throws IllegalArgumentException {
-        String response = getResponse(String.join("/", baseUrl, "repos", owner, repositoryName));
+        String response = getResponse(String.join("/", "/repos", owner, repositoryName), NOT_FOUND_REPOSITORY_MESSAGE);
         try {
             RepositoryInformation repositoryInformation = objectMapper.readValue(response, RepositoryInformation.class);
-            GithubActivity lastGitHubActivity = getLastGithubActivity(owner, repositoryName);
+            RepositoryInformation.GithubActivity lastGitHubActivity = getLastGithubActivity(owner, repositoryName);
             repositoryInformation.setLastActivity(lastGitHubActivity);
             return repositoryInformation;
         } catch (JsonProcessingException e) {
@@ -60,23 +48,17 @@ public class GitHubClient {
         }
     }
 
-    private GithubActivity getLastGithubActivity(@NotNull String owner, @NotNull String repositoryName)
+    private RepositoryInformation.GithubActivity getLastGithubActivity(
+        @NotNull String owner,
+        @NotNull String repositoryName
+    )
         throws JsonProcessingException {
-        String response = getResponse(String.join("/", baseUrl, "repos", owner, repositoryName, "activity"));
+        String response =
+            getResponse(String.join("/", "/repos", owner, repositoryName, "activity"), NOT_FOUND_REPOSITORY_MESSAGE);
         JsonNode node = objectMapper.readTree(response);
-        return githubActivityMapper.getOrDefault(node.get(0).get("activity_type").asText(), GithubActivity.UNKNOWN);
-    }
-
-    private String getResponse(String uri) {
-        return webClient
-            .get()
-            .uri(uri)
-            .retrieve()
-            .onStatus(
-                status -> status == HttpStatus.NOT_FOUND,
-                clientResponse -> Mono.error(new IllegalArgumentException(NOT_FOUND_REPOSITORY_MESSAGE))
-            )
-            .bodyToMono(String.class)
-            .block();
+        return githubActivityMapper.getOrDefault(
+            node.get(0).get("activity_type").asText(),
+            RepositoryInformation.GithubActivity.UNKNOWN
+        );
     }
 }
