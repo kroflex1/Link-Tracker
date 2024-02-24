@@ -1,5 +1,6 @@
 package edu.java.client;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,13 +11,8 @@ import reactor.core.publisher.Mono;
 
 public abstract class HttpClient {
 
-    protected final static String DEFAULT_URL = null;
     private final WebClient webClient;
     protected final ObjectMapper objectMapper;
-
-    public HttpClient() {
-        this(DEFAULT_URL);
-    }
 
     public HttpClient(String baseUrl) {
         this(baseUrl, new HttpHeaders());
@@ -29,9 +25,12 @@ public abstract class HttpClient {
             .defaultHeaders(httpHeaders -> httpHeaders.addAll(headers))
             .build();
         this.objectMapper = new ObjectMapper();
+        this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        this.objectMapper.findAndRegisterModules();
     }
 
-    protected String getResponse(String path, MultiValueMap<String, String> params, String notFoundMessage) {
+    protected String getResponse(String path, MultiValueMap<String, String> params, String notFoundMessage)
+        throws IllegalArgumentException {
         return webClient
             .get()
             .uri(uriBuilder -> uriBuilder

@@ -1,41 +1,45 @@
 package edu.java.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import edu.java.utils.TimeConvertor;
+import io.micrometer.common.lang.Nullable;
+import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.OffsetDateTime;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @EqualsAndHashCode
 public class QuestionInformation {
-    private Long id;
+    @JsonSetter("question_id") private long id;
+    @JsonSetter("title") private String text;
     private OffsetDateTime creationDate;
     private OffsetDateTime lastActivityDate;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Answer lastAnswer;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Comment lasComment;
+    @Nullable private AdditionalInformation lastAnswer;
+    @Nullable private AdditionalInformation lastComment;
 
-    @AllArgsConstructor
-    @Getter
-    @Setter
-    public static class Answer {
-        private OffsetDateTime creationDate;
-        private String ownerName;
-        private String text;
-        private String link;
+    @JsonSetter("creation_date")
+    public void setCreationDate(long epochValue) {
+        creationDate = TimeConvertor.convertEpochToOffsetDateTime(epochValue);
+    }
+
+    @JsonSetter("last_activity_date")
+    public void setLastActivityDate(long epochValue) {
+        lastActivityDate = TimeConvertor.convertEpochToOffsetDateTime(epochValue);
     }
 
     @AllArgsConstructor
-    @Getter
-    @Setter
+    @NoArgsConstructor
     @EqualsAndHashCode
-    public static class Comment {
+    public static class AdditionalInformation {
         private OffsetDateTime creationDate;
         private String ownerName;
         private String text;

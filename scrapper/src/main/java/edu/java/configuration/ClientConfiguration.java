@@ -13,6 +13,8 @@ public class ClientConfiguration {
     private String githubToken;
     @Value("${github.url}")
     private String githubUrl;
+    @Value("&{stackoverflow.url}")
+    private String stackOverflowUrl;
 
     @Bean
     public GitHubClient gitHubClient() {
@@ -24,7 +26,7 @@ public class ClientConfiguration {
     }
 
     @Bean StackOverflowClient stackOverflowClient() {
-        return new StackOverflowClient();
+        return new StackOverflowClient(stackOverflowUrl, new HttpHeaders());
     }
 
 }

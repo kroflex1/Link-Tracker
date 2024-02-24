@@ -17,3 +17,6 @@ logging:
 github:
   token: ...
   url: "https://api.github.com"
+
+stackoverflow:
+  url: ...
