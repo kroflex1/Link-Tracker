@@ -75,7 +75,7 @@ public class StackOverflowClientTest {
     }
 
     @Test
-    public void testGetInformationAboutQuestion() throws JsonProcessingException {
+    public void testCantGetInformationAboutQuestion() throws JsonProcessingException {
 
         String pathForQuestion = String.join("/", "/questions", "1");
         stubFor(get(urlPathMatching(pathForQuestion))
