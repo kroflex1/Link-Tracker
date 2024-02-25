@@ -12,6 +12,6 @@ public class LinkUpdaterScheduler {
 
     @Scheduled(fixedDelayString = "#{@scheduler.interval()}")
     public void update() {
-        LOG.warning("Fake database usage");
+        LOG.info("Fake database usage");
     }
 }
