@@ -5,7 +5,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.DAO.UserDAO;
 
 public class StartCommand extends Command {
-    private final static String USER_ALREADY_REGISTERED_MESSAGE = "Привет, вы уже пользуетесь данным ботом";
+    private static final String USER_ALREADY_REGISTERED_MESSAGE = "Привет, вы уже пользуетесь данным ботом";
 
     public StartCommand(UserDAO userDAO) {
         super(userDAO);

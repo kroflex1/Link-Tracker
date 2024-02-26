@@ -7,8 +7,8 @@ import edu.java.bot.model.UserModel;
 import java.util.Optional;
 
 public class UntrackCommand extends CompositeCommand {
-    private final static String OK_MESSAGE = "Ссылка больше не отслеживается";
-    private final static String REQUIRED_LINK_IS_MISSING_MESSAGE = "Переданная ссылка не найдена";
+    private static final String OK_MESSAGE = "Ссылка больше не отслеживается";
+    private static final String REQUIRED_LINK_IS_MISSING_MESSAGE = "Переданная ссылка не найдена";
 
     public UntrackCommand(UserDAO userDAO) {
         super(userDAO);
