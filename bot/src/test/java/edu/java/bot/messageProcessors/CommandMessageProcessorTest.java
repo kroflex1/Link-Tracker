@@ -1,13 +1,10 @@
 package edu.java.bot.messageProcessors;
 
 import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.DAO.InMemoryUserDAO;
-import edu.java.bot.DAO.UserDAO;
+import edu.java.bot.dao.InMemoryUserDAO;
 import edu.java.bot.UtilsForTests;
-import org.junit.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

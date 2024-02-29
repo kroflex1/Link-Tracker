@@ -2,7 +2,7 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.DAO.UserDAO;
+import edu.java.bot.dao.UserDAO;
 import edu.java.bot.model.UserModel;
 import java.util.Optional;
 import java.util.Set;
@@ -28,7 +28,7 @@ public class ListCommand extends Command {
     @Override
     public SendMessage handle(Update update) {
         Long userID = update.message().from().id();
-        Optional<UserModel> user = userDAO.getUserById(userID);
+        Optional<UserModel> user = userDAO.getUserByChatId(userID);
         if (user.isEmpty() || user.get().getLinks().isEmpty()) {
             return new SendMessage(update.message().chat().id(), EMPTY_LIST_LINKS_MESSAGE);
         }

@@ -1,8 +1,8 @@
 package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.DAO.InMemoryUserDAO;
-import edu.java.bot.DAO.UserDAO;
+import edu.java.bot.dao.InMemoryUserDAO;
+import edu.java.bot.dao.UserDAO;
 import edu.java.bot.UtilsForTests;
 import edu.java.bot.model.UserModel;
 import java.util.Arrays;
@@ -20,7 +20,7 @@ public class ListCommandTest {
     public void testReturnSpecialMessageWhenListOfLinksIsEmpty() {
         UserDAO mockUserDAO = Mockito.mock(InMemoryUserDAO.class);
         Update mockUpdate = UtilsForTests.getMockUpdate(1L);
-        Mockito.when(mockUserDAO.getUserById(anyLong())).thenReturn(Optional.of(new UserModel(1L)));
+        Mockito.when(mockUserDAO.getUserByChatId(anyLong())).thenReturn(Optional.of(new UserModel(1L)));
 
         ListCommand listCommand = new ListCommand(mockUserDAO);
         String actual = listCommand.handle(mockUpdate).getParameters().get("text").toString();
@@ -33,7 +33,7 @@ public class ListCommandTest {
         UserDAO mockUserDAO = Mockito.mock(InMemoryUserDAO.class);
         UserModel mockUserModel = Mockito.mock(UserModel.class);
         Update mockUpdate = UtilsForTests.getMockUpdate(1L);
-        Mockito.when(mockUserDAO.getUserById(anyLong())).thenReturn(Optional.of(mockUserModel));
+        Mockito.when(mockUserDAO.getUserByChatId(anyLong())).thenReturn(Optional.of(mockUserModel));
         Mockito.when(mockUserModel.getLinks()).thenReturn(expectedTrackedLinks);
 
         ListCommand listCommand = new ListCommand(mockUserDAO);

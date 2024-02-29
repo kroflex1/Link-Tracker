@@ -2,7 +2,7 @@ package edu.java.bot.messageProcessors;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.DAO.UserDAO;
+import edu.java.bot.dao.UserDAO;
 import edu.java.bot.commands.Command;
 
 public class CommandMessageProcessor extends UserMessageProcessor {

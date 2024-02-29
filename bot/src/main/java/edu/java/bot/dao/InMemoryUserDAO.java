@@ -1,4 +1,4 @@
-package edu.java.bot.DAO;
+package edu.java.bot.dao;
 
 import edu.java.bot.model.UserModel;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ public class InMemoryUserDAO implements UserDAO {
     }
 
     @Override
-    public Optional<UserModel> getUserById(Long userId) {
+    public Optional<UserModel> getUserByChatId(Long userId) {
         if (users.containsKey(userId)) {
             return Optional.of(users.get(userId));
         }

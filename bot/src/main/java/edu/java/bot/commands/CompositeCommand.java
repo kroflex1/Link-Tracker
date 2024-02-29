@@ -1,7 +1,7 @@
 package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.DAO.UserDAO;
+import edu.java.bot.dao.UserDAO;
 
 public abstract class CompositeCommand extends Command {
     public CompositeCommand(UserDAO userDAO) {

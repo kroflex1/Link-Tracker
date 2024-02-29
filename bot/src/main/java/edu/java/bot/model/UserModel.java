@@ -5,11 +5,11 @@ import java.util.Set;
 import lombok.Getter;
 
 public class UserModel {
-    private final Long id;
+    private final Long chatId;
     @Getter private final Set<String> links;
 
-    public UserModel(Long id) {
-        this.id = id;
+    public UserModel(Long chatId) {
+        this.chatId = chatId;
         this.links = new HashSet<>();
     }
 

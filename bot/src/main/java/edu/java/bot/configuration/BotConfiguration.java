@@ -1,8 +1,8 @@
 package edu.java.bot.configuration;
 
 import com.pengrad.telegrambot.TelegramBot;
-import edu.java.bot.DAO.InMemoryUserDAO;
-import edu.java.bot.DAO.UserDAO;
+import edu.java.bot.dao.InMemoryUserDAO;
+import edu.java.bot.dao.UserDAO;
 import edu.java.bot.messageProcessors.CommandMessageProcessor;
 import edu.java.bot.messageProcessors.UserMessageProcessor;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,7 +2,7 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.DAO.UserDAO;
+import edu.java.bot.dao.UserDAO;
 import edu.java.bot.model.UserModel;
 import java.util.Optional;
 
@@ -32,7 +32,7 @@ public class UntrackCommand extends CompositeCommand {
     public SendMessage handle(Update update) {
         String url = update.message().text().split(" ")[1];
         Long userId = update.message().from().id();
-        Optional<UserModel> userModel = userDAO.getUserById(userId);
+        Optional<UserModel> userModel = userDAO.getUserByChatId(userId);
         if (userModel.isEmpty() || !userModel.get().getLinks().contains(url)) {
             return new SendMessage(update.message().chat().id(), REQUIRED_LINK_IS_MISSING_MESSAGE);
         }

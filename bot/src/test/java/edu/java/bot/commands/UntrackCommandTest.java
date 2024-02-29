@@ -1,8 +1,8 @@
 package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.DAO.InMemoryUserDAO;
-import edu.java.bot.DAO.UserDAO;
+import edu.java.bot.dao.InMemoryUserDAO;
+import edu.java.bot.dao.UserDAO;
 import edu.java.bot.UtilsForTests;
 import edu.java.bot.model.UserModel;
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class UntrackCommandTest {
         UserDAO mockUserDAO = Mockito.mock(InMemoryUserDAO.class);
         UserModel mockUserModel = Mockito.mock(UserModel.class);
         Update mockUpdate = UtilsForTests.getMockUpdate(1L);
-        Mockito.when(mockUserDAO.getUserById(anyLong())).thenReturn(Optional.of(mockUserModel));
+        Mockito.when(mockUserDAO.getUserByChatId(anyLong())).thenReturn(Optional.of(mockUserModel));
         Mockito.when(mockUserModel.getLinks()).thenReturn(Set.of("https://github.com/getify/You-Dont-Know-JS"));
         Mockito.when(mockUpdate.message().text()).thenReturn("/untrack https://github.com/getify/You-Dont-Know-JS");
 
@@ -34,7 +34,7 @@ public class UntrackCommandTest {
         UserDAO mockUserDAO = Mockito.mock(InMemoryUserDAO.class);
         UserModel mockUserModel = Mockito.mock(UserModel.class);
         Update mockUpdate = UtilsForTests.getMockUpdate(1L);
-        Mockito.when(mockUserDAO.getUserById(anyLong())).thenReturn(Optional.of(mockUserModel));
+        Mockito.when(mockUserDAO.getUserByChatId(anyLong())).thenReturn(Optional.of(mockUserModel));
         Mockito.when(mockUserModel.getLinks()).thenReturn(new HashSet<>());
         Mockito.when(mockUpdate.message().text()).thenReturn("/untrack https://github.com/getify/You-Dont-Know-JS");
 
