@@ -1,8 +1,7 @@
 package edu.java.dto.response;
 
-import lombok.Data;
-import lombok.Value;
 import java.net.URI;
+import lombok.Value;
 
 @Value
 public class LinkResponse {

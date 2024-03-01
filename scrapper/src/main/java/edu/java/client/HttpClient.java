@@ -2,6 +2,7 @@ package edu.java.client;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.LinkedMultiValueMap;
@@ -48,5 +49,17 @@ public abstract class HttpClient {
 
     protected String getResponse(String path, String notFoundMessage) {
         return getResponse(path, new LinkedMultiValueMap<>(), notFoundMessage);
+    }
+
+    protected Mono<String> postRequest(String path, MultiValueMap<String, HttpEntity<?>> body)
+        throws IllegalArgumentException {
+        return webClient
+            .post()
+            .uri(uriBuilder -> uriBuilder
+                .path(path)
+                .build())
+            .bodyValue(body)
+            .retrieve()
+            .bodyToMono(String.class);
     }
 }

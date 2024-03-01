@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class BotConfiguration {
-
     @Bean
     public TelegramBot telegramBot(@Autowired ApplicationConfig applicationConfig) {
         return new TelegramBot(applicationConfig.telegramToken());

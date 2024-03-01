@@ -1,7 +1,6 @@
 package edu.java.dto.response;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.Value;
 
 @Value
