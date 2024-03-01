@@ -44,9 +44,9 @@ public class ApiController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/links")
+    @GetMapping("/links/<chatId>")
     @Operation(summary = "Get all tracked links")
-    public ListLinksResponse getLinks(@RequestHeader Long chatId) {
+    public ListLinksResponse getLinks(@PathVariable Long chatId) {
         checkChatId(chatId);
         List<LinkResponse> trackedLinks = new ArrayList<>();
         for (URI link : chatsInf.get(chatId)) {
@@ -55,9 +55,9 @@ public class ApiController {
         return new ListLinksResponse(trackedLinks.size(), trackedLinks);
     }
 
-    @PostMapping("/links")
+    @PostMapping("/links/<chatId>")
     @Operation(summary = "Add tracked link")
-    public LinkResponse addLinks(@RequestHeader Long chatId, @RequestBody AddLinkRequest linkInf)
+    public LinkResponse addLinks(@PathVariable Long chatId, @RequestBody AddLinkRequest linkInf)
         throws MalformedURLException, URISyntaxException {
         checkChatId(chatId);
         URI uri = new URL(linkInf.link()).toURI();
@@ -68,9 +68,9 @@ public class ApiController {
         return new LinkResponse(chatId, uri);
     }
 
-    @DeleteMapping("/links")
+    @DeleteMapping("/links/<chatId>")
     @Operation(summary = "Remove tracked link")
-    public RemoveLinkResponse removeLinks(@RequestHeader Long chatId, @RequestBody AddLinkRequest linkInf) {
+    public RemoveLinkResponse removeLinks(@PathVariable Long chatId, @RequestBody AddLinkRequest linkInf) {
         checkChatId(chatId);
         return new RemoveLinkResponse(URI.create(linkInf.link()));
     }
