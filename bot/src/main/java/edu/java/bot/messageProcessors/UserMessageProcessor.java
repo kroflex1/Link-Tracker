@@ -2,7 +2,7 @@ package edu.java.bot.messageProcessors;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.dao.UserDAO;
+import edu.java.bot.dao.ChatDAO;
 import edu.java.bot.commands.Command;
 import edu.java.bot.commands.HelpCommand;
 import edu.java.bot.commands.ListCommand;
@@ -24,13 +24,13 @@ public abstract class UserMessageProcessor {
         return null;
     }
 
-    public UserMessageProcessor(@Autowired UserDAO userDAO) {
+    public UserMessageProcessor(@Autowired ChatDAO chatDAO) {
         this.commands = List.of(
-            new StartCommand(userDAO),
-            new HelpCommand(userDAO),
-            new ListCommand(userDAO),
-            new TrackCommand(userDAO),
-            new UntrackCommand(userDAO)
+            new StartCommand(chatDAO),
+            new HelpCommand(chatDAO),
+            new ListCommand(chatDAO),
+            new TrackCommand(chatDAO),
+            new UntrackCommand(chatDAO)
         );
     }
 

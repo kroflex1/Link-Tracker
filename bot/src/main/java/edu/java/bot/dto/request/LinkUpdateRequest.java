@@ -6,8 +6,7 @@ import lombok.Data;
 
 @Data
 public class LinkUpdateRequest {
-    private Long id;
-    private URI url;
+    private String url;
     private String description;
     private List<Long> tgChatIds;
 }

@@ -4,11 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
 
-public class UserModel {
+public class ChatModel {
     private final Long chatId;
     @Getter private final Set<String> links;
 
-    public UserModel(Long chatId) {
+    public ChatModel(Long chatId) {
         this.chatId = chatId;
         this.links = new HashSet<>();
     }

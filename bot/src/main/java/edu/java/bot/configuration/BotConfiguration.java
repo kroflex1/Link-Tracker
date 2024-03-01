@@ -1,8 +1,8 @@
 package edu.java.bot.configuration;
 
 import com.pengrad.telegrambot.TelegramBot;
-import edu.java.bot.dao.InMemoryUserDAO;
-import edu.java.bot.dao.UserDAO;
+import edu.java.bot.dao.InMemoryChatDAO;
+import edu.java.bot.dao.ChatDAO;
 import edu.java.bot.messageProcessors.CommandMessageProcessor;
 import edu.java.bot.messageProcessors.UserMessageProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,8 @@ public class BotConfiguration {
     }
 
     @Bean
-    public UserDAO userDAO() {
-        return new InMemoryUserDAO();
+    public ChatDAO userDAO() {
+        return new InMemoryChatDAO();
     }
 
     @Bean

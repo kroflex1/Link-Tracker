@@ -3,13 +3,13 @@ package edu.java.bot.commands;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.dao.UserDAO;
+import edu.java.bot.dao.ChatDAO;
 
 public abstract class Command {
-    protected final UserDAO userDAO;
+    protected final ChatDAO chatDAO;
 
-    public Command(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public Command(ChatDAO chatDAO) {
+        this.chatDAO = chatDAO;
     }
 
     public abstract String command();

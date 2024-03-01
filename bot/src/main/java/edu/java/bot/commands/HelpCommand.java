@@ -2,13 +2,13 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.dao.UserDAO;
+import edu.java.bot.dao.ChatDAO;
 import java.util.List;
 
 public class HelpCommand extends Command {
 
-    public HelpCommand(UserDAO userDAO) {
-        super(userDAO);
+    public HelpCommand(ChatDAO chatDAO) {
+        super(chatDAO);
     }
 
     @Override
@@ -41,11 +41,11 @@ public class HelpCommand extends Command {
 
     private List<Command> getCommands() {
         return List.of(
-            new HelpCommand(userDAO),
-            new ListCommand(userDAO),
-            new StartCommand(userDAO),
-            new TrackCommand(userDAO),
-            new UntrackCommand(userDAO)
+            new HelpCommand(chatDAO),
+            new ListCommand(chatDAO),
+            new StartCommand(chatDAO),
+            new TrackCommand(chatDAO),
+            new UntrackCommand(chatDAO)
         );
     }
 }
