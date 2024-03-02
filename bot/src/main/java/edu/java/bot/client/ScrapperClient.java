@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import edu.java.dto.response.LinkResponse;
+import edu.java.dto.response.ListLinksResponse;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
@@ -41,7 +44,7 @@ public class ScrapperClient extends HttpClient {
     }
 
     public List<URI> getTrackedLinks(Long chatId) {
-        JsonNode node = webClient
+        ListLinksResponse linksInf = webClient
             .delete()
             .uri(uriBuilder -> uriBuilder
                 .path("/links/%d".formatted(chatId))
@@ -51,12 +54,12 @@ public class ScrapperClient extends HttpClient {
                 status -> status == HttpStatus.BAD_REQUEST,
                 clientResponse -> Mono.error(new IllegalArgumentException(NOT_FOUND_CHAT_ID_MESSAGE))
             )
-            .bodyToMono(JsonNode.class)
+            .bodyToMono(ListLinksResponse.class)
             .block();
 
         List<URI> result = new ArrayList<>();
-        for (JsonNode link : node.get("links")) {
-            result.add(URI.create(link.get("url").asText()));
+        for (LinkResponse linkInf : linksInf.links()) {
+            result.add(linkInf.link());
         }
         return result;
     }
@@ -69,6 +72,7 @@ public class ScrapperClient extends HttpClient {
             .uri(uriBuilder -> uriBuilder
                 .path("/links/%d".formatted(chatId))
                 .build())
+            .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(body.build())
             .retrieve()
             .onStatus(
@@ -78,7 +82,6 @@ public class ScrapperClient extends HttpClient {
             .bodyToMono(String.class);
     }
 
-
     public Mono<String> stopTrackLink(Long chatId, URI link) {
         MultipartBodyBuilder body = new MultipartBodyBuilder();
         body.part("link", link.toString());
@@ -87,6 +90,7 @@ public class ScrapperClient extends HttpClient {
             .uri(uriBuilder -> uriBuilder
                 .path("/links/%d".formatted(chatId))
                 .build())
+            .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(body.build())
             .retrieve()
             .onStatus(

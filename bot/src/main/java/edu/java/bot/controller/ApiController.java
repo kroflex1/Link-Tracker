@@ -3,8 +3,8 @@ package edu.java.bot.controller;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.dao.ChatDAO;
-import edu.java.bot.dto.request.LinkUpdateRequest;
 import edu.java.bot.model.ChatModel;
+import edu.java.dto.request.LinkUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -30,15 +30,15 @@ public class ApiController {
     @Operation(summary = "Send an update")
     public ResponseEntity updates(LinkUpdateRequest linkUpdateRequest) throws MalformedURLException,
         URISyntaxException {
-        for (Long chatId : linkUpdateRequest.getTgChatIds()) {
+        for (Long chatId : linkUpdateRequest.tgChatsId()) {
             Optional<ChatModel> userModel = chatDAO.getChatById(chatId);
             if (userModel.isEmpty()) {
                 throw new IllegalArgumentException("Not found chat with id=%d ".formatted(chatId));
             }
-            URI uri = new URL(linkUpdateRequest.getUrl()).toURI();
+            URI uri = new URL(linkUpdateRequest.url()).toURI();
             SendMessage message = new SendMessage(
                 chatId,
-                generateMessageText(uri, linkUpdateRequest.getDescription())
+                generateMessageText(uri, linkUpdateRequest.description())
             );
             sendMessageToChat(message);
         }
