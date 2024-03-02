@@ -43,9 +43,9 @@ public class ScrapperClient extends HttpClient {
             .bodyToMono(String.class);
     }
 
-    public List<URI> getTrackedLinks(Long chatId) {
+    public List<URI> getTrackedLinks(Long chatId) throws IllegalArgumentException{
         ListLinksResponse linksInf = webClient
-            .delete()
+            .get()
             .uri(uriBuilder -> uriBuilder
                 .path("/links/%d".formatted(chatId))
                 .build())
@@ -64,7 +64,7 @@ public class ScrapperClient extends HttpClient {
         return result;
     }
 
-    public Mono<String> trackLink(Long chatId, URI link) {
+    public Mono<String> trackLink(Long chatId, URI link){
         MultipartBodyBuilder body = new MultipartBodyBuilder();
         body.part("link", link.toString());
         return webClient
