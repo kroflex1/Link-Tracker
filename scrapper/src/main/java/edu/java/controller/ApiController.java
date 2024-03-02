@@ -1,6 +1,5 @@
 package edu.java.controller;
 
-
 import edu.java.dto.request.AddLinkRequest;
 import edu.java.dto.response.LinkResponse;
 import edu.java.dto.response.ListLinksResponse;
@@ -28,10 +27,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiController {
     Map<Long, Set<URI>> chatsInf = new HashMap<>();
 
-    @GetMapping("/tg-chat/{id}")
+    @PostMapping("/tg-chat/{id}")
     @Operation(summary = "Register chat")
     public ResponseEntity registerChat(@PathVariable Long id) {
-        checkChatId(id);
+        if (chatsInf.containsKey(id)) {
+            throw new IllegalArgumentException("Chat with this id already registered");
+        }
         chatsInf.put(id, new HashSet<>());
         return ResponseEntity.ok().build();
     }
@@ -39,15 +40,15 @@ public class ApiController {
     @DeleteMapping("/tg-chat/{id}")
     @Operation(summary = "Remove chat")
     public ResponseEntity removeChat(@PathVariable Long id) {
-        checkChatId(id);
+        checkForChatId(id);
         chatsInf.remove(id);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/links/<chatId>")
+    @GetMapping("/links/{chatId}")
     @Operation(summary = "Get all tracked links")
     public ListLinksResponse getLinks(@PathVariable Long chatId) {
-        checkChatId(chatId);
+        checkForChatId(chatId);
         List<LinkResponse> trackedLinks = new ArrayList<>();
         for (URI link : chatsInf.get(chatId)) {
             trackedLinks.add(new LinkResponse(chatId, link));
@@ -55,11 +56,11 @@ public class ApiController {
         return new ListLinksResponse(trackedLinks.size(), trackedLinks);
     }
 
-    @PostMapping("/links/<chatId>")
+    @PostMapping("/links/{chatId}")
     @Operation(summary = "Add tracked link")
     public LinkResponse addLinks(@PathVariable Long chatId, @RequestBody AddLinkRequest linkInf)
         throws MalformedURLException, URISyntaxException {
-        checkChatId(chatId);
+        checkForChatId(chatId);
         URI uri = new URL(linkInf.link()).toURI();
         if (chatsInf.get(chatId).contains(uri)) {
             throw new IllegalArgumentException("This link is already register");
@@ -68,14 +69,17 @@ public class ApiController {
         return new LinkResponse(chatId, uri);
     }
 
-    @DeleteMapping("/links/<chatId>")
+    @DeleteMapping("/links/{chatId}")
     @Operation(summary = "Remove tracked link")
     public RemoveLinkResponse removeLinks(@PathVariable Long chatId, @RequestBody AddLinkRequest linkInf) {
-        checkChatId(chatId);
+        checkForChatId(chatId);
+        if (!chatsInf.get(chatId).contains(URI.create(linkInf.link()))) {
+            throw new IllegalArgumentException("Link was not found");
+        }
         return new RemoveLinkResponse(URI.create(linkInf.link()));
     }
 
-    private void checkChatId(Long chatId) throws IllegalArgumentException {
+    private void checkForChatId(Long chatId) throws IllegalArgumentException {
         if (!chatsInf.containsKey(chatId)) {
             throw new IllegalArgumentException("Chat with this id wasn`t found");
         }
