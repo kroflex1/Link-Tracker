@@ -1,4 +1,4 @@
-package edu.java.dto.response;
+package edu.java.response;
 
 import lombok.Builder;
 import lombok.Data;

@@ -1,9 +1,10 @@
 package edu.java.controller;
 
-import edu.java.dto.request.AddLinkRequest;
-import edu.java.dto.response.LinkResponse;
-import edu.java.dto.response.ListLinksResponse;
-import edu.java.dto.response.RemoveLinkResponse;
+
+import edu.java.request.AddLinkRequest;
+import edu.java.response.LinkResponse;
+import edu.java.response.ListLinksResponse;
+import edu.java.response.RemoveLinkResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import java.net.MalformedURLException;
 import java.net.URI;

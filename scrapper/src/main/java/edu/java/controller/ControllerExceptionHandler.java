@@ -1,6 +1,6 @@
 package edu.java.controller;
 
-import edu.java.dto.response.ApiErrorResponse;
+import edu.java.response.ApiErrorResponse;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import org.springframework.http.HttpStatus;

@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.dao.ChatDAO;
 import edu.java.bot.model.ChatModel;
-import edu.java.dto.request.LinkUpdateRequest;
+import edu.java.request.LinkUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import java.net.MalformedURLException;
 import java.net.URI;

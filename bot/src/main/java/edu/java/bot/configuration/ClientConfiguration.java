@@ -11,7 +11,7 @@ public class ClientConfiguration {
     private String scrapperUrl;
 
     @Bean
-    public ScrapperClient scrapperClient(){
+    public ScrapperClient scrapperClient() {
         return new ScrapperClient(scrapperUrl);
     }
 }

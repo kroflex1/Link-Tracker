@@ -1,4 +1,4 @@
-package edu.java.dto.request;
+package edu.java.request;
 
 import java.util.List;
 

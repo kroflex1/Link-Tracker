@@ -1,11 +1,10 @@
 package edu.java.bot.client;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import edu.java.response.LinkResponse;
+import edu.java.response.ListLinksResponse;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import edu.java.dto.response.LinkResponse;
-import edu.java.dto.response.ListLinksResponse;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -23,6 +22,7 @@ public class ScrapperClient extends HttpClient {
         super(baseUrl);
     }
 
+    @SuppressWarnings("MultipleStringLiterals")
     public Mono<String> registerChat(Long chatId) {
         return webClient
             .post()
@@ -33,6 +33,7 @@ public class ScrapperClient extends HttpClient {
             .bodyToMono(String.class);
     }
 
+    @SuppressWarnings("MultipleStringLiterals")
     public Mono<String> removeChat(Long chatId) {
         return webClient
             .delete()
@@ -43,7 +44,8 @@ public class ScrapperClient extends HttpClient {
             .bodyToMono(String.class);
     }
 
-    public List<URI> getTrackedLinks(Long chatId) throws IllegalArgumentException{
+    @SuppressWarnings("MultipleStringLiterals")
+    public List<URI> getTrackedLinks(Long chatId) throws IllegalArgumentException {
         ListLinksResponse linksInf = webClient
             .get()
             .uri(uriBuilder -> uriBuilder
@@ -64,7 +66,8 @@ public class ScrapperClient extends HttpClient {
         return result;
     }
 
-    public Mono<String> trackLink(Long chatId, URI link){
+    @SuppressWarnings("MultipleStringLiterals")
+    public Mono<String> trackLink(Long chatId, URI link) {
         MultipartBodyBuilder body = new MultipartBodyBuilder();
         body.part("link", link.toString());
         return webClient
@@ -82,6 +85,7 @@ public class ScrapperClient extends HttpClient {
             .bodyToMono(String.class);
     }
 
+    @SuppressWarnings("MultipleStringLiterals")
     public Mono<String> stopTrackLink(Long chatId, URI link) {
         MultipartBodyBuilder body = new MultipartBodyBuilder();
         body.part("link", link.toString());

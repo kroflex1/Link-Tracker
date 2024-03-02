@@ -1,8 +1,8 @@
 package edu.java.bot.controller;
 
+import edu.java.response.ApiErrorResponse;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import edu.java.dto.response.ApiErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
