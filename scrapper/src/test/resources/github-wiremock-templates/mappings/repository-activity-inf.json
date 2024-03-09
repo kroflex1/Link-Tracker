@@ -1,0 +1,10 @@
+{
+    "request": {
+        "urlPathPattern": "/repos/test-user/test-repos/activity",
+        "method": "GET"
+    },
+    "response": {
+        "status": 200,
+        "body": "[{\"activity_type\":\"push\"}]"
+    }
+}
