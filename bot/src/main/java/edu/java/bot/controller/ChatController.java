@@ -13,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class BotController implements UpdatesListener {
+public class ChatController implements UpdatesListener {
     private final TelegramBot telegramBot;
     private final UserMessageProcessor userMessageProcessor;
 
-    public BotController(@Autowired TelegramBot telegramBot, @Autowired UserMessageProcessor userMessageProcessor) {
+    public ChatController(@Autowired TelegramBot telegramBot, @Autowired UserMessageProcessor userMessageProcessor) {
         this.telegramBot = telegramBot;
         this.telegramBot.setUpdatesListener(this);
         this.telegramBot.execute(new SetMyCommands(userMessageProcessor.getHelpCommand().toApiCommand()));

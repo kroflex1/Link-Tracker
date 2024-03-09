@@ -2,6 +2,7 @@ package edu.java.scrapper.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
@@ -11,6 +12,8 @@ import edu.java.dto.RepositoryInformation;
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @WireMockTest(httpPort = 8080)
 public class GitHubClientTest {
     private static final GitHubClient GITHUB_CLIENT = new GitHubClient("http://localhost:8080", new HttpHeaders());
+
     private static final String OWNER_NAME = "test-user";
     private static final String REPOSITORY_NAME = "test-repos";
     private static final String UPDATE_TIME = "2024-02-18T18:26:28Z";
@@ -65,6 +69,7 @@ public class GitHubClientTest {
     public void testProcessUnknownTypeOfRepositoryActivity(WireMockRuntimeInfo wmRuntimeInfo) {
         WireMock wireMock = wmRuntimeInfo.getWireMock();
         wireMock.loadMappingsFrom("src/test/resources/github-wiremock-templates/");
+
         stubFor(get(urlPathMatching(String.join("/", "/repos", OWNER_NAME, REPOSITORY_NAME, "activity")))
             .willReturn(aResponse()
                 .withStatus(200)
