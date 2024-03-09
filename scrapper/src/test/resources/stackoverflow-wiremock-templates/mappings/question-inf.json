@@ -1,0 +1,13 @@
+{
+    "request": {
+        "urlPathPattern": "/questions/1",
+        "method": "GET"
+    },
+    "response": {
+        "status": 200,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "body": "{\"items\":[{\"question_id\":1,\"title\":\"How to use python?\",\"creation_date\":100,\"last_activity_date\":1000}]}"
+    }
+}

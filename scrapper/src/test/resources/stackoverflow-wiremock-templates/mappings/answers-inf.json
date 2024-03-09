@@ -1,0 +1,30 @@
+{
+    "request": {
+        "urlPathPattern": "/questions/1/answers",
+        "method": "GET",
+        "queryParameters": {
+            "pagesize": {
+                "equalTo": "1"
+            },
+            "order": {
+                "equalTo": "desc"
+            },
+            "sort": {
+                "equalTo": "creation"
+            },
+            "site": {
+                "equalTo": "stackoverflow"
+            },
+            "filter": {
+                "equalTo": "!6WPIomp-eb(U5"
+            }
+        }
+    },
+    "response": {
+        "status": 202,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "body": "{\"items\":[{\"creation_date\":1000,\"body\":\"Use python with the IDE\",\"link\":\"http://some-link-to-answer\",\"owner\":{\"display_name\":\"Limus\"}}]}"
+    }
+}
