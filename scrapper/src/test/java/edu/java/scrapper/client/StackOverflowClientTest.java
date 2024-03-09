@@ -3,6 +3,8 @@ package edu.java.scrapper.client;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import edu.java.client.StackOverflowClient;
 import edu.java.dto.QuestionInformation;
@@ -32,51 +34,18 @@ public class StackOverflowClientTest {
     @ParameterizedTest
     @MethodSource("getResponses")
     public void testGetInformationAboutQuestion(
-        QuestionInformation questionInf,
-        String questionResponse,
-        String lastAnswerResponse,
-        String lastCommentResponse,
-        int answerResponseStatusCode,
-        int commentResponseStatusCode
+        QuestionInformation questionInf, WireMockRuntimeInfo wmRuntimeInfo
     ) throws JsonProcessingException {
-
-        String pathForQuestion = String.join("/", "/questions", Long.toString(questionInf.getId()));
-        stubFor(get(urlPathMatching(pathForQuestion))
-            .withQueryParam("site", equalTo("stackoverflow"))
-            .willReturn(aResponse()
-                .withStatus(200)
-                .withHeader("Content-Type", "application/json")
-                .withBody(questionResponse)));
-
-        stubFor(get(urlPathMatching(String.join("/", "/questions", Long.toString(questionInf.getId()), "answers")))
-            .withQueryParam("pagesize", equalTo("1"))
-            .withQueryParam("order", equalTo("desc"))
-            .withQueryParam("sort", equalTo("creation"))
-            .withQueryParam("site", equalTo("stackoverflow"))
-            .withQueryParam("filter", equalTo("!6WPIomp-eb(U5"))
-            .willReturn(aResponse()
-                .withStatus(answerResponseStatusCode)
-                .withHeader("Content-Type", "application/json")
-                .withBody(lastAnswerResponse)));
-
-        stubFor(get(urlPathMatching(String.join("/", "/questions", Long.toString(questionInf.getId()), "comments")))
-            .withQueryParam("pagesize", equalTo("1"))
-            .withQueryParam("order", equalTo("desc"))
-            .withQueryParam("sort", equalTo("creation"))
-            .withQueryParam("site", equalTo("stackoverflow"))
-            .withQueryParam("filter", equalTo("!6WPIompltQw.p"))
-            .willReturn(aResponse()
-                .withStatus(commentResponseStatusCode)
-                .withHeader("Content-Type", "application/json")
-                .withBody(lastCommentResponse)));
+        WireMock wireMock = wmRuntimeInfo.getWireMock();
+        wireMock.loadMappingsFrom("src/test/resources/stackoverflow-wiremock-templates/");
 
         QuestionInformation actual = STACK_OVERFLOW_CLIENT.getInformationAboutQuestion(questionInf.getId()).get();
+
         assertEquals(questionInf, actual);
     }
 
     @Test
     public void testCantGetInformationAboutQuestion() throws JsonProcessingException {
-
         String pathForQuestion = String.join("/", "/questions", "1");
         stubFor(get(urlPathMatching(pathForQuestion))
             .withQueryParam("site", equalTo("stackoverflow"))
@@ -84,6 +53,7 @@ public class StackOverflowClientTest {
                 .withStatus(404)));
 
         Optional<QuestionInformation> actual = STACK_OVERFLOW_CLIENT.getInformationAboutQuestion(1);
+
         assertTrue(actual.isEmpty());
     }
 
@@ -96,7 +66,6 @@ public class StackOverflowClientTest {
         );
         QuestionInformation.AdditionalInformation lastAnswer =
             (QuestionInformation.AdditionalInformation) lastAnswerData.get()[0];
-        String lastAnswerResponse = (String) lastAnswerData.get()[1];
 
         Arguments lastCommentData = createResponseAndAdditionalInformation(
             500L,
@@ -106,7 +75,6 @@ public class StackOverflowClientTest {
         );
         QuestionInformation.AdditionalInformation lastComment =
             (QuestionInformation.AdditionalInformation) lastCommentData.get()[0];
-        String lastCommentResponse = (String) lastCommentData.get()[1];
 
         Long questionId = 1L;
         String questionText = "How to use python?";
@@ -122,16 +90,9 @@ public class StackOverflowClientTest {
             .lastAnswer(lastAnswer)
             .lastComment(lastComment)
             .build();
-        String questionResponse = String.format(
-            "{\"items\":[{\"question_id\":%d,\"title\":\"%s\",\"creation_date\":%d,\"last_activity_date\":%d}]}",
-            questionId,
-            questionText,
-            creationEpochTime,
-            lastActivityEpochTime
-        );
 
         return Stream.of(
-            Arguments.of(questionInformation, questionResponse, lastAnswerResponse, lastCommentResponse, 202, 202));
+            Arguments.of(questionInformation));
     }
 
     private static Arguments createResponseAndAdditionalInformation(

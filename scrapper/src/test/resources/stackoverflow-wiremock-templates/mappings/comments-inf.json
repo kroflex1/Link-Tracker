@@ -1,0 +1,30 @@
+{
+    "request": {
+        "urlPathPattern": "/questions/1/comments",
+        "method": "GET",
+        "queryParameters": {
+            "pagesize": {
+                "equalTo": "1"
+            },
+            "order": {
+                "equalTo": "desc"
+            },
+            "sort": {
+                "equalTo": "creation"
+            },
+            "site": {
+                "equalTo": "stackoverflow"
+            },
+            "filter": {
+                "equalTo": "!6WPIompltQw.p"
+            }
+        }
+    },
+    "response": {
+        "status": 202,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "body": "{\"items\":[{\"creation_date\":500,\"body\":\"Which version of Python are you using?\",\"link\":\"http://some-link-to-comment\",\"owner\":{\"display_name\":\"Mark\"}}]}"
+    }
+}
