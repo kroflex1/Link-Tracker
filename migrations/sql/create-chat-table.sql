@@ -4,7 +4,7 @@
 CREATE TABLE chats
 (
     chat_id    BIGINT                   NOT NULL,
-    created_at timestamp with time zone not null NOT NULL,
+    created_at timestamp WITH TIME ZONE NOT NULL,
 
     PRIMARY KEY (chat_id)
 )
