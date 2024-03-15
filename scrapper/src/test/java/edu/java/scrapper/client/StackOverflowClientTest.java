@@ -1,18 +1,15 @@
 package edu.java.scrapper.client;
 
-import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import edu.java.client.StackOverflowClient;
 import edu.java.dto.QuestionInformation;
-import edu.java.dto.RepositoryInformation;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.stream.Stream;
-import edu.java.utils.TimeConvertor;
+import edu.java.utils.TimeManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -80,8 +77,8 @@ public class StackOverflowClientTest {
         String questionText = "How to use python?";
         Long creationEpochTime = 100L;
         Long lastActivityEpochTime = 1000L;
-        OffsetDateTime creationDate = TimeConvertor.convertEpochToOffsetDateTime(creationEpochTime);
-        OffsetDateTime lastActivityDate = TimeConvertor.convertEpochToOffsetDateTime(lastActivityEpochTime);
+        OffsetDateTime creationDate = TimeManager.convertEpochToOffsetDateTime(creationEpochTime);
+        OffsetDateTime lastActivityDate = TimeManager.convertEpochToOffsetDateTime(lastActivityEpochTime);
         QuestionInformation questionInformation = QuestionInformation.builder()
             .id(questionId)
             .text(questionText)
@@ -101,7 +98,7 @@ public class StackOverflowClientTest {
         String text,
         String link
     ) {
-        OffsetDateTime dateTime = TimeConvertor.convertEpochToOffsetDateTime(epochTime);
+        OffsetDateTime dateTime = TimeManager.convertEpochToOffsetDateTime(epochTime);
         QuestionInformation.AdditionalInformation additionalInf = new QuestionInformation.AdditionalInformation(
             dateTime,
             ownerName,

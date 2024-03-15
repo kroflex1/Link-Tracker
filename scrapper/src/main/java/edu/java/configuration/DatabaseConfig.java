@@ -1,15 +1,17 @@
 package edu.java.configuration;
 
-import edu.java.dao.repository.JdbcChatRepository;
+import edu.java.dao.repository.chatRepository.JdbcChatRepository;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.annotation.Validated;
 import javax.sql.DataSource;
 
 @Validated
 @ConfigurationProperties(prefix = "spring.datasource", ignoreUnknownFields = false)
+@EnableTransactionManagement
 public record DatabaseConfig(@NotEmpty String url, @NotEmpty String username, @NotEmpty String password,
                              @NotEmpty String driver) {
 

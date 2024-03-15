@@ -3,7 +3,7 @@ package edu.java.client;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.java.dto.QuestionInformation;
-import edu.java.utils.TimeConvertor;
+import edu.java.utils.TimeManager;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 import org.springframework.http.HttpHeaders;
@@ -76,7 +76,7 @@ public class StackOverflowClient extends HttpClient {
             return Optional.empty();
         }
         JsonNode node = objectMapper.readTree(response).get("items").get(0);
-        OffsetDateTime creationDate = TimeConvertor.convertEpochToOffsetDateTime(node.get("creation_date").asLong());
+        OffsetDateTime creationDate = TimeManager.convertEpochToOffsetDateTime(node.get("creation_date").asLong());
         String text = node.get("body").asText();
         String link = node.get("link").asText();
         String ownerName = node.get("owner").get("display_name").asText();

@@ -1,5 +1,6 @@
 package edu.java.dao.dto;
 
+import edu.java.utils.TimeManager;
 import java.time.OffsetDateTime;
 import lombok.Value;
 
@@ -10,14 +11,10 @@ public class ChatDTO {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof ChatDTO)) {
+        if (!(o instanceof ChatDTO otherChatDTO)) {
             return false;
         }
-        ChatDTO otherChatDTO = (ChatDTO) o;
-        return id.equals(otherChatDTO.id) && isEqualOffsetDateTime(createdAt, otherChatDTO.createdAt);
+        return id.equals(otherChatDTO.id) && TimeManager.isEqualOffsetDateTime(createdAt, otherChatDTO.createdAt);
     }
 
-    private boolean isEqualOffsetDateTime(OffsetDateTime first, OffsetDateTime second) {
-        return first.withNano(0).equals(second.withNano(0));
-    }
 }
