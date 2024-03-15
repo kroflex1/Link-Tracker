@@ -14,7 +14,7 @@ public class JdbcLinkRepository implements LinkRepository {
     private static final LinkDTOMapper LINK_MAPPER = new LinkDTOMapper();
     private final JdbcTemplate jdbcTemplate;
     private final String SQL_INSERT_TGCHAT = "INSERT INTO links(link, created_at, last_time_update) VALUES(?,?,?)";
-    private final String SQL_DELETE_TGCHAT = "DELETE FROM chats WHERE links = ?";
+    private final String SQL_DELETE_TGCHAT = "DELETE FROM links WHERE link = ?";
     private final String SQL_GET_ALL = "SELECT * FROM links";
 
     public JdbcLinkRepository(DataSource dataSource) {
@@ -26,12 +26,12 @@ public class JdbcLinkRepository implements LinkRepository {
         Timestamp createdTime =
             Timestamp.valueOf(linkDTO.getCreatedTime().toLocalDateTime());
         Timestamp lastTimeUpdate = Timestamp.valueOf(linkDTO.getLastTimeUpdate().toLocalDateTime());
-        jdbcTemplate.update(SQL_INSERT_TGCHAT, linkDTO.getLink(), createdTime, lastTimeUpdate);
+        jdbcTemplate.update(SQL_INSERT_TGCHAT, linkDTO.getLink().toString(), createdTime, lastTimeUpdate);
     }
 
     @Override
     public void remove(URI link) {
-        jdbcTemplate.update(SQL_DELETE_TGCHAT, link);
+        jdbcTemplate.update(SQL_DELETE_TGCHAT, link.toString());
     }
 
     @Override

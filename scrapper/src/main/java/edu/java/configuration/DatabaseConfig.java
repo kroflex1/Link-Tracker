@@ -1,6 +1,7 @@
 package edu.java.configuration;
 
 import edu.java.dao.repository.chatRepository.JdbcChatRepository;
+import edu.java.dao.repository.linkRepository.JdbcLinkRepository;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,11 @@ public record DatabaseConfig(@NotEmpty String url, @NotEmpty String username, @N
     @Bean
     public JdbcChatRepository jdbcChatRepository() {
         return new JdbcChatRepository(dataSource());
+    }
+
+    @Bean
+    public JdbcLinkRepository jdbcLinkRepository(){
+        return new JdbcLinkRepository(dataSource());
     }
 
     private DataSource dataSource() {
