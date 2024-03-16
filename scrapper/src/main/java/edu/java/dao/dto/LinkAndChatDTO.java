@@ -1,7 +1,7 @@
 package edu.java.dao.dto;
 
-import lombok.Value;
 import java.net.URI;
+import lombok.Value;
 
 @Value
 public class LinkAndChatDTO {

@@ -5,6 +5,7 @@ import java.time.OffsetDateTime;
 import lombok.Value;
 
 @Value
+@SuppressWarnings("hashCode")
 public class ChatDTO {
     Long id;
     OffsetDateTime createdAt;

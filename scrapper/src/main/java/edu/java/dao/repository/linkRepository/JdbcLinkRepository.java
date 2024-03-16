@@ -2,19 +2,19 @@ package edu.java.dao.repository.linkRepository;
 
 import edu.java.dao.dto.LinkDTO;
 import edu.java.dao.mapper.LinkDTOMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import javax.sql.DataSource;
 import java.net.URI;
 import java.sql.Timestamp;
 import java.util.List;
+import javax.sql.DataSource;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 public class JdbcLinkRepository implements LinkRepository {
 
     private static final LinkDTOMapper LINK_MAPPER = new LinkDTOMapper();
+    private static final String SQL_INSERT_LINK = "INSERT INTO links(link, created_at, last_time_update) VALUES(?,?,?)";
+    private static final String SQL_DELETE_LINK = "DELETE FROM links WHERE link = ?";
+    private static final String SQL_GET_ALL = "SELECT * FROM links";
     private final JdbcTemplate jdbcTemplate;
-    private final String SQL_INSERT_LINK = "INSERT INTO links(link, created_at, last_time_update) VALUES(?,?,?)";
-    private final String SQL_DELETE_LINK = "DELETE FROM links WHERE link = ?";
-    private final String SQL_GET_ALL = "SELECT * FROM links";
 
     public JdbcLinkRepository(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);

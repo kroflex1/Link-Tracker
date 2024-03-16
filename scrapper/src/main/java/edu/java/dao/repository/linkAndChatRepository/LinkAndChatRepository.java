@@ -1,7 +1,6 @@
 package edu.java.dao.repository.linkAndChatRepository;
 
 import edu.java.dao.dto.LinkAndChatDTO;
-import edu.java.dao.repository.SimpleCrudRepository;
 import java.net.URI;
 import java.util.List;
 

@@ -9,10 +9,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 public class JdbcChatRepository implements ChatRepository {
     private static final ChatDTOMapper CHAT_MAPPER = new ChatDTOMapper();
+    private static final String SQL_INSERT_CHAT = "INSERT INTO chats(chat_id, created_at) VALUES(?,?)";
+    private static final String SQL_DELETE_CHAT = "DELETE FROM chats WHERE chat_id = ?";
+    private static final String SQL_GET_ALL = "SELECT * FROM chats";
+
     private final JdbcTemplate jdbcTemplate;
-    private final String SQL_INSERT_CHAT = "INSERT INTO chats(chat_id, created_at) VALUES(?,?)";
-    private final String SQL_DELETE_CHAT = "DELETE FROM chats WHERE chat_id = ?";
-    private final String SQL_GET_ALL = "SELECT * FROM chats";
 
     public JdbcChatRepository(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
