@@ -1,6 +1,6 @@
 package edu.java.scrapper.dao.repository;
 
-import edu.java.dao.dto.ChatDTO;
+import edu.java.dao.dto.Chat;
 import edu.java.dao.repository.jdbc.JdbcChatRepository;
 import edu.java.scrapper.IntegrationTest;
 import java.time.OffsetDateTime;
@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class JdbcChatRepositoryTest extends IntegrationTest {
@@ -22,12 +23,12 @@ public class JdbcChatRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     void testAddNewChat() {
-        ChatDTO chatDTO = new ChatDTO(1L, OffsetDateTime.now());
-        jdbcChatRepository.add(chatDTO);
+        Chat chat = new Chat(1L, OffsetDateTime.now());
+        jdbcChatRepository.add(chat);
 
-        List<ChatDTO> chats = jdbcChatRepository.findAll();
+        List<Chat> chats = jdbcChatRepository.findAll();
 
-        assertEquals(chatDTO, chats.getFirst());
+        assertEquals(chat, chats.getFirst());
     }
 
     @Test
@@ -35,14 +36,14 @@ public class JdbcChatRepositoryTest extends IntegrationTest {
     @Rollback
     void tesGetAllChats() {
         int numberOfChats = 5;
-        List<ChatDTO> expected = new ArrayList<>();
+        List<Chat> expected = new ArrayList<>();
         for (long i = 1; i <= numberOfChats; i++) {
-            ChatDTO newChat = new ChatDTO(i, OffsetDateTime.now());
+            Chat newChat = new Chat(i, OffsetDateTime.now());
             expected.add(newChat);
             jdbcChatRepository.add(newChat);
         }
 
-        List<ChatDTO> actual = jdbcChatRepository.findAll();
+        List<Chat> actual = jdbcChatRepository.findAll();
 
         assertEquals(expected, actual);
     }
@@ -50,16 +51,36 @@ public class JdbcChatRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void testRemoveChat(){
-        ChatDTO firstChatDTO = new ChatDTO(1L, OffsetDateTime.now());
-        ChatDTO secondChatDTO = new ChatDTO(2L, OffsetDateTime.now());
-        jdbcChatRepository.add(firstChatDTO);
-        jdbcChatRepository.add(secondChatDTO);
+    void testRemoveChat() {
+        Chat firstChat = new Chat(1L, OffsetDateTime.now());
+        Chat secondChat = new Chat(2L, OffsetDateTime.now());
+        jdbcChatRepository.add(firstChat);
+        jdbcChatRepository.add(secondChat);
 
-        List<ChatDTO> chats = jdbcChatRepository.findAll();
+        List<Chat> chats = jdbcChatRepository.findAll();
         assertEquals(2, chats.size());
         jdbcChatRepository.remove(1L);
-        assertEquals(List.of(secondChatDTO), jdbcChatRepository.findAll());
+        assertEquals(List.of(secondChat), jdbcChatRepository.findAll());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void testAddAlreadyExistingChat() {
+        Chat chat = new Chat(1L, OffsetDateTime.now());
+        jdbcChatRepository.add(chat);
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            jdbcChatRepository.add(chat));
+        assertEquals("Chat with this id has already been registered", exception.getMessage());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void testDeleteNonExistentChat() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            jdbcChatRepository.remove(1L));
+        assertEquals("Chat with this ID was not detected", exception.getMessage());
     }
 
 }

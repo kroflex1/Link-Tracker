@@ -1,11 +1,12 @@
 package edu.java.dao.repository.jdbc;
 
-import edu.java.dao.dto.ChatDTO;
+import edu.java.dao.dto.Chat;
 import edu.java.dao.mapper.ChatDTOMapper;
 import java.sql.Timestamp;
 import java.util.List;
 import javax.sql.DataSource;
 import edu.java.dao.repository.ChatRepository;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class JdbcChatRepository implements ChatRepository {
@@ -21,19 +22,25 @@ public class JdbcChatRepository implements ChatRepository {
     }
 
     @Override
-    public void add(ChatDTO chatDTO) {
+    public void add(Chat chat) throws IllegalArgumentException {
         Timestamp timestamp =
-            Timestamp.valueOf(chatDTO.getCreatedAt().toLocalDateTime());
-        jdbcTemplate.update(SQL_INSERT_CHAT, chatDTO.getId(), timestamp);
+            Timestamp.valueOf(chat.getCreatedAt().toLocalDateTime());
+        try {
+            jdbcTemplate.update(SQL_INSERT_CHAT, chat.getChatId(), timestamp);
+        } catch (DataAccessException e) {
+            throw new IllegalArgumentException("Chat with this id has already been registered");
+        }
     }
 
     @Override
-    public void remove(Long chatId) {
-        jdbcTemplate.update(SQL_DELETE_CHAT, chatId);
+    public void remove(Long chatId) throws IllegalArgumentException {
+        if( jdbcTemplate.update(SQL_DELETE_CHAT, chatId) == 0){
+            throw new IllegalArgumentException("Chat with this ID was not detected");
+        }
     }
 
     @Override
-    public List<ChatDTO> findAll() {
+    public List<Chat> findAll() {
         return jdbcTemplate.query(SQL_GET_ALL, CHAT_MAPPER);
     }
 }

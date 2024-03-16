@@ -6,19 +6,19 @@ import java.time.OffsetDateTime;
 import lombok.Value;
 
 @Value
-public class LinkDTO {
-    URI link;
+public class Link {
+    URI uri;
     OffsetDateTime createdTime;
     OffsetDateTime lastTimeUpdate;
 
     @Override
     @SuppressWarnings("hashCode")
     public boolean equals(Object o) {
-        if (!(o instanceof LinkDTO otherLinkDTO)) {
+        if (!(o instanceof Link otherLink)) {
             return false;
         }
-        return link.equals(otherLinkDTO.link)
-            && TimeManager.isEqualOffsetDateTime(createdTime, otherLinkDTO.createdTime)
-            && TimeManager.isEqualOffsetDateTime(lastTimeUpdate, otherLinkDTO.lastTimeUpdate);
+        return uri.equals(otherLink.uri)
+            && TimeManager.isEqualOffsetDateTime(createdTime, otherLink.createdTime)
+            && TimeManager.isEqualOffsetDateTime(lastTimeUpdate, otherLink.lastTimeUpdate);
     }
 }

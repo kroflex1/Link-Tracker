@@ -1,6 +1,6 @@
 package edu.java.dao.repository.jdbc;
 
-import edu.java.dao.dto.LinkAndChatDTO;
+import edu.java.dao.dto.LinkAndChat;
 import edu.java.dao.mapper.LinkAndChatMapper;
 import java.net.URI;
 import java.util.List;
@@ -38,7 +38,7 @@ public class JdbcLinkAndChatRepository implements LinkAndChatRepository {
     }
 
     @Override
-    public List<LinkAndChatDTO> findAll() {
+    public List<LinkAndChat> findAll() {
         return jdbcTemplate.query(SQL_GET_ALL, LINK_AND_CHAT_MAPPER);
     }
 }

@@ -6,16 +6,16 @@ import lombok.Value;
 
 @Value
 @SuppressWarnings("hashCode")
-public class ChatDTO {
-    Long id;
+public class Chat {
+    Long chatId;
     OffsetDateTime createdAt;
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof ChatDTO otherChatDTO)) {
+        if (!(o instanceof Chat otherChat)) {
             return false;
         }
-        return id.equals(otherChatDTO.id) && TimeManager.isEqualOffsetDateTime(createdAt, otherChatDTO.createdAt);
+        return chatId.equals(otherChat.chatId) && TimeManager.isEqualOffsetDateTime(createdAt, otherChat.createdAt);
     }
 
 }

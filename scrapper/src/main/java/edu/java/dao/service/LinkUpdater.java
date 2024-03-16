@@ -1,4 +1,5 @@
 package edu.java.dao.service;
 
-public class LinkUpdater {
+public interface LinkUpdater {
+    int update();
 }

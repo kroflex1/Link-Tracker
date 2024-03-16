@@ -1,6 +1,6 @@
 package edu.java.dao.repository;
 
-import edu.java.dao.dto.LinkAndChatDTO;
+import edu.java.dao.dto.LinkAndChat;
 import java.net.URI;
 import java.util.List;
 
@@ -11,5 +11,5 @@ public interface LinkAndChatRepository {
 
     void remove(URI link, long chatId);
 
-    List<LinkAndChatDTO> findAll();
+    List<LinkAndChat> findAll();
 }
