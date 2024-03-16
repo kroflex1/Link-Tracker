@@ -1,4 +1,4 @@
-package edu.java.dao.repository.linkRepository;
+package edu.java.dao.repository;
 
 import edu.java.dao.dto.LinkDTO;
 import edu.java.dao.repository.SimpleCrudRepository;

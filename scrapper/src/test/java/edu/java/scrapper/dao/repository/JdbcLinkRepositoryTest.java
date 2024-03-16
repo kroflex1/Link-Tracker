@@ -1,9 +1,7 @@
 package edu.java.scrapper.dao.repository;
 
-import edu.java.dao.dto.ChatDTO;
 import edu.java.dao.dto.LinkDTO;
-import edu.java.dao.repository.chatRepository.JdbcChatRepository;
-import edu.java.dao.repository.linkRepository.JdbcLinkRepository;
+import edu.java.dao.repository.jdbc.JdbcLinkRepository;
 import edu.java.scrapper.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

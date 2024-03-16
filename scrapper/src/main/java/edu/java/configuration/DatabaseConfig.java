@@ -1,8 +1,8 @@
 package edu.java.configuration;
 
-import edu.java.dao.repository.chatRepository.JdbcChatRepository;
-import edu.java.dao.repository.linkAndChatRepository.JdbcLinkAndChatRepository;
-import edu.java.dao.repository.linkRepository.JdbcLinkRepository;
+import edu.java.dao.repository.jdbc.JdbcChatRepository;
+import edu.java.dao.repository.jdbc.JdbcLinkAndChatRepository;
+import edu.java.dao.repository.jdbc.JdbcLinkRepository;
 import jakarta.validation.constraints.NotEmpty;
 import javax.sql.DataSource;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -1,4 +1,4 @@
-package edu.java.dao.repository.linkRepository;
+package edu.java.dao.repository.jdbc;
 
 import edu.java.dao.dto.LinkDTO;
 import edu.java.dao.mapper.LinkDTOMapper;
@@ -6,6 +6,7 @@ import java.net.URI;
 import java.sql.Timestamp;
 import java.util.List;
 import javax.sql.DataSource;
+import edu.java.dao.repository.LinkRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class JdbcLinkRepository implements LinkRepository {

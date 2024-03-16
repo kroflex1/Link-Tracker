@@ -1,10 +1,11 @@
-package edu.java.dao.repository.chatRepository;
+package edu.java.dao.repository.jdbc;
 
 import edu.java.dao.dto.ChatDTO;
 import edu.java.dao.mapper.ChatDTOMapper;
 import java.sql.Timestamp;
 import java.util.List;
 import javax.sql.DataSource;
+import edu.java.dao.repository.ChatRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class JdbcChatRepository implements ChatRepository {

@@ -1,7 +1,7 @@
 package edu.java.scrapper.dao.repository;
 
 import edu.java.dao.dto.ChatDTO;
-import edu.java.dao.repository.chatRepository.JdbcChatRepository;
+import edu.java.dao.repository.jdbc.JdbcChatRepository;
 import edu.java.scrapper.IntegrationTest;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;

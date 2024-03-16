@@ -1,10 +1,11 @@
-package edu.java.dao.repository.linkAndChatRepository;
+package edu.java.dao.repository.jdbc;
 
 import edu.java.dao.dto.LinkAndChatDTO;
 import edu.java.dao.mapper.LinkAndChatMapper;
 import java.net.URI;
 import java.util.List;
 import javax.sql.DataSource;
+import edu.java.dao.repository.LinkAndChatRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class JdbcLinkAndChatRepository implements LinkAndChatRepository {

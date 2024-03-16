@@ -1,4 +1,4 @@
-package edu.java.dao.repository.chatRepository;
+package edu.java.dao.repository;
 
 import edu.java.dao.dto.ChatDTO;
 import edu.java.dao.repository.SimpleCrudRepository;

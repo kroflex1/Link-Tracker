@@ -1,4 +1,4 @@
-package edu.java.dao.repository.linkAndChatRepository;
+package edu.java.dao.repository;
 
 import edu.java.dao.dto.LinkAndChatDTO;
 import java.net.URI;
