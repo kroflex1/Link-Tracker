@@ -3,7 +3,7 @@
 
 CREATE TABLE link_and_chat
 (
-    id      INT          NOT NULL,
+    id      SERIAL       NOT NULL,
     link    VARCHAR(300) NOT NULL,
     chat_id BIGINT       NOT NULL,
 
