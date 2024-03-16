@@ -21,7 +21,7 @@ public class JdbcLinkAndChatRepository implements LinkAndChatRepository {
 
     @Override
     public void add(URI link, long chatId) {
-        jdbcTemplate.update(SQL_INSERT, link, chatId);
+        jdbcTemplate.update(SQL_INSERT, link.toString(), chatId);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class JdbcLinkAndChatRepository implements LinkAndChatRepository {
 
     @Override
     public void remove(URI link, long chatId) {
-        jdbcTemplate.update(SQL_DELETE_BY_LINK_AND_CHATID, link, chatId);
+        jdbcTemplate.update(SQL_DELETE_BY_LINK_AND_CHATID, link.toString(), chatId);
     }
 
     @Override

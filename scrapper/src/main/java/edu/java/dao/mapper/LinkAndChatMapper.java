@@ -9,6 +9,6 @@ import org.springframework.jdbc.core.RowMapper;
 public class LinkAndChatMapper implements RowMapper<LinkAndChatDTO> {
     @Override
     public LinkAndChatDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new LinkAndChatDTO(rs.getLong(""), URI.create(rs.getString("link")), rs.getLong("chatId"));
+        return new LinkAndChatDTO(rs.getLong("id"), URI.create(rs.getString("link")), rs.getLong("chat_id"));
     }
 }

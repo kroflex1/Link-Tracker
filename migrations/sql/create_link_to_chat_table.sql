@@ -8,6 +8,6 @@ CREATE TABLE link_and_chat
     chat_id BIGINT       NOT NULL,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (link) REFERENCES links (link),
-    FOREIGN KEY (chat_id) REFERENCES chats (chat_id)
+    FOREIGN KEY (link) REFERENCES links (link) ON DELETE CASCADE,
+    FOREIGN KEY (chat_id) REFERENCES chats (chat_id) ON DELETE CASCADE
 )
