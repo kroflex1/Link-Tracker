@@ -1,10 +1,10 @@
 package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.DAO.InMemoryUserDAO;
-import edu.java.bot.DAO.UserDAO;
+import edu.java.bot.dao.InMemoryChatDAO;
+import edu.java.bot.dao.ChatDAO;
 import edu.java.bot.UtilsForTests;
-import edu.java.bot.model.UserModel;
+import edu.java.bot.model.ChatModel;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
@@ -18,11 +18,11 @@ public class ListCommandTest {
 
     @Test
     public void testReturnSpecialMessageWhenListOfLinksIsEmpty() {
-        UserDAO mockUserDAO = Mockito.mock(InMemoryUserDAO.class);
+        ChatDAO mockChatDAO = Mockito.mock(InMemoryChatDAO.class);
         Update mockUpdate = UtilsForTests.getMockUpdate(1L);
-        Mockito.when(mockUserDAO.getUserById(anyLong())).thenReturn(Optional.of(new UserModel(1L)));
+        Mockito.when(mockChatDAO.getChatById(anyLong())).thenReturn(Optional.of(new ChatModel(1L)));
 
-        ListCommand listCommand = new ListCommand(mockUserDAO);
+        ListCommand listCommand = new ListCommand(mockChatDAO);
         String actual = listCommand.handle(mockUpdate).getParameters().get("text").toString();
         assertEquals("У вас нет отслеживаемых ссылок", actual);
     }
@@ -30,13 +30,13 @@ public class ListCommandTest {
     @Test
     public void testReturnListOfTrackedLinks() {
         Set<String> expectedTrackedLinks = Set.of("firstLink", "secondLink", "thirrdLink");
-        UserDAO mockUserDAO = Mockito.mock(InMemoryUserDAO.class);
-        UserModel mockUserModel = Mockito.mock(UserModel.class);
+        ChatDAO mockChatDAO = Mockito.mock(InMemoryChatDAO.class);
+        ChatModel mockChatModel = Mockito.mock(ChatModel.class);
         Update mockUpdate = UtilsForTests.getMockUpdate(1L);
-        Mockito.when(mockUserDAO.getUserById(anyLong())).thenReturn(Optional.of(mockUserModel));
-        Mockito.when(mockUserModel.getLinks()).thenReturn(expectedTrackedLinks);
+        Mockito.when(mockChatDAO.getChatById(anyLong())).thenReturn(Optional.of(mockChatModel));
+        Mockito.when(mockChatModel.getLinks()).thenReturn(expectedTrackedLinks);
 
-        ListCommand listCommand = new ListCommand(mockUserDAO);
+        ListCommand listCommand = new ListCommand(mockChatDAO);
         String message = listCommand.handle(mockUpdate).getParameters().get("text").toString();
         Set<String> actualLinks = Arrays.stream(message.split("\n")).skip(1).collect(Collectors.toSet());
         assertEquals(expectedTrackedLinks, actualLinks);

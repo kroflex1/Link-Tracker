@@ -2,7 +2,7 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.DAO.UserDAO;
+import edu.java.bot.dao.ChatDAO;
 import edu.java.bot.handler.GitHubHandler;
 import edu.java.bot.handler.StackOverflowHandler;
 import edu.java.bot.handler.UrlHandler;
@@ -11,8 +11,8 @@ public class TrackCommand extends CompositeCommand {
     private static final String OK_MESSAGE = "Теперь ваша ссылка отслеживается";
     private final UrlHandler urlHandler;
 
-    public TrackCommand(UserDAO userDAO) {
-        super(userDAO);
+    public TrackCommand(ChatDAO chatDAO) {
+        super(chatDAO);
         urlHandler = new GitHubHandler();
         urlHandler.setNextUrlHandler(new StackOverflowHandler());
     }
@@ -42,8 +42,8 @@ public class TrackCommand extends CompositeCommand {
         if (!urlHandler.isValidLink(link)) {
             return new SendMessage(update.message().chat().id(), getWrongLinkFormatMessage());
         }
-        Long userId = update.message().from().id();
-        userDAO.addTrackedLink(userId, link);
+        Long chatId = update.message().chat().id();
+        chatDAO.addTrackedLink(chatId, link);
         return new SendMessage(update.message().chat().id(), OK_MESSAGE);
     }
 

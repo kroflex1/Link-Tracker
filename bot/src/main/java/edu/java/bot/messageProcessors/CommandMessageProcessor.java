@@ -2,13 +2,13 @@ package edu.java.bot.messageProcessors;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.DAO.UserDAO;
 import edu.java.bot.commands.Command;
+import edu.java.bot.dao.ChatDAO;
 
 public class CommandMessageProcessor extends UserMessageProcessor {
 
-    public CommandMessageProcessor(UserDAO userDAO) {
-        super(userDAO);
+    public CommandMessageProcessor(ChatDAO chatDAO) {
+        super(chatDAO);
     }
 
     @Override
