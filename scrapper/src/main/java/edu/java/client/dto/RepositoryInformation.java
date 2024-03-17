@@ -1,4 +1,4 @@
-package edu.java.dto;
+package edu.java.client.dto;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 import java.time.OffsetDateTime;

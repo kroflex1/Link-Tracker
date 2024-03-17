@@ -20,7 +20,7 @@ public class JdbcLinkRepository implements LinkRepository {
     private static final String SQL_DELETE_LINK = "DELETE FROM links WHERE link = ?";
     private static final String SQL_GET_ALL_LINKS = "SELECT * FROM links";
     private static final String SQL_GET_ALL_OUTDATED_LINKS = "SELECT * FROM links WHERE last_check_time <= ?";
-    private static final String SQL_GET_BY_URL = "SELECT * FROM links WHERE link = ?"
+    private static final String SQL_GET_BY_URL = "SELECT * FROM links WHERE link = ?";
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcLinkRepository(DataSource dataSource) {

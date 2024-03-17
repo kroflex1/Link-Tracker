@@ -7,14 +7,17 @@ import jakarta.validation.constraints.NotEmpty;
 import javax.sql.DataSource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
 @ConfigurationProperties(prefix = "spring.datasource", ignoreUnknownFields = false)
 @EnableTransactionManagement
-public record DatabaseConfig(@NotEmpty String url, @NotEmpty String username, @NotEmpty String password,
+public record DataBaseConfig(@NotEmpty String url, @NotEmpty String username, @NotEmpty String password,
                              @NotEmpty String driver) {
 
     @Bean
@@ -31,6 +34,7 @@ public record DatabaseConfig(@NotEmpty String url, @NotEmpty String username, @N
     public JdbcLinkAndChatRepository jdbcLinkAndChatRepository() {
         return new JdbcLinkAndChatRepository(dataSource());
     }
+
 
     private DataSource dataSource() {
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
