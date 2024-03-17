@@ -1,11 +1,11 @@
 package edu.java.dao.repository.jdbc;
 
-import edu.java.dao.dto.Chat;
+import edu.java.dao.dto.ChatDTO;
 import edu.java.dao.mapper.ChatDTOMapper;
+import edu.java.dao.repository.ChatRepository;
 import java.sql.Timestamp;
 import java.util.List;
 import javax.sql.DataSource;
-import edu.java.dao.repository.ChatRepository;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -22,7 +22,7 @@ public class JdbcChatRepository implements ChatRepository {
     }
 
     @Override
-    public void add(Chat chat) throws IllegalArgumentException {
+    public void add(ChatDTO chat) throws IllegalArgumentException {
         Timestamp timestamp =
             Timestamp.valueOf(chat.getCreatedAt().toLocalDateTime());
         try {
@@ -34,13 +34,13 @@ public class JdbcChatRepository implements ChatRepository {
 
     @Override
     public void remove(Long chatId) throws IllegalArgumentException {
-        if( jdbcTemplate.update(SQL_DELETE_CHAT, chatId) == 0){
+        if (jdbcTemplate.update(SQL_DELETE_CHAT, chatId) == 0) {
             throw new IllegalArgumentException("Chat with this ID was not detected");
         }
     }
 
     @Override
-    public List<Chat> findAll() {
+    public List<ChatDTO> findAll() {
         return jdbcTemplate.query(SQL_GET_ALL, CHAT_MAPPER);
     }
 }

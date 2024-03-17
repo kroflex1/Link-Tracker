@@ -6,16 +6,16 @@ import java.time.OffsetDateTime;
 import lombok.Value;
 
 @Value
-public class Link {
+public class LinkDTO {
     URI url;
     OffsetDateTime createdTime;
     OffsetDateTime lastCheckTime;
     OffsetDateTime lastActivityTime;
 
     @Override
-    @SuppressWarnings("hashCode")
+    @SuppressWarnings("EqualsHashCode")
     public boolean equals(Object o) {
-        if (!(o instanceof Link otherLink)) {
+        if (!(o instanceof LinkDTO otherLink)) {
             return false;
         }
         return url.equals(otherLink.url)

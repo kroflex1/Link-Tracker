@@ -1,7 +1,6 @@
 package edu.java.scrapper.dao.repository;
 
-import edu.java.dao.dto.Chat;
-import edu.java.dao.dto.Link;
+import edu.java.dao.dto.LinkDTO;
 import edu.java.dao.repository.jdbc.JdbcLinkRepository;
 import edu.java.scrapper.IntegrationTest;
 import org.junit.jupiter.api.Test;
@@ -26,11 +25,11 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     void testAddNewLink() {
-        Link link =
-            new Link(URI.create("http://link"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
+        LinkDTO link =
+            new LinkDTO(URI.create("http://link"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
         jdbcLinkRepository.add(link);
 
-        List<Link> links = jdbcLinkRepository.findAll();
+        List<LinkDTO> links = jdbcLinkRepository.findAll();
 
         assertEquals(link, links.getFirst());
     }
@@ -40,15 +39,15 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     @Rollback
     void tesGetAllLinks() {
         int numberOfLinks = 5;
-        List<Link> expected = new ArrayList<>();
+        List<LinkDTO> expected = new ArrayList<>();
         for (int i = 1; i <= numberOfLinks; i++) {
-            Link newLink =
-                new Link(URI.create("http://" + i), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
+            LinkDTO newLink =
+                new LinkDTO(URI.create("http://" + i), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
             expected.add(newLink);
             jdbcLinkRepository.add(newLink);
         }
 
-        List<Link> actual = jdbcLinkRepository.findAll();
+        List<LinkDTO> actual = jdbcLinkRepository.findAll();
 
         assertEquals(expected, actual);
     }
@@ -61,18 +60,18 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
         int numberOfOldLinks = 3;
         for (int i = 1; i <= numberOfLinks; i++) {
             OffsetDateTime date = OffsetDateTime.now();
-            Link newLink = new Link(URI.create("http://" + i), date, date, date);
+            LinkDTO newLink = new LinkDTO(URI.create("http://" + i), date, date, date);
             jdbcLinkRepository.add(newLink);
         }
-        List<Link> expected = new ArrayList<>();
+        List<LinkDTO> expected = new ArrayList<>();
         for (int i = 1; i <= numberOfOldLinks; i++) {
             OffsetDateTime date = OffsetDateTime.now().minusDays(2);
-            Link newLink = new Link(URI.create("http://" + (numberOfLinks + i)), date, date, date);
+            LinkDTO newLink = new LinkDTO(URI.create("http://" + (numberOfLinks + i)), date, date, date);
             expected.add(newLink);
             jdbcLinkRepository.add(newLink);
         }
 
-        List<Link> actual = jdbcLinkRepository.findAllOutdatedLinks(Duration.ofDays(1));
+        List<LinkDTO> actual = jdbcLinkRepository.findAllOutdatedLinks(Duration.ofDays(1));
 
         assertEquals(expected, actual);
     }
@@ -81,14 +80,14 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     void testRemoveLink() {
-        Link firstLink =
-            new Link(URI.create("http://" + 1), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
-        Link secondLink =
-            new Link(URI.create("http://" + 2), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
+        LinkDTO firstLink =
+            new LinkDTO(URI.create("http://" + 1), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
+        LinkDTO secondLink =
+            new LinkDTO(URI.create("http://" + 2), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
         jdbcLinkRepository.add(firstLink);
         jdbcLinkRepository.add(secondLink);
 
-        List<Link> links = jdbcLinkRepository.findAll();
+        List<LinkDTO> links = jdbcLinkRepository.findAll();
         assertEquals(2, links.size());
         jdbcLinkRepository.remove(URI.create("http://" + 1));
         assertEquals(List.of(secondLink), jdbcLinkRepository.findAll());
@@ -98,7 +97,7 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     void testAddAlreadyExistingLink() {
-        Link link = new Link(URI.create("http://1"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
+        LinkDTO link = new LinkDTO(URI.create("http://1"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
         jdbcLinkRepository.add(link);
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
             jdbcLinkRepository.add(link));

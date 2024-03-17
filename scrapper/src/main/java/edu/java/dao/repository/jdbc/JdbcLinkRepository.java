@@ -1,15 +1,14 @@
 package edu.java.dao.repository.jdbc;
 
-import edu.java.dao.dto.Link;
+import edu.java.dao.dto.LinkDTO;
 import edu.java.dao.mapper.LinkDTOMapper;
+import edu.java.dao.repository.LinkRepository;
 import java.net.URI;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.OffsetDateTime;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
 import javax.sql.DataSource;
-import edu.java.dao.repository.LinkRepository;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -28,7 +27,7 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
-    public void add(Link link) throws IllegalArgumentException {
+    public void add(LinkDTO link) throws IllegalArgumentException {
         Timestamp createdTime =
             Timestamp.valueOf(link.getCreatedTime().toLocalDateTime());
         Timestamp lastTimeUpdate = Timestamp.valueOf(link.getLastCheckTime().toLocalDateTime());
@@ -54,8 +53,8 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
-    public Link get(URI url) throws IllegalArgumentException {
-        List<Link> result = jdbcTemplate.query(SQL_DELETE_LINK, LINK_MAPPER, url.toString());
+    public LinkDTO get(URI url) throws IllegalArgumentException {
+        List<LinkDTO> result = jdbcTemplate.query(SQL_DELETE_LINK, LINK_MAPPER, url.toString());
         if (result.size() != 1) {
             throw new IllegalArgumentException(String.format("Link %s was not found", url));
         }
@@ -63,12 +62,12 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
-    public List<Link> findAll() {
+    public List<LinkDTO> findAll() {
         return jdbcTemplate.query(SQL_GET_ALL_LINKS, LINK_MAPPER);
     }
 
     @Override
-    public List<Link> findAllOutdatedLinks(Duration duration) {
+    public List<LinkDTO> findAllOutdatedLinks(Duration duration) {
         OffsetDateTime outdated = OffsetDateTime.now().minusSeconds(duration.toSeconds());
         return jdbcTemplate.query(
             SQL_GET_ALL_OUTDATED_LINKS,

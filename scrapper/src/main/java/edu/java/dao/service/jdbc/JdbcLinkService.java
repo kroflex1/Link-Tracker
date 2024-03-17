@@ -1,7 +1,7 @@
 package edu.java.dao.service.jdbc;
 
-import edu.java.dao.dto.Link;
-import edu.java.dao.dto.LinkAndChat;
+import edu.java.dao.dto.LinkAndChatDTO;
+import edu.java.dao.dto.LinkDTO;
 import edu.java.dao.repository.jdbc.JdbcLinkAndChatRepository;
 import edu.java.dao.repository.jdbc.JdbcLinkRepository;
 import edu.java.dao.service.LinkService;
@@ -26,30 +26,30 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
-    public Link add(long tgChatId, URI url) throws IllegalArgumentException {
-        Link link = new Link(url, OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
+    public LinkDTO add(long tgChatId, URI url) throws IllegalArgumentException {
+        LinkDTO link = new LinkDTO(url, OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
         linkRepository.add(link);
-        linkAndChatRepository.add(new LinkAndChat(url, tgChatId));
+        linkAndChatRepository.add(new LinkAndChatDTO(url, tgChatId));
         return link;
     }
 
     @Override
-    public Link remove(long tgChatId, URI url) throws IllegalArgumentException {
-        linkAndChatRepository.remove(new LinkAndChat(url, tgChatId));
+    public LinkDTO remove(long tgChatId, URI url) throws IllegalArgumentException {
+        linkAndChatRepository.remove(new LinkAndChatDTO(url, tgChatId));
         return null;
     }
 
     @Override
-    public Collection<Link> listAll(long tgChatId) {
-        List<Link> links = new ArrayList<>();
-        for (LinkAndChat record : linkAndChatRepository.finaAll(tgChatId)) {
-            links.add(linkRepository.get(record.getUrl()));
+    public Collection<LinkDTO> listAll(long tgChatId) {
+        List<LinkDTO> links = new ArrayList<>();
+        for (LinkAndChatDTO linkAndChat : linkAndChatRepository.finaAll(tgChatId)) {
+            links.add(linkRepository.get(linkAndChat.getUrl()));
         }
         return links;
     }
 
     @Override
-    public Collection<Link> listAllOutdated(Duration duration) {
+    public Collection<LinkDTO> listAllOutdated(Duration duration) {
         return linkRepository.findAllOutdatedLinks(duration);
     }
 }

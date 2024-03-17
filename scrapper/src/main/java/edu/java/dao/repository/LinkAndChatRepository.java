@@ -1,10 +1,11 @@
 package edu.java.dao.repository;
 
-import edu.java.dao.dto.LinkAndChat;
+import edu.java.dao.dto.LinkAndChatDTO;
 import java.net.URI;
 import java.util.List;
 
-public interface LinkAndChatRepository extends SimpleCrudRepository<LinkAndChat, LinkAndChat> {
-    List<LinkAndChat> findAll(URI link);
-    List<LinkAndChat> finaAll(Long chatId);
+public interface LinkAndChatRepository extends SimpleCrudRepository<LinkAndChatDTO, LinkAndChatDTO> {
+    List<LinkAndChatDTO> findAll(URI link);
+
+    List<LinkAndChatDTO> finaAll(Long chatId);
 }

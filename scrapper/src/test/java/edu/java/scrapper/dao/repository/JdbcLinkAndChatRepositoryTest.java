@@ -1,8 +1,8 @@
 package edu.java.scrapper.dao.repository;
 
-import edu.java.dao.dto.Chat;
-import edu.java.dao.dto.LinkAndChat;
-import edu.java.dao.dto.Link;
+import edu.java.dao.dto.ChatDTO;
+import edu.java.dao.dto.LinkAndChatDTO;
+import edu.java.dao.dto.LinkDTO;
 import edu.java.dao.repository.jdbc.JdbcChatRepository;
 import edu.java.dao.repository.jdbc.JdbcLinkAndChatRepository;
 import java.net.URI;
@@ -32,14 +32,15 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     void testAddNewChat() {
-        Chat chat = new Chat(1L, OffsetDateTime.now());
-        Link link = new Link(URI.create("http://somelink"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
-        LinkAndChat expected = new LinkAndChat(link.getUrl(), chat.getChatId());
+        ChatDTO chat = new ChatDTO(1L, OffsetDateTime.now());
+        LinkDTO
+            link = new LinkDTO(URI.create("http://somelink"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
+        LinkAndChatDTO expected = new LinkAndChatDTO(link.getUrl(), chat.getChatId());
         chatRepository.add(chat);
         linkRepository.add(link);
         linkAndChatRepository.add(expected);
 
-        List<LinkAndChat> actual = linkAndChatRepository.findAll();
+        List<LinkAndChatDTO> actual = linkAndChatRepository.findAll();
 
         assertEquals(expected, actual.getFirst());
     }
@@ -49,17 +50,17 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     @Rollback
     void tesGetAllChats() {
         int numberOfRecords = 5;
-        List<LinkAndChat> expected = new ArrayList<>();
+        List<LinkAndChatDTO> expected = new ArrayList<>();
         for (long i = 1; i <= numberOfRecords; i++) {
             URI link = URI.create("http://" + i);
-            linkRepository.add(new Link(link, OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now()));
-            chatRepository.add(new Chat(i, OffsetDateTime.now()));
-            LinkAndChat newRecord = new LinkAndChat(link, i);
+            linkRepository.add(new LinkDTO(link, OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now()));
+            chatRepository.add(new ChatDTO(i, OffsetDateTime.now()));
+            LinkAndChatDTO newRecord = new LinkAndChatDTO(link, i);
             expected.add(newRecord);
             linkAndChatRepository.add(newRecord);
         }
 
-        List<LinkAndChat> actual = linkAndChatRepository.findAll();
+        List<LinkAndChatDTO> actual = linkAndChatRepository.findAll();
 
         assertEquals(expected, actual);
     }
@@ -68,14 +69,15 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     void testRemoveChatByLinkAndChatId() {
-        Chat chat = new Chat(1L, OffsetDateTime.now());
-        Link link = new Link(URI.create("http://somelink"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
-        LinkAndChat record = new LinkAndChat(link.getUrl(), chat.getChatId());
+        ChatDTO chat = new ChatDTO(1L, OffsetDateTime.now());
+        LinkDTO
+            link = new LinkDTO(URI.create("http://somelink"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
+        LinkAndChatDTO record = new LinkAndChatDTO(link.getUrl(), chat.getChatId());
         chatRepository.add(chat);
         linkRepository.add(link);
         linkAndChatRepository.add(record);
 
-        List<LinkAndChat> records = linkAndChatRepository.findAll();
+        List<LinkAndChatDTO> records = linkAndChatRepository.findAll();
         assertEquals(1, records.size());
         linkAndChatRepository.remove(record);
         assertEquals(new ArrayList<>(), linkAndChatRepository.findAll());
@@ -85,9 +87,10 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     void testAddAlreadyExistsLinkAndChat() {
-        Chat chat = new Chat(1L, OffsetDateTime.now());
-        Link link = new Link(URI.create("http://somelink"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
-        LinkAndChat record = new LinkAndChat(link.getUrl(), chat.getChatId());
+        ChatDTO chat = new ChatDTO(1L, OffsetDateTime.now());
+        LinkDTO
+            link = new LinkDTO(URI.create("http://somelink"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
+        LinkAndChatDTO record = new LinkAndChatDTO(link.getUrl(), chat.getChatId());
         chatRepository.add(chat);
         linkRepository.add(link);
         linkAndChatRepository.add(record);
@@ -101,7 +104,7 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     void testRemoveNonExistentRecord() {
-        LinkAndChat record = new LinkAndChat(URI.create("http://somelink"), 1L);
+        LinkAndChatDTO record = new LinkAndChatDTO(URI.create("http://somelink"), 1L);
 
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
             linkAndChatRepository.remove(record));

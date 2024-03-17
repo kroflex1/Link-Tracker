@@ -1,6 +1,6 @@
 package edu.java.dao.repository.jdbc;
 
-import edu.java.dao.dto.LinkAndChat;
+import edu.java.dao.dto.LinkAndChatDTO;
 import edu.java.dao.mapper.LinkAndChatMapper;
 import edu.java.dao.repository.LinkAndChatRepository;
 import java.net.URI;
@@ -25,39 +25,43 @@ public class JdbcLinkAndChatRepository implements LinkAndChatRepository {
     }
 
     @Override
-    public void add(LinkAndChat record) throws IllegalArgumentException {
+    public void add(LinkAndChatDTO linkAndChat) throws IllegalArgumentException {
         try {
-            jdbcTemplate.update(SQL_INSERT, record.getUrl().toString(), record.getChatId());
+            jdbcTemplate.update(SQL_INSERT, linkAndChat.getUrl().toString(), linkAndChat.getChatId());
         } catch (DataAccessException e) {
             throw new IllegalArgumentException(String.format(
                 "This chat with id %d is already tracking link %s",
-                record.getChatId(),
-                record.getUrl()
+                linkAndChat.getChatId(),
+                linkAndChat.getUrl()
             ));
         }
     }
 
     @Override
-    public void remove(LinkAndChat record) throws IllegalArgumentException {
+    public void remove(LinkAndChatDTO linkAndChat) throws IllegalArgumentException {
         int numberOfChangedRows =
-            jdbcTemplate.update(SQL_DELETE_BY_LINK_AND_CHATID, record.getUrl().toString(), record.getChatId());
+            jdbcTemplate.update(
+                SQL_DELETE_BY_LINK_AND_CHATID,
+                linkAndChat.getUrl().toString(),
+                linkAndChat.getChatId()
+            );
         if (numberOfChangedRows == 0) {
-            throw new IllegalArgumentException(String.format("Chat with link %s wasn`t found", record.getUrl()));
+            throw new IllegalArgumentException(String.format("Chat with link %s wasn`t found", linkAndChat.getUrl()));
         }
     }
 
     @Override
-    public List<LinkAndChat> findAll() {
+    public List<LinkAndChatDTO> findAll() {
         return jdbcTemplate.query(SQL_GET_ALL_RECORDS, LINK_AND_CHAT_MAPPER);
     }
 
     @Override
-    public List<LinkAndChat> findAll(URI link) {
+    public List<LinkAndChatDTO> findAll(URI link) {
         return jdbcTemplate.query(SQL_GET_ALL_RECORDS_WITH_LINK, LINK_AND_CHAT_MAPPER, link.toString());
     }
 
     @Override
-    public List<LinkAndChat> finaAll(Long chatId) {
+    public List<LinkAndChatDTO> finaAll(Long chatId) {
         return jdbcTemplate.query(SQL_GET_ALL_RECORDS_WITH_CHAT_ID, LINK_AND_CHAT_MAPPER, chatId);
     }
 }

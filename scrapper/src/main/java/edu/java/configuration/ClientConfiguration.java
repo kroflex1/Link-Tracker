@@ -1,6 +1,5 @@
 package edu.java.configuration;
 
-
 import edu.java.client.BotClient;
 import edu.java.client.GitHubClient;
 import edu.java.client.StackOverflowClient;
@@ -33,10 +32,8 @@ public class ClientConfiguration {
         return new StackOverflowClient(stackOverflowUrl, new HttpHeaders());
     }
 
-
     @Bean
     public BotClient botClient() {
         return new BotClient(botLink);
     }
-
 }

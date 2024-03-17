@@ -1,6 +1,6 @@
 package edu.java.controller;
 
-import edu.java.dao.dto.Link;
+import edu.java.dao.dto.LinkDTO;
 import edu.java.dao.service.ChatService;
 import edu.java.dao.service.LinkService;
 import edu.java.request.AddLinkRequest;
@@ -13,11 +13,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -56,7 +52,7 @@ public class ApiController {
     @Operation(summary = "Get all tracked links")
     public ListLinksResponse getLinks(@PathVariable Long chatId) {
         List<LinkResponse> trackedLinks = new ArrayList<>();
-        for (Link link : linkService.listAll(chatId)) {
+        for (LinkDTO link : linkService.listAll(chatId)) {
             trackedLinks.add(new LinkResponse(chatId, link.getUrl()));
         }
         return new ListLinksResponse(trackedLinks.size(), trackedLinks);

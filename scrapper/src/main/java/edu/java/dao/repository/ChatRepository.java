@@ -1,7 +1,7 @@
 package edu.java.dao.repository;
 
-import edu.java.dao.dto.Chat;
+import edu.java.dao.dto.ChatDTO;
 
-public interface ChatRepository extends SimpleCrudRepository<Long, Chat> {
+public interface ChatRepository extends SimpleCrudRepository<Long, ChatDTO> {
 
 }

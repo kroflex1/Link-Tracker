@@ -4,7 +4,7 @@ import java.net.URI;
 import lombok.Value;
 
 @Value
-public class LinkAndChat {
+public class LinkAndChatDTO {
     URI url;
     Long chatId;
 }

@@ -1,6 +1,5 @@
 package edu.java.dao.repository;
 
-import org.springframework.dao.DataAccessException;
 import java.util.List;
 
 public interface SimpleCrudRepository<T, V> {
