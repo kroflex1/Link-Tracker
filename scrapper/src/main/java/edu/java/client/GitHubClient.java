@@ -2,7 +2,7 @@ package edu.java.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import edu.java.dto.RepositoryInformation;
+import edu.java.client.dto.RepositoryInformation;
 import java.util.Map;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
