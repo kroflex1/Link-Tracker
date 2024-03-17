@@ -8,7 +8,9 @@ import edu.java.dao.service.LinkService;
 import java.net.URI;
 import java.time.Duration;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,13 +41,15 @@ public class JdbcLinkService implements LinkService {
 
     @Override
     public Collection<Link> listAll(long tgChatId) {
-        linkAndChatRepository.
-        return linkRepository.findAll();
+        List<Link> links = new ArrayList<>();
+        for (LinkAndChat record : linkAndChatRepository.finaAll(tgChatId)) {
+            links.add(linkRepository.get(record.getUrl()));
+        }
+        return links;
     }
 
     @Override
-    public Collection<Link> listAll(long tgChatId, Duration duration) {
-        return linkRepository.findAllOutdatedLinks(d);
+    public Collection<Link> listAllOutdated(Duration duration) {
+        return linkRepository.findAllOutdatedLinks(duration);
     }
-
 }

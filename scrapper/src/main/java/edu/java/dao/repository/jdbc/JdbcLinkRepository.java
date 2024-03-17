@@ -20,6 +20,7 @@ public class JdbcLinkRepository implements LinkRepository {
     private static final String SQL_DELETE_LINK = "DELETE FROM links WHERE link = ?";
     private static final String SQL_GET_ALL_LINKS = "SELECT * FROM links";
     private static final String SQL_GET_ALL_OUTDATED_LINKS = "SELECT * FROM links WHERE last_check_time <= ?";
+    private static final String SQL_GET_BY_URL = "SELECT * FROM links WHERE link = ?"
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcLinkRepository(DataSource dataSource) {
@@ -50,6 +51,15 @@ public class JdbcLinkRepository implements LinkRepository {
         if (jdbcTemplate.update(SQL_DELETE_LINK, link.toString()) == 0) {
             throw new IllegalArgumentException(String.format("%s cannot be deleted because it wasn`t found", link));
         }
+    }
+
+    @Override
+    public Link get(URI url) throws IllegalArgumentException {
+        List<Link> result = jdbcTemplate.query(SQL_DELETE_LINK, LINK_MAPPER, url.toString());
+        if (result.size() != 1) {
+            throw new IllegalArgumentException(String.format("Link %s was not found", url));
+        }
+        return result.getFirst();
     }
 
     @Override
