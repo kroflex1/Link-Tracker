@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
@@ -33,13 +34,12 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     void testAddNewChat() {
         Chat chat = new Chat(1L, OffsetDateTime.now());
         Link link = new Link(URI.create("http://somelink"), OffsetDateTime.now(), OffsetDateTime.now());
+        LinkAndChat expected = new LinkAndChat(link.getUri(), chat.getChatId());
         chatRepository.add(chat);
         linkRepository.add(link);
-        linkAndChatRepository.add(link.getUri(), chat.getChatId());
+        linkAndChatRepository.add(expected);
 
-        LinkAndChat expected = new LinkAndChat(1L, link.getUri(), chat.getChatId());
         List<LinkAndChat> actual = linkAndChatRepository.findAll();
-
 
         assertEquals(expected, actual.getFirst());
     }
@@ -54,10 +54,9 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
             URI link = URI.create("http://" + i);
             linkRepository.add(new Link(link, OffsetDateTime.now(), OffsetDateTime.now()));
             chatRepository.add(new Chat(i, OffsetDateTime.now()));
-
-            LinkAndChat newRecord = new LinkAndChat(i, link, i);
+            LinkAndChat newRecord = new LinkAndChat(link, i);
             expected.add(newRecord);
-            linkAndChatRepository.add(link, i);
+            linkAndChatRepository.add(newRecord);
         }
 
         List<LinkAndChat> actual = linkAndChatRepository.findAll();
@@ -71,13 +70,41 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     void testRemoveChatByLinkAndChatId() {
         Chat chat = new Chat(1L, OffsetDateTime.now());
         Link link = new Link(URI.create("http://somelink"), OffsetDateTime.now(), OffsetDateTime.now());
+        LinkAndChat record = new LinkAndChat(link.getUri(), chat.getChatId());
         chatRepository.add(chat);
         linkRepository.add(link);
-        linkAndChatRepository.add(link.getUri(), chat.getChatId());
+        linkAndChatRepository.add(record);
 
         List<LinkAndChat> records = linkAndChatRepository.findAll();
         assertEquals(1, records.size());
-        linkAndChatRepository.remove(link.getUri(), chat.getChatId());
+        linkAndChatRepository.remove(record);
         assertEquals(new ArrayList<>(), linkAndChatRepository.findAll());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void testAddAlreadyExistsLinkAndChat() {
+        Chat chat = new Chat(1L, OffsetDateTime.now());
+        Link link = new Link(URI.create("http://somelink"), OffsetDateTime.now(), OffsetDateTime.now());
+        LinkAndChat record = new LinkAndChat(link.getUri(), chat.getChatId());
+        chatRepository.add(chat);
+        linkRepository.add(link);
+        linkAndChatRepository.add(record);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            linkAndChatRepository.add(record));
+        assertEquals("This chat with id 1 is already tracking link http://somelink", exception.getMessage());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void testRemoveNonExistentRecord() {
+        LinkAndChat record = new LinkAndChat(URI.create("http://somelink"), 1L);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            linkAndChatRepository.remove(record));
+        assertEquals("Chat with link http://somelink wasn`t found", exception.getMessage());
     }
 }

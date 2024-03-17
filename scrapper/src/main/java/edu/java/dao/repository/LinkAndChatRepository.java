@@ -4,12 +4,5 @@ import edu.java.dao.dto.LinkAndChat;
 import java.net.URI;
 import java.util.List;
 
-public interface LinkAndChatRepository {
-    void add(URI link, long chatId);
-
-    void remove(long id);
-
-    void remove(URI link, long chatId);
-
-    List<LinkAndChat> findAll();
+public interface LinkAndChatRepository extends SimpleCrudRepository<LinkAndChat, LinkAndChat> {
 }

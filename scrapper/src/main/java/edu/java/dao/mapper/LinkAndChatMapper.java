@@ -9,6 +9,6 @@ import org.springframework.jdbc.core.RowMapper;
 public class LinkAndChatMapper implements RowMapper<LinkAndChat> {
     @Override
     public LinkAndChat mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new LinkAndChat(rs.getLong("id"), URI.create(rs.getString("link")), rs.getLong("chat_id"));
+        return new LinkAndChat(URI.create(rs.getString("link")), rs.getLong("chat_id"));
     }
 }
