@@ -5,6 +5,6 @@ import lombok.Value;
 
 @Value
 public class LinkAndChat {
-    URI link;
+    URI url;
     Long chatId;
 }

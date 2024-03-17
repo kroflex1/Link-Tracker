@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,8 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     void testAddNewLink() {
-        Link link = new Link(URI.create("http://link"), OffsetDateTime.now(), OffsetDateTime.now());
+        Link link =
+            new Link(URI.create("http://link"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
         jdbcLinkRepository.add(link);
 
         List<Link> links = jdbcLinkRepository.findAll();
@@ -37,10 +39,11 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     void tesGetAllLinks() {
-        int numberOfChats = 5;
+        int numberOfLinks = 5;
         List<Link> expected = new ArrayList<>();
-        for (int i = 1; i <= numberOfChats; i++) {
-            Link newLink = new Link(URI.create("http://" + i), OffsetDateTime.now(), OffsetDateTime.now());
+        for (int i = 1; i <= numberOfLinks; i++) {
+            Link newLink =
+                new Link(URI.create("http://" + i), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
             expected.add(newLink);
             jdbcLinkRepository.add(newLink);
         }
@@ -53,9 +56,35 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
+    void tesGetAllOutdatedLinks() {
+        int numberOfLinks = 4;
+        int numberOfOldLinks = 3;
+        for (int i = 1; i <= numberOfLinks; i++) {
+            OffsetDateTime date = OffsetDateTime.now();
+            Link newLink = new Link(URI.create("http://" + i), date, date, date);
+            jdbcLinkRepository.add(newLink);
+        }
+        List<Link> expected = new ArrayList<>();
+        for (int i = 1; i <= numberOfOldLinks; i++) {
+            OffsetDateTime date = OffsetDateTime.now().minusDays(2);
+            Link newLink = new Link(URI.create("http://" + (numberOfLinks + i)), date, date, date);
+            expected.add(newLink);
+            jdbcLinkRepository.add(newLink);
+        }
+
+        List<Link> actual = jdbcLinkRepository.findAllOutdatedLinks(Duration.ofDays(1));
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Transactional
+    @Rollback
     void testRemoveLink() {
-        Link firstLink = new Link(URI.create("http://" + 1), OffsetDateTime.now(), OffsetDateTime.now());
-        Link secondLink = new Link(URI.create("http://" + 2), OffsetDateTime.now(), OffsetDateTime.now());
+        Link firstLink =
+            new Link(URI.create("http://" + 1), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
+        Link secondLink =
+            new Link(URI.create("http://" + 2), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
         jdbcLinkRepository.add(firstLink);
         jdbcLinkRepository.add(secondLink);
 
@@ -69,7 +98,7 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     void testAddAlreadyExistingLink() {
-        Link link = new Link(URI.create("http://1"), OffsetDateTime.now(), OffsetDateTime.now());
+        Link link = new Link(URI.create("http://1"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
         jdbcLinkRepository.add(link);
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
             jdbcLinkRepository.add(link));

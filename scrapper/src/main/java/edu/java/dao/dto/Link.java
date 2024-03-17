@@ -7,9 +7,10 @@ import lombok.Value;
 
 @Value
 public class Link {
-    URI uri;
+    URI url;
     OffsetDateTime createdTime;
-    OffsetDateTime lastTimeUpdate;
+    OffsetDateTime lastCheckTime;
+    OffsetDateTime lastActivityTime;
 
     @Override
     @SuppressWarnings("hashCode")
@@ -17,8 +18,9 @@ public class Link {
         if (!(o instanceof Link otherLink)) {
             return false;
         }
-        return uri.equals(otherLink.uri)
+        return url.equals(otherLink.url)
             && TimeManager.isEqualOffsetDateTime(createdTime, otherLink.createdTime)
-            && TimeManager.isEqualOffsetDateTime(lastTimeUpdate, otherLink.lastTimeUpdate);
+            && TimeManager.isEqualOffsetDateTime(lastCheckTime, otherLink.lastCheckTime)
+            && TimeManager.isEqualOffsetDateTime(lastActivityTime, otherLink.lastActivityTime);
     }
 }

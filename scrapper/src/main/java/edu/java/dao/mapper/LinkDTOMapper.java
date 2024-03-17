@@ -11,9 +11,12 @@ import org.springframework.jdbc.core.RowMapper;
 public class LinkDTOMapper implements RowMapper<Link> {
     @SneakyThrows @Override
     public Link mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new Link(new URI(rs.getString("link")),
+        return new Link(
+            new URI(rs.getString("link")),
             TimeManager.convertTimestampToOffsetDateTime(rs.getTimestamp("created_at")),
-            TimeManager.convertTimestampToOffsetDateTime(rs.getTimestamp("last_time_update"))
+            TimeManager.convertTimestampToOffsetDateTime(rs.getTimestamp("last_check_time")),
+            TimeManager.convertTimestampToOffsetDateTime(rs.getTimestamp("last_activity_time")
+            )
         );
     }
 }

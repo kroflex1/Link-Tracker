@@ -33,8 +33,8 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     @Rollback
     void testAddNewChat() {
         Chat chat = new Chat(1L, OffsetDateTime.now());
-        Link link = new Link(URI.create("http://somelink"), OffsetDateTime.now(), OffsetDateTime.now());
-        LinkAndChat expected = new LinkAndChat(link.getUri(), chat.getChatId());
+        Link link = new Link(URI.create("http://somelink"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
+        LinkAndChat expected = new LinkAndChat(link.getUrl(), chat.getChatId());
         chatRepository.add(chat);
         linkRepository.add(link);
         linkAndChatRepository.add(expected);
@@ -52,7 +52,7 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
         List<LinkAndChat> expected = new ArrayList<>();
         for (long i = 1; i <= numberOfRecords; i++) {
             URI link = URI.create("http://" + i);
-            linkRepository.add(new Link(link, OffsetDateTime.now(), OffsetDateTime.now()));
+            linkRepository.add(new Link(link, OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now()));
             chatRepository.add(new Chat(i, OffsetDateTime.now()));
             LinkAndChat newRecord = new LinkAndChat(link, i);
             expected.add(newRecord);
@@ -69,8 +69,8 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     @Rollback
     void testRemoveChatByLinkAndChatId() {
         Chat chat = new Chat(1L, OffsetDateTime.now());
-        Link link = new Link(URI.create("http://somelink"), OffsetDateTime.now(), OffsetDateTime.now());
-        LinkAndChat record = new LinkAndChat(link.getUri(), chat.getChatId());
+        Link link = new Link(URI.create("http://somelink"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
+        LinkAndChat record = new LinkAndChat(link.getUrl(), chat.getChatId());
         chatRepository.add(chat);
         linkRepository.add(link);
         linkAndChatRepository.add(record);
@@ -86,8 +86,8 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     @Rollback
     void testAddAlreadyExistsLinkAndChat() {
         Chat chat = new Chat(1L, OffsetDateTime.now());
-        Link link = new Link(URI.create("http://somelink"), OffsetDateTime.now(), OffsetDateTime.now());
-        LinkAndChat record = new LinkAndChat(link.getUri(), chat.getChatId());
+        Link link = new Link(URI.create("http://somelink"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
+        LinkAndChat record = new LinkAndChat(link.getUrl(), chat.getChatId());
         chatRepository.add(chat);
         linkRepository.add(link);
         linkAndChatRepository.add(record);
