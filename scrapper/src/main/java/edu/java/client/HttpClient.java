@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 
 public abstract class HttpClient {
 
-    private final WebClient webClient;
+    protected final WebClient webClient;
     protected final ObjectMapper objectMapper;
 
     public HttpClient(String baseUrl) {

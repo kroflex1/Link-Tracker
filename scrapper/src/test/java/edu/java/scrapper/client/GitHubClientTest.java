@@ -8,6 +8,7 @@ import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import edu.java.client.GitHubClient;
 import edu.java.client.dto.RepositoryInformation;
+import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @WireMockTest(httpPort = 8080)
 public class GitHubClientTest {
     private static final GitHubClient GITHUB_CLIENT = new GitHubClient("http://localhost:8080", new HttpHeaders());
-
     private static final String OWNER_NAME = "test-user";
     private static final String REPOSITORY_NAME = "test-repos";
     private static final String UPDATE_TIME = "2024-02-18T18:26:28Z";
