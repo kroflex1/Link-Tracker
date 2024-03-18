@@ -34,9 +34,24 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
-    public LinkDTO remove(long tgChatId, URI url) throws IllegalArgumentException {
+    public void updateLastActivityTime(URI url, OffsetDateTime lastActivityTime) {
+        LinkDTO linkDTO = linkRepository.get(url);
+        linkRepository.update(new LinkDTO(url, linkDTO.getCreatedTime(), linkDTO.getLastCheckTime(),
+            lastActivityTime
+        ));
+    }
+
+    @Override
+    public void updateLastCheckTime(URI url, OffsetDateTime lastCheckTime) {
+        LinkDTO linkDTO = linkRepository.get(url);
+        linkRepository.update(new LinkDTO(url, linkDTO.getCreatedTime(), lastCheckTime,
+            linkDTO.getLastActivityTime()
+        ));
+    }
+
+    @Override
+    public void remove(long tgChatId, URI url) throws IllegalArgumentException {
         linkAndChatRepository.remove(new LinkAndChatDTO(url, tgChatId));
-        return null;
     }
 
     @Override

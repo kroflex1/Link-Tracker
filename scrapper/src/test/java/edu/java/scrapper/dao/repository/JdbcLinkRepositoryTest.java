@@ -42,7 +42,12 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
         List<LinkDTO> expected = new ArrayList<>();
         for (int i = 1; i <= numberOfLinks; i++) {
             LinkDTO newLink =
-                new LinkDTO(URI.create("http://" + i), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
+                new LinkDTO(
+                    URI.create("http://" + i),
+                    OffsetDateTime.now(),
+                    OffsetDateTime.now(),
+                    OffsetDateTime.now()
+                );
             expected.add(newLink);
             jdbcLinkRepository.add(newLink);
         }
@@ -97,8 +102,10 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     @Transactional
     @Rollback
     void testAddAlreadyExistingLink() {
-        LinkDTO link = new LinkDTO(URI.create("http://1"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
+        LinkDTO link =
+            new LinkDTO(URI.create("http://1"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
         jdbcLinkRepository.add(link);
+
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
             jdbcLinkRepository.add(link));
         assertEquals("http://1 has already been registered", exception.getMessage());
@@ -111,5 +118,24 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
             jdbcLinkRepository.remove(URI.create("http://sonelink")));
         assertEquals("http://sonelink cannot be deleted because it wasn`t found", exception.getMessage());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void testUpdateLink() {
+        LinkDTO link =
+            new LinkDTO(URI.create("http://link"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
+        jdbcLinkRepository.add(link);
+        LinkDTO updatedLink = new LinkDTO(link.getUrl(),
+            link.getCreatedTime(),
+            OffsetDateTime.now().plusDays(1),
+            OffsetDateTime.now().plusDays(2)
+        );
+        jdbcLinkRepository.update(updatedLink);
+
+        LinkDTO expected = jdbcLinkRepository.get(updatedLink.getUrl());
+
+        assertEquals(updatedLink, expected);
     }
 }

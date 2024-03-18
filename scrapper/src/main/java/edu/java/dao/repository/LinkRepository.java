@@ -9,4 +9,6 @@ public interface LinkRepository extends SimpleCrudRepository<URI, LinkDTO> {
     LinkDTO get(URI url);
 
     List<LinkDTO> findAllOutdatedLinks(Duration duration);
+
+    void update(LinkDTO link);
 }

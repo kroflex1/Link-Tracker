@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 @EnableScheduling
 public class LinkUpdaterScheduler {
     private static final Duration TIME_DURATION_TO_CHECK_LINK = Duration.ofDays(1);
-    private static final String UPDATE_MESSAGE = " Link get update";
+    private static final String UPDATE_MESSAGE = "Link get update";
     private final BotClient botClient;
     private final StackOverflowClient stackOverflowClient;
     private final GitHubClient gitHubClient;
@@ -49,15 +49,16 @@ public class LinkUpdaterScheduler {
     @Scheduled(fixedDelayString = "#{@scheduler.interval()}")
     public void update() {
         for (LinkDTO link : linkService.listAllOutdated(TIME_DURATION_TO_CHECK_LINK)) {
-            if (hasLinkBeenUpdated(link.getUrl(), link.getLastActivityTime())) {
-                List<Long> chatsId =
-                    chatService.getChatsThatTrackLink(link.getUrl()).stream().map(LinkAndChatDTO::getChatId).toList();
-                botClient.sendUpdate(chatsId, link.getUrl(), UPDATE_MESSAGE);
-            }
+            linkService.updateLastCheckTime(link.getUrl(), OffsetDateTime.now());
+            OffsetDateTime lastActivityTime = getLastActivityTime(link.getUrl(), link.getLastActivityTime());
+            linkService.updateLastActivityTime(link.getUrl(), lastActivityTime);
+            List<Long> chatsId =
+                chatService.getChatsThatTrackLink(link.getUrl()).stream().map(LinkAndChatDTO::getChatId).toList();
+            botClient.sendUpdate(chatsId, link.getUrl(), UPDATE_MESSAGE);
         }
     }
 
-    private boolean hasLinkBeenUpdated(URI url, OffsetDateTime lastActivityTime) {
+    private OffsetDateTime getLastActivityTime(URI url, OffsetDateTime lastActivityTime) {
         Optional<RepositoryInformation> gitHubActivity = gitHubClient.getRepositoryInformation(url);
         Optional<QuestionInformation> stackOverflowActivity;
         try {
@@ -65,13 +66,9 @@ public class LinkUpdaterScheduler {
         } catch (JsonProcessingException e) {
             stackOverflowActivity = Optional.empty();
         }
-        if (gitHubActivity.isPresent() && gitHubActivity.get().getLastUpdateTime().isAfter(lastActivityTime)) {
-            return true;
+        if (gitHubActivity.isPresent()) {
+            return gitHubActivity.get().getLastUpdateTime();
         }
-        if (stackOverflowActivity.isPresent() &&
-            stackOverflowActivity.get().getLastUpdateTime().isAfter(lastActivityTime)) {
-            return true;
-        }
-        return false;
+        return stackOverflowActivity.get().getLastUpdateTime();
     }
 }

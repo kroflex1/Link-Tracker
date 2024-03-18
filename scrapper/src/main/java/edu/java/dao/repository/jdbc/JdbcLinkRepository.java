@@ -20,6 +20,8 @@ public class JdbcLinkRepository implements LinkRepository {
     private static final String SQL_GET_ALL_LINKS = "SELECT * FROM links";
     private static final String SQL_GET_ALL_OUTDATED_LINKS = "SELECT * FROM links WHERE last_check_time <= ?";
     private static final String SQL_GET_BY_URL = "SELECT * FROM links WHERE link = ?";
+    private static final String SQL_UPDATE_LINK =
+        "UPDATE links SET last_check_time = ?, last_activity_time = ? WHERE link = ? ";
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcLinkRepository(DataSource dataSource) {
@@ -54,9 +56,9 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     public LinkDTO get(URI url) throws IllegalArgumentException {
-        List<LinkDTO> result = jdbcTemplate.query(SQL_DELETE_LINK, LINK_MAPPER, url.toString());
+        List<LinkDTO> result = jdbcTemplate.query(SQL_GET_BY_URL, LINK_MAPPER, url.toString());
         if (result.size() != 1) {
-            throw new IllegalArgumentException(String.format("Link %s was not found", url));
+            throw new IllegalArgumentException(String.format("Link %s cannot be updated because it wasn`t found", url));
         }
         return result.getFirst();
     }
@@ -74,5 +76,21 @@ public class JdbcLinkRepository implements LinkRepository {
             LINK_MAPPER,
             Timestamp.valueOf(outdated.toLocalDateTime())
         );
+    }
+
+    @Override
+    public void update(LinkDTO link) throws IllegalArgumentException {
+        Timestamp lastTimeUpdate = Timestamp.valueOf(link.getLastCheckTime().toLocalDateTime());
+        Timestamp lastActivityTime = Timestamp.valueOf(link.getLastActivityTime().toLocalDateTime());
+        try {
+            jdbcTemplate.update(
+                SQL_UPDATE_LINK,
+                lastTimeUpdate,
+                lastActivityTime,
+                link.getUrl().toString()
+            );
+        } catch (DataAccessException e) {
+            throw new IllegalArgumentException(String.format("Link %s was not found", link.getUrl()));
+        }
     }
 }
