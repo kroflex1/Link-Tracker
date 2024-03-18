@@ -2,10 +2,13 @@ package edu.java.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import edu.java.dto.QuestionInformation;
-import edu.java.utils.TimeConvertor;
+import edu.java.client.dto.QuestionInformation;
+import edu.java.utils.TimeManager;
+import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -15,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 public class StackOverflowClient extends HttpClient {
     private static final String DEFAULT_URL = "https://api.stackexchange.com";
     private static final String START_PATH = "/questions";
+    private static final Pattern PATTERN_FOR_LINK = Pattern.compile("https://stackoverflow\\.com/questions/(\\d+)/.+");
 
     public StackOverflowClient(HttpHeaders headers) {
         this(DEFAULT_URL, headers);
@@ -22,6 +26,14 @@ public class StackOverflowClient extends HttpClient {
 
     public StackOverflowClient(String baseUrl, HttpHeaders headers) {
         super(baseUrl, headers);
+    }
+
+    public Optional<QuestionInformation> getInformationAboutQuestion(URI url) throws JsonProcessingException {
+        Matcher matcher = PATTERN_FOR_LINK.matcher(url.toString());
+        if (matcher.matches()) {
+            return getInformationAboutQuestion(Long.parseLong(matcher.group(1)));
+        }
+        return Optional.empty();
     }
 
     @SuppressWarnings("MultipleStringLiterals")
@@ -76,7 +88,7 @@ public class StackOverflowClient extends HttpClient {
             return Optional.empty();
         }
         JsonNode node = objectMapper.readTree(response).get("items").get(0);
-        OffsetDateTime creationDate = TimeConvertor.convertEpochToOffsetDateTime(node.get("creation_date").asLong());
+        OffsetDateTime creationDate = TimeManager.convertEpochToOffsetDateTime(node.get("creation_date").asLong());
         String text = node.get("body").asText();
         String link = node.get("link").asText();
         String ownerName = node.get("owner").get("display_name").asText();

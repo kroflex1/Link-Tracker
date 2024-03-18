@@ -1,7 +1,7 @@
-package edu.java.dto;
+package edu.java.client.dto;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
-import edu.java.utils.TimeConvertor;
+import edu.java.utils.TimeManager;
 import io.micrometer.common.lang.Nullable;
 import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
@@ -21,19 +21,19 @@ public class QuestionInformation {
     @JsonSetter("question_id") private long id;
     @JsonSetter("title") private String text;
     private OffsetDateTime creationDate;
-    private OffsetDateTime lastActivityDate;
+    private OffsetDateTime lastUpdateTime;
 
     @Nullable private AdditionalInformation lastAnswer;
     @Nullable private AdditionalInformation lastComment;
 
     @JsonSetter("creation_date")
     public void setCreationDate(long epochValue) {
-        creationDate = TimeConvertor.convertEpochToOffsetDateTime(epochValue);
+        creationDate = TimeManager.convertEpochToOffsetDateTime(epochValue);
     }
 
     @JsonSetter("last_activity_date")
-    public void setLastActivityDate(long epochValue) {
-        lastActivityDate = TimeConvertor.convertEpochToOffsetDateTime(epochValue);
+    public void setLastUpdateTime(long epochValue) {
+        lastUpdateTime = TimeManager.convertEpochToOffsetDateTime(epochValue);
     }
 
     @AllArgsConstructor
