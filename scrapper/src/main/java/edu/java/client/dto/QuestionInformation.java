@@ -21,7 +21,7 @@ public class QuestionInformation {
     @JsonSetter("question_id") private long id;
     @JsonSetter("title") private String text;
     private OffsetDateTime creationDate;
-    private OffsetDateTime lastActivityDate;
+    private OffsetDateTime lastUpdateTime;
 
     @Nullable private AdditionalInformation lastAnswer;
     @Nullable private AdditionalInformation lastComment;
@@ -32,8 +32,8 @@ public class QuestionInformation {
     }
 
     @JsonSetter("last_activity_date")
-    public void setLastActivityDate(long epochValue) {
-        lastActivityDate = TimeManager.convertEpochToOffsetDateTime(epochValue);
+    public void setLastUpdateTime(long epochValue) {
+        lastUpdateTime = TimeManager.convertEpochToOffsetDateTime(epochValue);
     }
 
     @AllArgsConstructor

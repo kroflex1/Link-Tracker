@@ -83,7 +83,7 @@ public class StackOverflowClientTest {
             .id(questionId)
             .text(questionText)
             .creationDate(creationDate)
-            .lastActivityDate(lastActivityDate)
+            .lastUpdateTime(lastActivityDate)
             .lastAnswer(lastAnswer)
             .lastComment(lastComment)
             .build();
