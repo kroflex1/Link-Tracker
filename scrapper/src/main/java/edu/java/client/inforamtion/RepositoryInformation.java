@@ -3,18 +3,20 @@ package edu.java.client.inforamtion;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+@Data
 @AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
 public class RepositoryInformation {
+    @JsonSetter("name")
     private String name;
     @JsonSetter("pushed_at")
     private OffsetDateTime lastUpdateTime;
+
+
     private GithubActivity lastActivity;
 
     public enum GithubActivity {

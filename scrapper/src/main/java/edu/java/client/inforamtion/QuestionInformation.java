@@ -6,17 +6,14 @@ import io.micrometer.common.lang.Nullable;
 import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
 @Builder
-@EqualsAndHashCode
 public class QuestionInformation {
     @JsonSetter("question_id")
     private long id;
@@ -31,7 +28,6 @@ public class QuestionInformation {
     @Nullable
     private AdditionalInformation lastComment;
 
-
     @JsonSetter("creation_date")
     public void setCreationDate(long epochValue) {
         creationDate = TimeManager.convertEpochToOffsetDateTime(epochValue);
@@ -41,7 +37,6 @@ public class QuestionInformation {
     public void setLastUpdateTime(long epochValue) {
         lastUpdateTime = TimeManager.convertEpochToOffsetDateTime(epochValue);
     }
-
 
     @AllArgsConstructor
     @NoArgsConstructor
