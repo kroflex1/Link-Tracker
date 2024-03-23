@@ -1,4 +1,4 @@
-package edu.java.client.dto;
+package edu.java.client.inforamtion;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 import edu.java.utils.TimeManager;
@@ -18,13 +18,19 @@ import lombok.Setter;
 @Builder
 @EqualsAndHashCode
 public class QuestionInformation {
-    @JsonSetter("question_id") private long id;
-    @JsonSetter("title") private String text;
+    @JsonSetter("question_id")
+    private long id;
+    @JsonSetter("title")
+    private String text;
+
     private OffsetDateTime creationDate;
     private OffsetDateTime lastUpdateTime;
 
-    @Nullable private AdditionalInformation lastAnswer;
-    @Nullable private AdditionalInformation lastComment;
+    @Nullable
+    private AdditionalInformation lastAnswer;
+    @Nullable
+    private AdditionalInformation lastComment;
+
 
     @JsonSetter("creation_date")
     public void setCreationDate(long epochValue) {
@@ -36,8 +42,10 @@ public class QuestionInformation {
         lastUpdateTime = TimeManager.convertEpochToOffsetDateTime(epochValue);
     }
 
+
     @AllArgsConstructor
     @NoArgsConstructor
+    @Getter
     @EqualsAndHashCode
     public static class AdditionalInformation {
         private OffsetDateTime creationDate;

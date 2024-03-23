@@ -28,7 +28,8 @@ public class ClientConfiguration {
         return new GitHubClient(githubUrl, headers);
     }
 
-    @Bean StackOverflowClient stackOverflowClient() {
+    @Bean
+    public StackOverflowClient stackOverflowClient() {
         return new StackOverflowClient(stackOverflowUrl, new HttpHeaders());
     }
 

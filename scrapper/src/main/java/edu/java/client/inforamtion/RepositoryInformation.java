@@ -1,4 +1,4 @@
-package edu.java.client.dto;
+package edu.java.client.inforamtion;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 import java.time.OffsetDateTime;
@@ -18,8 +18,14 @@ public class RepositoryInformation {
     private GithubActivity lastActivity;
 
     public enum GithubActivity {
-        PUSH,
-        BRANCH_CREATION,
-        UNKNOWN;
+        PUSH("добавлен новый комментарий"),
+        BRANCH_CREATION("создана новая ветка"),
+        UNKNOWN("неизвестная активность");
+
+        public final String description;
+
+        GithubActivity(String description) {
+            this.description = description;
+        }
     }
 }

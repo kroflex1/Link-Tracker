@@ -2,7 +2,7 @@ package edu.java.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import edu.java.client.dto.RepositoryInformation;
+import edu.java.client.inforamtion.RepositoryInformation;
 import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
@@ -16,12 +16,12 @@ import org.springframework.validation.annotation.Validated;
 public class GitHubClient extends HttpClient {
     private static final String DEFAULT_URL = "https://api.github.com";
     private static final String START_PATH = "/repos";
+    private static final Pattern PATTERN_FOR_LINK = Pattern.compile("https://github\\.com/(.+)/(.+)");
+    private static final String NOT_FOUND_REPOSITORY_MESSAGE = "Repository was not found, or it is private";
     private static final Map<String, RepositoryInformation.GithubActivity> GITHUB_ACTIVITY_MAPPER = Map.of(
         "branch_creation", RepositoryInformation.GithubActivity.BRANCH_CREATION,
         "push", RepositoryInformation.GithubActivity.PUSH
     );
-    private static final Pattern PATTERN_FOR_LINK = Pattern.compile("https://github\\.com/(.+)/(.+)");
-    private static final String NOT_FOUND_REPOSITORY_MESSAGE = "Repository was not found, or it is private";
 
     public GitHubClient(HttpHeaders headers) {
         this(DEFAULT_URL, headers);

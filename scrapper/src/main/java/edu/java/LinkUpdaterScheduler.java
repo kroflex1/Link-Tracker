@@ -1,16 +1,15 @@
 package edu.java;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.java.client.BotClient;
 import edu.java.client.GitHubClient;
 import edu.java.client.StackOverflowClient;
-import edu.java.client.dto.QuestionInformation;
-import edu.java.client.dto.RepositoryInformation;
 import edu.java.dao.dto.LinkAndChatDTO;
 import edu.java.dao.dto.LinkDTO;
 import edu.java.dao.service.ChatService;
 import edu.java.dao.service.LinkService;
-import java.net.URI;
+import edu.java.utils.linkInformant.GithubLinkInformant;
+import edu.java.utils.linkInformant.LinkInformant;
+import edu.java.utils.linkInformant.StackOverflowInformant;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -24,51 +23,41 @@ import org.springframework.stereotype.Service;
 @EnableScheduling
 public class LinkUpdaterScheduler {
     private static final Duration TIME_DURATION_TO_CHECK_LINK = Duration.ofDays(1);
-    private static final String UPDATE_MESSAGE = "Link get update";
-    private final BotClient botClient;
-    private final StackOverflowClient stackOverflowClient;
-    private final GitHubClient gitHubClient;
     private final LinkService linkService;
     private final ChatService chatService;
+    private final BotClient botClient;
+
+    private final LinkInformant linkInformant;
 
     @Autowired
     public LinkUpdaterScheduler(
         BotClient botClient,
-        LinkService linkService,
-        ChatService chatService,
         StackOverflowClient stackOverflowClient,
-        GitHubClient gitHubClient
+        GitHubClient gitHubClient,
+        LinkService linkService,
+        ChatService chatService
     ) {
         this.botClient = botClient;
         this.linkService = linkService;
         this.chatService = chatService;
-        this.gitHubClient = gitHubClient;
-        this.stackOverflowClient = stackOverflowClient;
+
+        linkInformant = new StackOverflowInformant(stackOverflowClient);
+        linkInformant.setNextLinkUpdateDescription(new GithubLinkInformant(gitHubClient));
     }
 
     @Scheduled(fixedDelayString = "#{@scheduler.interval()}")
     public void update() {
         for (LinkDTO link : linkService.listAllOutdated(TIME_DURATION_TO_CHECK_LINK)) {
             linkService.updateLastCheckTime(link.getUrl(), OffsetDateTime.now());
-            OffsetDateTime lastActivityTime = getLastActivityTime(link.getUrl(), link.getLastActivityTime());
-            linkService.updateLastActivityTime(link.getUrl(), lastActivityTime);
-            List<Long> chatsId =
-                chatService.getChatsThatTrackLink(link.getUrl()).stream().map(LinkAndChatDTO::getChatId).toList();
-            botClient.sendUpdate(chatsId, link.getUrl(), UPDATE_MESSAGE);
-        }
-    }
 
-    private OffsetDateTime getLastActivityTime(URI url, OffsetDateTime lastActivityTime) {
-        Optional<RepositoryInformation> gitHubActivity = gitHubClient.getRepositoryInformation(url);
-        Optional<QuestionInformation> stackOverflowActivity;
-        try {
-            stackOverflowActivity = stackOverflowClient.getInformationAboutQuestion(url);
-        } catch (JsonProcessingException e) {
-            stackOverflowActivity = Optional.empty();
+            Optional<LinkInformant.LinkActivityInformation> activityInformation =
+                linkInformant.getLinkActivityInformationAfterDate(link.getLastActivityTime(), link.getUrl());
+            if (activityInformation.isPresent()) {
+                linkService.updateLastActivityTime(link.getUrl(), activityInformation.get().lastActivityTime());
+                List<Long> chatsId =
+                    chatService.getChatsThatTrackLink(link.getUrl()).stream().map(LinkAndChatDTO::getChatId).toList();
+                botClient.sendUpdate(chatsId, link.getUrl(), activityInformation.get().message());
+            }
         }
-        if (gitHubActivity.isPresent()) {
-            return gitHubActivity.get().getLastUpdateTime();
-        }
-        return stackOverflowActivity.get().getLastUpdateTime();
     }
 }
