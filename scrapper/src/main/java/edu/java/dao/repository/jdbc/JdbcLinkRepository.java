@@ -7,6 +7,9 @@ import java.net.URI;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.List;
 import javax.sql.DataSource;
 import edu.java.exceptions.AlreadyRegisteredLinkException;
@@ -81,12 +84,12 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     public void update(LinkDTO link) throws IllegalArgumentException {
-        Timestamp lastTimeUpdate = Timestamp.valueOf(link.getLastCheckTime().toLocalDateTime());
-        Timestamp lastActivityTime = Timestamp.valueOf(link.getLastActivityTime().toLocalDateTime());
+        Timestamp lastCheckTime = Timestamp.valueOf(link.getLastCheckTime().toLocalDateTime());
+        Timestamp lastActivityTime =  Timestamp.valueOf(link.getLastActivityTime().toLocalDateTime());
         try {
             jdbcTemplate.update(
                 SQL_UPDATE_LINK,
-                lastTimeUpdate,
+                lastCheckTime,
                 lastActivityTime,
                 link.getUrl().toString()
             );

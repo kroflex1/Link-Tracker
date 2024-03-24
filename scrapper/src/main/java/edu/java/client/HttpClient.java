@@ -62,4 +62,15 @@ public abstract class HttpClient {
             .bodyToMono(String.class);
     }
 
+    protected Mono<String> postRequest(String path, Object body)
+        throws IllegalArgumentException {
+        return webClient
+            .post()
+            .uri(uriBuilder -> uriBuilder
+                .path(path)
+                .build())
+            .bodyValue(body)
+            .retrieve()
+            .bodyToMono(String.class);
+    }
 }

@@ -11,13 +11,11 @@ public abstract class LinkInformant {
         this.next = next;
     }
 
-    public Optional<LinkActivityInformation> getLinkActivityInformationAfterDate(
-        OffsetDateTime lastUpdateDate,
-        URI url
+    public Optional<LinkActivityInformation> getLinkActivityInformationAfterDate(OffsetDateTime lastUpdateDate, URI url
     ) {
         Optional<LinkActivityInformation> activityInformation = getLinkActivityInformation(lastUpdateDate, url);
         if (activityInformation.isEmpty()) {
-            next.getLinkActivityInformationAfterDate(lastUpdateDate, url);
+            return next.getLinkActivityInformationAfterDate(lastUpdateDate, url);
         }
         return activityInformation;
     }

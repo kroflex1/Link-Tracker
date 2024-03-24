@@ -2,6 +2,7 @@ package edu.java.client;
 
 import java.net.URI;
 import java.util.List;
+import edu.java.request.LinkUpdateRequest;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.client.MultipartBodyBuilder;
@@ -15,12 +16,12 @@ public class BotClient extends HttpClient {
         super(baseUrl);
     }
 
-    public Mono<String> sendUpdate(List<Long> chatsId, URI updatedLink, String description) {
+    public String sendUpdate(List<Long> chatsId, URI updatedLink, String description) {
         MultipartBodyBuilder builder = new MultipartBodyBuilder();
-        builder.part("chatsId", chatsId);
+        builder.part("tgChatsId", chatsId);
         builder.part("url", updatedLink.toString());
         builder.part("description", description);
         MultiValueMap<String, HttpEntity<?>> body = builder.build();
-        return postRequest("/updates", body);
+        return postRequest("/updates", body).block();
     }
 }

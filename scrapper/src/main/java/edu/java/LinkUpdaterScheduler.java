@@ -22,11 +22,10 @@ import org.springframework.stereotype.Service;
 @Service
 @EnableScheduling
 public class LinkUpdaterScheduler {
-    private static final Duration TIME_DURATION_TO_CHECK_LINK = Duration.ofDays(1);
+    private static final Duration TIME_DURATION_TO_CHECK_LINK = Duration.ofSeconds(10);
     private final LinkService linkService;
     private final ChatService chatService;
     private final BotClient botClient;
-
     private final LinkInformant linkInformant;
 
     @Autowired
