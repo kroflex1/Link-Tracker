@@ -6,6 +6,7 @@ import edu.java.response.ListLinksResponse;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import edu.java.response.RemoveLinkResponse;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpMethod;
@@ -19,32 +20,33 @@ import reactor.core.publisher.Mono;
 @Validated
 public class ScrapperClient extends HttpClient {
 
-    private static final String NOT_FOUND_CHAT_ID_MESSAGE = "Chat with this id isn`t registered";
-    private static final String CHAT_ALREADY_REGISTERED_MESSAGE = "Chat with this id already registered";
+    public static final String NOT_FOUND_CHAT_ID_MESSAGE = "Chat with this id isn`t registered";
+    public static final String CHAT_ALREADY_REGISTERED_MESSAGE = "Chat with this id already registered";
+    public static final String ALREADY_TRACKED_LINK_MESSAGE = "Chat already tracking this link";
 
     public ScrapperClient(@NotNull String baseUrl) {
         super(baseUrl);
     }
 
     @SuppressWarnings("MultipleStringLiterals")
-    public ResponseEntity registerChat(Long chatId) throws IllegalArgumentException {
-        return webClient
+    public void registerChat(Long chatId) throws IllegalArgumentException {
+        webClient
             .post()
             .uri(uriBuilder -> uriBuilder
                 .path("/tg-chat/%d".formatted(chatId))
                 .build())
             .retrieve()
             .onStatus(
-                status -> status == HttpStatus.BAD_REQUEST,
+                status -> status == HttpStatus.CONFLICT,
                 clientResponse -> Mono.error(new IllegalArgumentException(CHAT_ALREADY_REGISTERED_MESSAGE))
             )
-            .bodyToMono(ResponseEntity.class)
+            .bodyToMono(String.class)
             .block();
     }
 
     @SuppressWarnings("MultipleStringLiterals")
-    public ResponseEntity removeChat(Long chatId) throws IllegalArgumentException {
-        return webClient
+    public void removeChat(Long chatId) throws IllegalArgumentException {
+        webClient
             .delete()
             .uri(uriBuilder -> uriBuilder
                 .path("/tg-chat/%d".formatted(chatId))
@@ -54,7 +56,7 @@ public class ScrapperClient extends HttpClient {
                 status -> status == HttpStatus.BAD_REQUEST,
                 clientResponse -> Mono.error(new IllegalArgumentException(NOT_FOUND_CHAT_ID_MESSAGE))
             )
-            .bodyToMono(ResponseEntity.class)
+            .bodyToMono(String.class)
             .block();
     }
 
@@ -81,9 +83,9 @@ public class ScrapperClient extends HttpClient {
     }
 
     @SuppressWarnings("MultipleStringLiterals")
-    public ResponseEntity trackLink(Long chatId, URI link) throws IllegalArgumentException {
+    public void trackLink(Long chatId, URI link) throws IllegalArgumentException {
         AddLinkRequest addLinkBody = new AddLinkRequest(link.toString());
-        return webClient
+        webClient
             .post()
             .uri(uriBuilder -> uriBuilder
                 .path("/links/%d".formatted(chatId))
@@ -94,27 +96,30 @@ public class ScrapperClient extends HttpClient {
                 status -> status == HttpStatus.BAD_REQUEST,
                 clientResponse -> Mono.error(new IllegalArgumentException(NOT_FOUND_CHAT_ID_MESSAGE))
             )
-            .bodyToMono(ResponseEntity.class)
+            .onStatus(
+                status -> status == HttpStatus.CONFLICT,
+                clientResponse -> Mono.error(new IllegalArgumentException(ALREADY_TRACKED_LINK_MESSAGE))
+            )
+            .bodyToMono(String.class)
             .block();
     }
 
     @SuppressWarnings("MultipleStringLiterals")
-    public LinkResponse stopTrackLink(Long chatId, URI link) throws IllegalArgumentException {
-        MultipartBodyBuilder body = new MultipartBodyBuilder();
-        body.part("link", link.toString());
-        return webClient
+    public void stopTrackLink(Long chatId, URI link) throws IllegalArgumentException {
+        RemoveLinkResponse body = new RemoveLinkResponse(link);
+        webClient
             .method(HttpMethod.DELETE)
             .uri(uriBuilder -> uriBuilder
                 .path("/links/%d".formatted(chatId))
                 .build())
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(body.build())
+            .bodyValue(body)
             .retrieve()
             .onStatus(
                 status -> status == HttpStatus.BAD_REQUEST,
                 clientResponse -> Mono.error(new IllegalArgumentException(NOT_FOUND_CHAT_ID_MESSAGE))
             )
-            .bodyToMono(LinkResponse.class)
+            .bodyToMono(String.class)
             .block();
     }
 }

@@ -37,8 +37,8 @@ public class ListCommand extends Command {
             return new SendMessage(update.message().chat().id(), EMPTY_LIST_LINKS_MESSAGE);
         }
         StringBuilder text = new StringBuilder(FILLED_LIST_MESSAGE).append("\n");
-        for (URI url : trackedLinks) {
-            text.append(url.toString()).append("\n");
+        for (int i = 0; i < trackedLinks.size(); i++) {
+            text.append(i + 1).append(") ").append(trackedLinks.get(i).toString()).append("\n");
         }
         return new SendMessage(update.message().chat().id(), text.toString());
     }

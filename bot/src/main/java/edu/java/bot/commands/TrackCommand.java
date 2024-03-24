@@ -50,7 +50,10 @@ public class TrackCommand extends CompositeCommand {
         try {
             scrapperClient.trackLink(chatId, URI.create(link));
         } catch (IllegalArgumentException e) {
-            return new SendMessage(chatId, ALREADY_TRACKED_LINK);
+            if (e.getMessage().equals(scrapperClient.ALREADY_TRACKED_LINK_MESSAGE)) {
+                return new SendMessage(chatId, ALREADY_TRACKED_LINK);
+            }
+            return new SendMessage(chatId, "Чтобы начать пользоваться ботом, введите команду /start");
         }
         return new SendMessage(chatId, OK_MESSAGE);
     }
