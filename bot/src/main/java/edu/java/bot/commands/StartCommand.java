@@ -2,13 +2,17 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.dao.ChatDAO;
+import edu.java.bot.client.ScrapperClient;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 
 public class StartCommand extends Command {
     private static final String USER_ALREADY_REGISTERED_MESSAGE = "Привет, вы уже пользуетесь данным ботом";
+    private static final String WELCOME_MESSAGE = "Привет, чтобы получить список доступных команд, используй /help";
+    private static final int OK_CODE = 200;
 
-    public StartCommand(ChatDAO chatDAO) {
-        super(chatDAO);
+    public StartCommand(ScrapperClient scrapperClient) {
+        super(scrapperClient);
     }
 
     @Override
@@ -24,10 +28,14 @@ public class StartCommand extends Command {
     @Override
     public SendMessage handle(Update update) {
         Long chatId = update.message().chat().id();
-        chatDAO.addChat(chatId);
+        try{
+            scrapperClient.registerChat(chatId);
+        } catch (IllegalArgumentException e) {
+            return new SendMessage(chatId, USER_ALREADY_REGISTERED_MESSAGE);
+        }
         return new SendMessage(
             chatId,
-            "Привет, чтобы получить список доступных команд, используй /help"
+            WELCOME_MESSAGE
         );
     }
 }

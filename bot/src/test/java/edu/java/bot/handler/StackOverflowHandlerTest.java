@@ -1,12 +1,13 @@
 package edu.java.bot.handler;
 
+import edu.java.bot.linkChecker.StackOverflowLinkChecker;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class StackOverflowHandlerTest {
-    StackOverflowHandler stackOverflowHandler = new StackOverflowHandler();
+    StackOverflowLinkChecker stackOverflowHandler = new StackOverflowLinkChecker();
 
     @ParameterizedTest
     @ValueSource(strings = {"", "hello", "stackoverflow.com", "https://stackoverflow.com",
