@@ -16,8 +16,8 @@ public class GithubLinkInformant extends LinkInformant {
     @Override
     protected Optional<LinkActivityInformation> getLinkActivityInformation(OffsetDateTime lastUpdateDate, URI url) {
         Optional<RepositoryInformation> repositoryInformation = gitHubClient.getRepositoryInformation(url);
-        if (repositoryInformation.isEmpty() ||
-            repositoryInformation.get().getLastUpdateTime().isBefore(lastUpdateDate)) {
+        if (repositoryInformation.isEmpty()
+            || repositoryInformation.get().getLastUpdateTime().isBefore(lastUpdateDate)) {
             return Optional.empty();
         }
         RepositoryInformation repository = repositoryInformation.get();

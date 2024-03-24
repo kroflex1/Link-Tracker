@@ -11,7 +11,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 public abstract class HttpClient {
-
     protected final WebClient webClient;
     protected final ObjectMapper objectMapper;
 

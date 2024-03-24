@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 @Data
 @AllArgsConstructor

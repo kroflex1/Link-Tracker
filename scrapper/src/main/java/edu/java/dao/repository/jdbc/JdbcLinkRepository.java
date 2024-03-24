@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
 import javax.sql.DataSource;
+import edu.java.exceptions.AlreadyRegisteredLinkException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -29,7 +30,7 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
-    public void add(LinkDTO link) throws IllegalArgumentException {
+    public void add(LinkDTO link) throws AlreadyRegisteredLinkException {
         Timestamp createdTime =
             Timestamp.valueOf(link.getCreatedTime().toLocalDateTime());
         Timestamp lastTimeUpdate = Timestamp.valueOf(link.getLastCheckTime().toLocalDateTime());
@@ -43,7 +44,7 @@ public class JdbcLinkRepository implements LinkRepository {
                 lastActivityTime
             );
         } catch (DataAccessException e) {
-            throw new IllegalArgumentException(String.format("%s has already been registered", link.getUrl()));
+            throw new AlreadyRegisteredLinkException(link.getUrl());
         }
     }
 

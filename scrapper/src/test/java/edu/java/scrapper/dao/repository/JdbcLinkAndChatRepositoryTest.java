@@ -10,6 +10,9 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import edu.java.dao.repository.jdbc.JdbcLinkRepository;
+import edu.java.exceptions.AlreadyRegisteredChatException;
+import edu.java.exceptions.AlreadyRegisteredLinkException;
+import edu.java.exceptions.AlreadyTrackedLinkException;
 import edu.java.scrapper.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +34,8 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void testAddNewChat() {
+    void testAddNewChat()
+        throws AlreadyRegisteredChatException, AlreadyRegisteredLinkException, AlreadyTrackedLinkException {
         ChatDTO chat = new ChatDTO(1L, OffsetDateTime.now());
         LinkDTO
             link = new LinkDTO(URI.create("http://somelink"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
@@ -48,7 +52,8 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void tesGetAllChats() {
+    void tesGetAllChats()
+        throws AlreadyRegisteredLinkException, AlreadyRegisteredChatException, AlreadyTrackedLinkException {
         int numberOfRecords = 5;
         List<LinkAndChatDTO> expected = new ArrayList<>();
         for (long i = 1; i <= numberOfRecords; i++) {
@@ -68,7 +73,8 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void testRemoveChatByLinkAndChatId() {
+    void testRemoveChatByLinkAndChatId()
+        throws AlreadyRegisteredChatException, AlreadyRegisteredLinkException, AlreadyTrackedLinkException {
         ChatDTO chat = new ChatDTO(1L, OffsetDateTime.now());
         LinkDTO
             link = new LinkDTO(URI.create("http://somelink"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
@@ -86,7 +92,8 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void testAddAlreadyExistsLinkAndChat() {
+    void testAddAlreadyExistsLinkAndChat()
+        throws AlreadyRegisteredChatException, AlreadyRegisteredLinkException, AlreadyTrackedLinkException {
         ChatDTO chat = new ChatDTO(1L, OffsetDateTime.now());
         LinkDTO
             link = new LinkDTO(URI.create("http://somelink"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
@@ -95,9 +102,8 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
         linkRepository.add(link);
         linkAndChatRepository.add(record);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(AlreadyTrackedLinkException.class, () ->
             linkAndChatRepository.add(record));
-        assertEquals("This chat with id 1 is already tracking link http://somelink", exception.getMessage());
     }
 
     @Test

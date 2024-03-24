@@ -6,6 +6,7 @@ import edu.java.dao.repository.ChatRepository;
 import java.sql.Timestamp;
 import java.util.List;
 import javax.sql.DataSource;
+import edu.java.exceptions.AlreadyRegisteredChatException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -22,20 +23,20 @@ public class JdbcChatRepository implements ChatRepository {
     }
 
     @Override
-    public void add(ChatDTO chat) throws IllegalArgumentException {
+    public void add(ChatDTO chat) throws AlreadyRegisteredChatException {
         Timestamp timestamp =
             Timestamp.valueOf(chat.getCreatedAt().toLocalDateTime());
         try {
             jdbcTemplate.update(SQL_INSERT_CHAT, chat.getChatId(), timestamp);
         } catch (DataAccessException e) {
-            throw new IllegalArgumentException("Chat with this id has already been registered");
+            throw new AlreadyRegisteredChatException(chat.getChatId());
         }
     }
 
     @Override
     public void remove(Long chatId) throws IllegalArgumentException {
         if (jdbcTemplate.update(SQL_DELETE_CHAT, chatId) == 0) {
-            throw new IllegalArgumentException("Chat with this ID was not detected");
+            throw new IllegalArgumentException("Chat with ID=%d was not detected".formatted(chatId));
         }
     }
 

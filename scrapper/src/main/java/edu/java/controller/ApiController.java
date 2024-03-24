@@ -3,6 +3,8 @@ package edu.java.controller;
 import edu.java.dao.dto.LinkDTO;
 import edu.java.dao.service.ChatService;
 import edu.java.dao.service.LinkService;
+import edu.java.exceptions.AlreadyRegisteredChatException;
+import edu.java.exceptions.AlreadyTrackedLinkException;
 import edu.java.request.AddLinkRequest;
 import edu.java.response.LinkResponse;
 import edu.java.response.ListLinksResponse;
@@ -36,7 +38,7 @@ public class ApiController {
 
     @PostMapping("/tg-chat/{id}")
     @Operation(summary = "Register chat")
-    public ResponseEntity registerChat(@PathVariable Long id) throws IllegalArgumentException {
+    public ResponseEntity registerChat(@PathVariable Long id) throws AlreadyRegisteredChatException {
         chatService.register(id);
         return ResponseEntity.ok().build();
     }
@@ -60,8 +62,8 @@ public class ApiController {
 
     @PostMapping("/links/{chatId}")
     @Operation(summary = "Add tracked link")
-    public LinkResponse addLinks(@PathVariable Long chatId, @RequestBody AddLinkRequest linkInf)
-        throws IllegalArgumentException, MalformedURLException, URISyntaxException {
+    public LinkResponse addLink(@PathVariable Long chatId, @RequestBody AddLinkRequest linkInf)
+        throws AlreadyTrackedLinkException, MalformedURLException, URISyntaxException {
         URI uri = new URL(linkInf.link()).toURI();
         linkService.add(chatId, uri);
         return new LinkResponse(chatId, uri);

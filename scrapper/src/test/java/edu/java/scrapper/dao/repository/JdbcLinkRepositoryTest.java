@@ -2,17 +2,18 @@ package edu.java.scrapper.dao.repository;
 
 import edu.java.dao.dto.LinkDTO;
 import edu.java.dao.repository.jdbc.JdbcLinkRepository;
+import edu.java.exceptions.AlreadyRegisteredLinkException;
 import edu.java.scrapper.IntegrationTest;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -24,7 +25,7 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void testAddNewLink() {
+    void testAddNewLink() throws AlreadyRegisteredLinkException {
         LinkDTO link =
             new LinkDTO(URI.create("http://link"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
         jdbcLinkRepository.add(link);
@@ -37,7 +38,7 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void tesGetAllLinks() {
+    void tesGetAllLinks() throws AlreadyRegisteredLinkException {
         int numberOfLinks = 5;
         List<LinkDTO> expected = new ArrayList<>();
         for (int i = 1; i <= numberOfLinks; i++) {
@@ -60,7 +61,7 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void tesGetAllOutdatedLinks() {
+    void testGetAllOutdatedLinks() throws AlreadyRegisteredLinkException {
         int numberOfLinks = 4;
         int numberOfOldLinks = 3;
         for (int i = 1; i <= numberOfLinks; i++) {
@@ -81,10 +82,11 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
         assertEquals(expected, actual);
     }
 
+
     @Test
     @Transactional
     @Rollback
-    void testRemoveLink() {
+    void testRemoveLink() throws AlreadyRegisteredLinkException {
         LinkDTO firstLink =
             new LinkDTO(URI.create("http://" + 1), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
         LinkDTO secondLink =
@@ -101,14 +103,13 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void testAddAlreadyExistingLink() {
+    void testAddAlreadyExistingLink() throws AlreadyRegisteredLinkException {
         LinkDTO link =
             new LinkDTO(URI.create("http://1"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
         jdbcLinkRepository.add(link);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(AlreadyRegisteredLinkException.class, () ->
             jdbcLinkRepository.add(link));
-        assertEquals("http://1 has already been registered", exception.getMessage());
     }
 
     @Test
@@ -123,7 +124,7 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void testUpdateLink() {
+    void testUpdateLink() throws AlreadyRegisteredLinkException {
         LinkDTO link =
             new LinkDTO(URI.create("http://link"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
         jdbcLinkRepository.add(link);

@@ -57,8 +57,7 @@ public class GitHubClient extends HttpClient {
     }
 
     private RepositoryInformation.GithubActivity getLastGithubActivity(
-        @NotNull String owner,
-        @NotNull String repositoryName
+        @NotNull String owner, @NotNull String repositoryName
     )
         throws JsonProcessingException {
         String response =

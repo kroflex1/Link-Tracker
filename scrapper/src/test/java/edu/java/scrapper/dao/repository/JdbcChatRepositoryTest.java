@@ -2,6 +2,7 @@ package edu.java.scrapper.dao.repository;
 
 import edu.java.dao.dto.ChatDTO;
 import edu.java.dao.repository.jdbc.JdbcChatRepository;
+import edu.java.exceptions.AlreadyRegisteredChatException;
 import edu.java.scrapper.IntegrationTest;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class JdbcChatRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void testAddNewChat() {
+    void testAddNewChat() throws AlreadyRegisteredChatException {
         ChatDTO chat = new ChatDTO(1L, OffsetDateTime.now());
         jdbcChatRepository.add(chat);
 
@@ -34,7 +35,7 @@ public class JdbcChatRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void tesGetAllChats() {
+    void tesGetAllChats() throws AlreadyRegisteredChatException {
         int numberOfChats = 5;
         List<ChatDTO> expected = new ArrayList<>();
         for (long i = 1; i <= numberOfChats; i++) {
@@ -51,7 +52,7 @@ public class JdbcChatRepositoryTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void testRemoveChat() {
+    void testRemoveChat() throws AlreadyRegisteredChatException {
         ChatDTO firstChat = new ChatDTO(1L, OffsetDateTime.now());
         ChatDTO secondChat = new ChatDTO(2L, OffsetDateTime.now());
         jdbcChatRepository.add(firstChat);
@@ -60,18 +61,19 @@ public class JdbcChatRepositoryTest extends IntegrationTest {
         List<ChatDTO> chats = jdbcChatRepository.findAll();
         assertEquals(2, chats.size());
         jdbcChatRepository.remove(1L);
+
         assertEquals(List.of(secondChat), jdbcChatRepository.findAll());
     }
 
     @Test
     @Transactional
     @Rollback
-    void testAddAlreadyExistingChat() {
+    void testAddAlreadyExistingChat() throws AlreadyRegisteredChatException {
         ChatDTO chat = new ChatDTO(1L, OffsetDateTime.now());
         jdbcChatRepository.add(chat);
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+
+        assertThrows(AlreadyRegisteredChatException.class, () ->
             jdbcChatRepository.add(chat));
-        assertEquals("Chat with this id has already been registered", exception.getMessage());
     }
 
     @Test
@@ -80,7 +82,7 @@ public class JdbcChatRepositoryTest extends IntegrationTest {
     void testDeleteNonExistentChat() {
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
             jdbcChatRepository.remove(1L));
-        assertEquals("Chat with this ID was not detected", exception.getMessage());
+        assertEquals("Chat with ID=1 was not detected", exception.getMessage());
     }
 
 }

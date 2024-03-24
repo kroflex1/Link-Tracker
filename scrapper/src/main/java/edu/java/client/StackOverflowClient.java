@@ -90,6 +90,7 @@ public class StackOverflowClient extends HttpClient {
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }
+
         JsonNode node;
         try {
             node = objectMapper.readTree(response).get("items").get(0);

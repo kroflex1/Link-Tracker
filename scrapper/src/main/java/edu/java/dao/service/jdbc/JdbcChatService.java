@@ -8,6 +8,7 @@ import edu.java.dao.service.ChatService;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
+import edu.java.exceptions.AlreadyRegisteredChatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public class JdbcChatService implements ChatService {
     }
 
     @Override
-    public void register(long chatId) throws IllegalArgumentException {
+    public void register(long chatId) throws AlreadyRegisteredChatException {
         chatRepository.add(new ChatDTO(chatId, OffsetDateTime.now()));
     }
 

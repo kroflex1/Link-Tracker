@@ -6,6 +6,7 @@ import edu.java.dao.repository.LinkAndChatRepository;
 import java.net.URI;
 import java.util.List;
 import javax.sql.DataSource;
+import edu.java.exceptions.AlreadyTrackedLinkException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -25,15 +26,11 @@ public class JdbcLinkAndChatRepository implements LinkAndChatRepository {
     }
 
     @Override
-    public void add(LinkAndChatDTO linkAndChat) throws IllegalArgumentException {
+    public void add(LinkAndChatDTO linkAndChat) throws AlreadyTrackedLinkException {
         try {
             jdbcTemplate.update(SQL_INSERT, linkAndChat.getUrl().toString(), linkAndChat.getChatId());
         } catch (DataAccessException e) {
-            throw new IllegalArgumentException(String.format(
-                "This chat with id %d is already tracking link %s",
-                linkAndChat.getChatId(),
-                linkAndChat.getUrl()
-            ));
+            throw new AlreadyTrackedLinkException(linkAndChat.getChatId(), linkAndChat.getUrl());
         }
     }
 

@@ -1,5 +1,7 @@
 package edu.java.controller;
 
+import edu.java.exceptions.AlreadyRegisteredDataException;
+import edu.java.exceptions.AlreadyTrackedLinkException;
 import edu.java.response.ApiErrorResponse;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -22,6 +24,19 @@ public class ControllerExceptionHandler {
             .exceptionMessage(ex.getMessage())
             .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDescription);
+    }
+
+    @ExceptionHandler(value = {AlreadyRegisteredDataException.class})
+    public ResponseEntity<ApiErrorResponse> resourceAlreadyTrackedLinkException(
+        AlreadyRegisteredDataException ex,
+        WebRequest request
+    ) {
+        ApiErrorResponse errorDescription = ApiErrorResponse.builder()
+            .description("Data already registered")
+            .exceptionName(ex.getClass().getName())
+            .exceptionMessage(ex.getMessage())
+            .build();
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorDescription);
     }
 
     @ExceptionHandler(value = {MalformedURLException.class, URISyntaxException.class})

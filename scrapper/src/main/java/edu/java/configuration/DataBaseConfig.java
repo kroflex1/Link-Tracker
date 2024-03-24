@@ -18,7 +18,7 @@ public record DataBaseConfig(@NotEmpty String url, @NotEmpty String username, @N
                              @NotEmpty String driver) {
 
     @Bean
-    public JdbcChatRepository chatRepository() {
+    public JdbcChatRepository jdbcChatRepository() {
         return new JdbcChatRepository(dataSource());
     }
 
