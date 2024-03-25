@@ -11,17 +11,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@Transactional
 public class JdbcChatRepositoryTest extends IntegrationTest {
     @Autowired
     JdbcChatRepository jdbcChatRepository;
 
     @Test
-    @Transactional
     @Rollback
     void testAddNewChat() throws AlreadyRegisteredChatException {
         ChatDTO chat = new ChatDTO(1L, OffsetDateTime.now());
@@ -33,7 +36,6 @@ public class JdbcChatRepositoryTest extends IntegrationTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     void tesGetAllChats() throws AlreadyRegisteredChatException {
         int numberOfChats = 5;
@@ -50,7 +52,6 @@ public class JdbcChatRepositoryTest extends IntegrationTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     void testRemoveChat() throws AlreadyRegisteredChatException {
         ChatDTO firstChat = new ChatDTO(1L, OffsetDateTime.now());
@@ -66,7 +67,6 @@ public class JdbcChatRepositoryTest extends IntegrationTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     void testAddAlreadyExistingChat() throws AlreadyRegisteredChatException {
         ChatDTO chat = new ChatDTO(1L, OffsetDateTime.now());
@@ -77,7 +77,6 @@ public class JdbcChatRepositoryTest extends IntegrationTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     void testDeleteNonExistentChat() {
         Exception exception = assertThrows(IllegalArgumentException.class, () ->

@@ -15,6 +15,10 @@ public class TimeManager {
         return timestamp.toInstant().atOffset(ZoneOffset.UTC);
     }
 
+    public static Timestamp convertOffsetDateTimeToTimestamp(OffsetDateTime offsetDateTime) {
+        return Timestamp.valueOf(offsetDateTime.toLocalDateTime());
+    }
+
     public static boolean isEqualOffsetDateTime(OffsetDateTime first, OffsetDateTime second) {
         ZonedDateTime firstTime = first.atZoneSameInstant(ZoneOffset.UTC);
         ZonedDateTime secondTime = second.atZoneSameInstant(ZoneOffset.UTC);

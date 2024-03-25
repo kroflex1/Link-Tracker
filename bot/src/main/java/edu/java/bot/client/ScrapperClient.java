@@ -3,17 +3,14 @@ package edu.java.bot.client;
 import edu.java.request.AddLinkRequest;
 import edu.java.response.LinkResponse;
 import edu.java.response.ListLinksResponse;
+import edu.java.response.RemoveLinkResponse;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import edu.java.response.RemoveLinkResponse;
-import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
 

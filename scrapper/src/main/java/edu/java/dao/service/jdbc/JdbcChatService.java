@@ -5,10 +5,10 @@ import edu.java.dao.dto.LinkAndChatDTO;
 import edu.java.dao.repository.jdbc.JdbcChatRepository;
 import edu.java.dao.repository.jdbc.JdbcLinkAndChatRepository;
 import edu.java.dao.service.ChatService;
+import edu.java.exceptions.AlreadyRegisteredChatException;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
-import edu.java.exceptions.AlreadyRegisteredChatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

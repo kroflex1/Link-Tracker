@@ -1,7 +1,6 @@
 package edu.java.controller;
 
 import edu.java.exceptions.AlreadyRegisteredDataException;
-import edu.java.exceptions.AlreadyTrackedLinkException;
 import edu.java.response.ApiErrorResponse;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;

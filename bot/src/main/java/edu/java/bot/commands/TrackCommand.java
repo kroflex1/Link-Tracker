@@ -6,7 +6,6 @@ import edu.java.bot.client.ScrapperClient;
 import edu.java.bot.linkChecker.GitHubLinkChecker;
 import edu.java.bot.linkChecker.LinkChecker;
 import edu.java.bot.linkChecker.StackOverflowLinkChecker;
-import org.springframework.http.ResponseEntity;
 import java.net.URI;
 
 public class TrackCommand extends CompositeCommand {
@@ -36,6 +35,7 @@ public class TrackCommand extends CompositeCommand {
     }
 
     @Override
+    @SuppressWarnings("ReturnCount")
     public SendMessage handle(Update update) {
         String[] partsOfCommand = update.message().text().split(" ");
         if (partsOfCommand.length != 2) {

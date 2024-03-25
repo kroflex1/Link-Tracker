@@ -108,7 +108,7 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
             new LinkDTO(URI.create("http://1"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
         jdbcLinkRepository.add(link);
 
-        Exception exception = assertThrows(AlreadyRegisteredLinkException.class, () ->
+        assertThrows(AlreadyRegisteredLinkException.class, () ->
             jdbcLinkRepository.add(link));
     }
 

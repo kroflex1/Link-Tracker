@@ -5,15 +5,14 @@ import edu.java.dao.dto.LinkDTO;
 import edu.java.dao.repository.jdbc.JdbcLinkAndChatRepository;
 import edu.java.dao.repository.jdbc.JdbcLinkRepository;
 import edu.java.dao.service.LinkService;
+import edu.java.exceptions.AlreadyRegisteredLinkException;
+import edu.java.exceptions.AlreadyTrackedLinkException;
 import java.net.URI;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import edu.java.exceptions.AlreadyRegisteredLinkException;
-import edu.java.exceptions.AlreadyTrackedLinkException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +30,10 @@ public class JdbcLinkService implements LinkService {
     @Override
     public LinkDTO add(long tgChatId, URI url) throws AlreadyTrackedLinkException {
         LinkDTO link = new LinkDTO(url, OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
-        try{
+        try {
             linkRepository.add(link);
-        } catch (AlreadyRegisteredLinkException ignored) {}
+        } catch (AlreadyRegisteredLinkException ignored) {
+        }
         linkAndChatRepository.add(new LinkAndChatDTO(url, tgChatId));
         return link;
     }

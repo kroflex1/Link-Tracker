@@ -32,7 +32,6 @@ public record DataBaseConfig(@NotEmpty String url, @NotEmpty String username, @N
         return new JdbcLinkAndChatRepository(dataSource());
     }
 
-
     private DataSource dataSource() {
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
         driverManagerDataSource.setUrl(url);

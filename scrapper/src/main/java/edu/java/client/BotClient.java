@@ -2,13 +2,11 @@ package edu.java.client;
 
 import java.net.URI;
 import java.util.List;
-import edu.java.request.LinkUpdateRequest;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
-import reactor.core.publisher.Mono;
 
 @Validated
 public class BotClient extends HttpClient {

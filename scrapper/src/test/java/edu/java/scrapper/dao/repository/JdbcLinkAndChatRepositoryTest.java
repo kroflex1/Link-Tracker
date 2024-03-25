@@ -5,15 +5,15 @@ import edu.java.dao.dto.LinkAndChatDTO;
 import edu.java.dao.dto.LinkDTO;
 import edu.java.dao.repository.jdbc.JdbcChatRepository;
 import edu.java.dao.repository.jdbc.JdbcLinkAndChatRepository;
-import java.net.URI;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import edu.java.dao.repository.jdbc.JdbcLinkRepository;
 import edu.java.exceptions.AlreadyRegisteredChatException;
 import edu.java.exceptions.AlreadyRegisteredLinkException;
 import edu.java.exceptions.AlreadyTrackedLinkException;
 import edu.java.scrapper.IntegrationTest;
+import java.net.URI;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -102,7 +102,7 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
         linkRepository.add(link);
         linkAndChatRepository.add(record);
 
-        Exception exception = assertThrows(AlreadyTrackedLinkException.class, () ->
+        assertThrows(AlreadyTrackedLinkException.class, () ->
             linkAndChatRepository.add(record));
     }
 

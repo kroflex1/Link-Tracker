@@ -3,10 +3,9 @@ package edu.java.dao.repository.jdbc;
 import edu.java.dao.dto.ChatDTO;
 import edu.java.dao.mapper.ChatDTOMapper;
 import edu.java.dao.repository.ChatRepository;
-import java.sql.Timestamp;
+import edu.java.exceptions.AlreadyRegisteredChatException;
 import java.util.List;
 import javax.sql.DataSource;
-import edu.java.exceptions.AlreadyRegisteredChatException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -24,10 +23,8 @@ public class JdbcChatRepository implements ChatRepository {
 
     @Override
     public void add(ChatDTO chat) throws AlreadyRegisteredChatException {
-        Timestamp timestamp =
-            Timestamp.valueOf(chat.getCreatedAt().toLocalDateTime());
         try {
-            jdbcTemplate.update(SQL_INSERT_CHAT, chat.getChatId(), timestamp);
+            jdbcTemplate.update(SQL_INSERT_CHAT, chat.getChatId(), chat.getCreatedAt());
         } catch (DataAccessException e) {
             throw new AlreadyRegisteredChatException(chat.getChatId());
         }

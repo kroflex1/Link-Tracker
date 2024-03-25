@@ -3,16 +3,12 @@ package edu.java.dao.repository.jdbc;
 import edu.java.dao.dto.LinkDTO;
 import edu.java.dao.mapper.LinkDTOMapper;
 import edu.java.dao.repository.LinkRepository;
+import edu.java.exceptions.AlreadyRegisteredLinkException;
 import java.net.URI;
-import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.List;
 import javax.sql.DataSource;
-import edu.java.exceptions.AlreadyRegisteredLinkException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -34,17 +30,13 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     public void add(LinkDTO link) throws AlreadyRegisteredLinkException {
-        Timestamp createdTime =
-            Timestamp.valueOf(link.getCreatedTime().toLocalDateTime());
-        Timestamp lastTimeUpdate = Timestamp.valueOf(link.getLastCheckTime().toLocalDateTime());
-        Timestamp lastActivityTime = Timestamp.valueOf(link.getLastActivityTime().toLocalDateTime());
         try {
             jdbcTemplate.update(
                 SQL_INSERT_LINK,
                 link.getUrl().toString(),
-                createdTime,
-                lastTimeUpdate,
-                lastActivityTime
+                link.getCreatedTime(),
+                link.getLastCheckTime(),
+                link.getLastActivityTime()
             );
         } catch (DataAccessException e) {
             throw new AlreadyRegisteredLinkException(link.getUrl());
@@ -59,10 +51,13 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
-    public LinkDTO get(URI url) throws IllegalArgumentException {
-        List<LinkDTO> result = jdbcTemplate.query(SQL_GET_BY_URL, LINK_MAPPER, url.toString());
+    public LinkDTO get(URI link) throws IllegalArgumentException {
+        List<LinkDTO> result = jdbcTemplate.query(SQL_GET_BY_URL, LINK_MAPPER, link.toString());
         if (result.size() != 1) {
-            throw new IllegalArgumentException(String.format("Link %s cannot be updated because it wasn`t found", url));
+            throw new IllegalArgumentException(String.format(
+                "Link %s cannot be updated because it wasn`t found",
+                link
+            ));
         }
         return result.getFirst();
     }
@@ -78,19 +73,17 @@ public class JdbcLinkRepository implements LinkRepository {
         return jdbcTemplate.query(
             SQL_GET_ALL_OUTDATED_LINKS,
             LINK_MAPPER,
-            Timestamp.valueOf(outdated.toLocalDateTime())
+            outdated
         );
     }
 
     @Override
     public void update(LinkDTO link) throws IllegalArgumentException {
-        Timestamp lastCheckTime = Timestamp.valueOf(link.getLastCheckTime().toLocalDateTime());
-        Timestamp lastActivityTime =  Timestamp.valueOf(link.getLastActivityTime().toLocalDateTime());
         try {
             jdbcTemplate.update(
                 SQL_UPDATE_LINK,
-                lastCheckTime,
-                lastActivityTime,
+                link.getLastCheckTime(),
+                link.getLastActivityTime(),
                 link.getUrl().toString()
             );
         } catch (DataAccessException e) {

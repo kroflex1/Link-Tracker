@@ -3,10 +3,10 @@ package edu.java.dao.repository.jdbc;
 import edu.java.dao.dto.LinkAndChatDTO;
 import edu.java.dao.mapper.LinkAndChatMapper;
 import edu.java.dao.repository.LinkAndChatRepository;
+import edu.java.exceptions.AlreadyTrackedLinkException;
 import java.net.URI;
 import java.util.List;
 import javax.sql.DataSource;
-import edu.java.exceptions.AlreadyTrackedLinkException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
