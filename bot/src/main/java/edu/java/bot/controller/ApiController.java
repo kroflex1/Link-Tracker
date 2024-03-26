@@ -11,6 +11,7 @@ import java.net.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,7 +24,7 @@ public class ApiController {
 
     @PostMapping("/updates")
     @Operation(summary = "Send an update")
-    public ResponseEntity updates(LinkUpdateRequest linkUpdateRequest) throws MalformedURLException,
+    public ResponseEntity updates(@RequestBody LinkUpdateRequest linkUpdateRequest) throws MalformedURLException,
         URISyntaxException {
         for (Long chatId : linkUpdateRequest.tgChatsId()) {
             URI url = new URL(linkUpdateRequest.url()).toURI();

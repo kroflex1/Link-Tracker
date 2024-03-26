@@ -14,7 +14,7 @@ public abstract class LinkInformant {
     public Optional<LinkActivityInformation> getLinkActivityInformationAfterDate(OffsetDateTime lastUpdateDate, URI url
     ) {
         Optional<LinkActivityInformation> activityInformation = getLinkActivityInformation(lastUpdateDate, url);
-        if (activityInformation.isEmpty()) {
+        if (activityInformation.isEmpty() && next != null) {
             return next.getLinkActivityInformationAfterDate(lastUpdateDate, url);
         }
         return activityInformation;

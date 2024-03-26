@@ -23,7 +23,7 @@ public class ClientConfiguration {
     public GitHubClient gitHubClient() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer" + githubToken);
-        headers.add("User-Agent", "LinkTrackerBot");
+        headers.add("User-Agent", "LinkBot");
         headers.add("Accept", "application/json");
         return new GitHubClient(githubUrl, headers);
     }

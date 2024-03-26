@@ -50,18 +50,6 @@ public abstract class HttpClient {
         return getResponse(path, new LinkedMultiValueMap<>(), notFoundMessage);
     }
 
-    protected Mono<String> postRequest(String path, MultiValueMap<String, HttpEntity<?>> body)
-        throws IllegalArgumentException {
-        return webClient
-            .post()
-            .uri(uriBuilder -> uriBuilder
-                .path(path)
-                .build())
-            .bodyValue(body)
-            .retrieve()
-            .bodyToMono(String.class);
-    }
-
     protected Mono<String> postRequest(String path, Object body)
         throws IllegalArgumentException {
         return webClient
