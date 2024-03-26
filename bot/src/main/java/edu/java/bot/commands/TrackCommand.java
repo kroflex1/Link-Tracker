@@ -37,7 +37,7 @@ public class TrackCommand extends CompositeCommand {
     @Override
     @SuppressWarnings("ReturnCount")
     public SendMessage handle(Update update) {
-        String[] partsOfCommand = update.message().text().split(" ");
+        String[] partsOfCommand = update.message().text().split("\s");
         if (partsOfCommand.length != 2) {
             return new SendMessage(update.message().chat().id(), getMessageForWrongLinkFormat());
         }

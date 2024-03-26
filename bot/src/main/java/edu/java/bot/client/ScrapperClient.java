@@ -16,7 +16,6 @@ import reactor.core.publisher.Mono;
 
 @Validated
 public class ScrapperClient extends HttpClient {
-
     public static final String NOT_FOUND_CHAT_ID_MESSAGE = "Chat with this id isn`t registered";
     public static final String CHAT_ALREADY_REGISTERED_MESSAGE = "Chat with this id already registered";
     public static final String ALREADY_TRACKED_LINK_MESSAGE = "Chat already tracking this link";
