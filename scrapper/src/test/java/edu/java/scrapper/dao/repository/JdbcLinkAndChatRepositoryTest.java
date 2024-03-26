@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@Transactional
 public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     @Autowired
     JdbcLinkAndChatRepository linkAndChatRepository;
@@ -32,7 +33,6 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     JdbcLinkRepository linkRepository;
 
     @Test
-    @Transactional
     @Rollback
     void testAddNewChat()
         throws AlreadyRegisteredChatException, AlreadyRegisteredLinkException, AlreadyTrackedLinkException {
@@ -50,7 +50,6 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     void tesGetAllChats()
         throws AlreadyRegisteredLinkException, AlreadyRegisteredChatException, AlreadyTrackedLinkException {
@@ -71,7 +70,6 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     void testRemoveChatByLinkAndChatId()
         throws AlreadyRegisteredChatException, AlreadyRegisteredLinkException, AlreadyTrackedLinkException {
@@ -90,7 +88,6 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     void testAddAlreadyExistsLinkAndChat()
         throws AlreadyRegisteredChatException, AlreadyRegisteredLinkException, AlreadyTrackedLinkException {
@@ -107,7 +104,6 @@ public class JdbcLinkAndChatRepositoryTest extends IntegrationTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     void testRemoveNonExistentRecord() {
         LinkAndChatDTO record = new LinkAndChatDTO(URI.create("http://somelink"), 1L);

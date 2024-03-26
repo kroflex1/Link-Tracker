@@ -18,12 +18,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@Transactional
 public class JdbcLinkRepositoryTest extends IntegrationTest {
     @Autowired
     JdbcLinkRepository jdbcLinkRepository;
 
     @Test
-    @Transactional
     @Rollback
     void testAddNewLink() throws AlreadyRegisteredLinkException {
         LinkDTO link =
@@ -36,7 +36,6 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     void tesGetAllLinks() throws AlreadyRegisteredLinkException {
         int numberOfLinks = 5;
@@ -59,7 +58,6 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     void testGetAllOutdatedLinks() throws AlreadyRegisteredLinkException {
         int numberOfLinks = 4;
@@ -84,7 +82,6 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
 
 
     @Test
-    @Transactional
     @Rollback
     void testRemoveLink() throws AlreadyRegisteredLinkException {
         LinkDTO firstLink =
@@ -101,7 +98,6 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     void testAddAlreadyExistingLink() throws AlreadyRegisteredLinkException {
         LinkDTO link =
@@ -113,7 +109,6 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     void testDeleteNonExistentChat() {
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
@@ -122,7 +117,6 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     void testUpdateLink() throws AlreadyRegisteredLinkException {
         LinkDTO link =

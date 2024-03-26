@@ -44,19 +44,19 @@ public class LinkUpdaterScheduler {
         linkInformant.setNextLinkUpdateDescription(new GithubLinkInformant(gitHubClient));
     }
 
-    @Scheduled(fixedDelayString = "#{@scheduler.interval()}")
-    public void update() {
-        for (LinkDTO link : linkService.listAllOutdated(TIME_DURATION_TO_CHECK_LINK)) {
-            linkService.updateLastCheckTime(link.getUrl(), OffsetDateTime.now());
-
-            Optional<LinkInformant.LinkActivityInformation> activityInformation =
-                linkInformant.getLinkActivityInformationAfterDate(link.getLastActivityTime(), link.getUrl());
-            if (activityInformation.isPresent()) {
-                linkService.updateLastActivityTime(link.getUrl(), activityInformation.get().lastActivityTime());
-                List<Long> chatsId =
-                    chatService.getChatsThatTrackLink(link.getUrl()).stream().map(LinkAndChatDTO::getChatId).toList();
-                botClient.sendUpdate(chatsId, link.getUrl(), activityInformation.get().message());
-            }
-        }
-    }
+//    @Scheduled(fixedDelayString = "#{@scheduler.interval()}")
+//    public void update() {
+//        for (LinkDTO link : linkService.listAllOutdated(TIME_DURATION_TO_CHECK_LINK)) {
+//            linkService.updateLastCheckTime(link.getUrl(), OffsetDateTime.now());
+//
+//            Optional<LinkInformant.LinkActivityInformation> activityInformation =
+//                linkInformant.getLinkActivityInformationAfterDate(link.getLastActivityTime(), link.getUrl());
+//            if (activityInformation.isPresent()) {
+//                linkService.updateLastActivityTime(link.getUrl(), activityInformation.get().lastActivityTime());
+//                List<Long> chatsId =
+//                    chatService.getChatsThatTrackLink(link.getUrl()).stream().map(LinkAndChatDTO::getChatId).toList();
+//                botClient.sendUpdate(chatsId, link.getUrl(), activityInformation.get().message());
+//            }
+//        }
+//    }
 }
