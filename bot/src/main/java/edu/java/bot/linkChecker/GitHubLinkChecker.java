@@ -1,10 +1,10 @@
-package edu.java.bot.handler;
+package edu.java.bot.linkChecker;
 
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class GitHubHandler extends UrlHandler {
+public class GitHubLinkChecker extends LinkChecker {
     @Override
     protected boolean checkUrl(URL url) {
         Pattern pattern = Pattern.compile("https://github\\.com/[a-zA-Z0-9-]+/[a-zA-Z0-9-]+/?");
@@ -13,7 +13,7 @@ public class GitHubHandler extends UrlHandler {
     }
 
     @Override
-    public String formatDescription() {
+    public String linkFormatDescription() {
         return "GitHub:\n\thttps://github.com/<username>/<repository>";
     }
 }

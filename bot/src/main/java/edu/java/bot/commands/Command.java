@@ -3,13 +3,13 @@ package edu.java.bot.commands;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.dao.ChatDAO;
+import edu.java.bot.client.ScrapperClient;
 
 public abstract class Command {
-    protected final ChatDAO chatDAO;
+    protected final ScrapperClient scrapperClient;
 
-    public Command(ChatDAO chatDAO) {
-        this.chatDAO = chatDAO;
+    public Command(ScrapperClient scrapperClient) {
+        this.scrapperClient = scrapperClient;
     }
 
     public abstract String command();

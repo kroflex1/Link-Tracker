@@ -2,7 +2,6 @@ package edu.java.client;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.LinkedMultiValueMap;
@@ -11,8 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 public abstract class HttpClient {
-
-    private final WebClient webClient;
+    protected final WebClient webClient;
     protected final ObjectMapper objectMapper;
 
     public HttpClient(String baseUrl) {
@@ -51,7 +49,7 @@ public abstract class HttpClient {
         return getResponse(path, new LinkedMultiValueMap<>(), notFoundMessage);
     }
 
-    protected Mono<String> postRequest(String path, MultiValueMap<String, HttpEntity<?>> body)
+    protected Mono<String> postRequest(String path, Object body)
         throws IllegalArgumentException {
         return webClient
             .post()
@@ -62,5 +60,4 @@ public abstract class HttpClient {
             .retrieve()
             .bodyToMono(String.class);
     }
-
 }

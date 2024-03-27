@@ -1,12 +1,13 @@
 package edu.java.bot.handler;
 
+import edu.java.bot.linkChecker.GitHubLinkChecker;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GitHubHandlerTest {
-    GitHubHandler gitHubHandler = new GitHubHandler();
+    GitHubLinkChecker gitHubHandler = new GitHubLinkChecker();
 
     @ParameterizedTest
     @ValueSource(strings = {"", "hello", "https://github.com",
