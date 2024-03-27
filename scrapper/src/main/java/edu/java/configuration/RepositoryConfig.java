@@ -10,8 +10,12 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RepositoryConfig {
+    final DataSource dataSource;
+
     @Autowired
-    DataSource dataSource;
+    public RepositoryConfig(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Bean
     public JdbcChatRepository jdbcChatRepository() {

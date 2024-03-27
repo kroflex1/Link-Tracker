@@ -11,7 +11,6 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 @Configuration
-//@ConfigurationProperties(prefix = "spring.datasource", ignoreUnknownFields = false)
 @EnableTransactionManagement
 public class DatabaseConfig {
     @NotEmpty

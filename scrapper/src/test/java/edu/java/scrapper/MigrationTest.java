@@ -27,8 +27,9 @@ public class MigrationTest extends IntegrationTest {
             PreparedStatement sqlQuery = connection.prepareStatement("SELECT * FROM links");
             ResultSetMetaData metaData = sqlQuery.executeQuery().getMetaData();
             assertEquals("link", metaData.getColumnName(1));
-            assertEquals("created_time", metaData.getColumnName(2));
-            assertEquals("last_time_update", metaData.getColumnName(3));
+            assertEquals("created_at", metaData.getColumnName(2));
+            assertEquals("last_check_time", metaData.getColumnName(3));
+            assertEquals("last_activity_time", metaData.getColumnName(4));
         }
     }
 }

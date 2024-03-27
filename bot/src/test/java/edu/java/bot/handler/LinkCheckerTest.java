@@ -15,7 +15,6 @@ public class LinkCheckerTest {
         "https://github.com/getify/You-Dont-Know-JS/",
         "https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c",
         "https://stackoverflow.com/questions/1642028",
-        "https://stackoverflow.com/search?q=unsupported%20link"
     })
     public void testUrlHandlerChainCheckValidURL(String link) {
         LinkChecker linkChecker = new GitHubLinkChecker();
