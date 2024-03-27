@@ -30,10 +30,7 @@ public class ClientConfiguration {
 
     @Bean
     public StackOverflowClient stackOverflowClient() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("User-Agent", "LinkBot");
-        headers.add("Accept", "application/json");
-        return new StackOverflowClient(stackOverflowUrl, headers);
+        return new StackOverflowClient(stackOverflowUrl, new HttpHeaders());
     }
 
     @Bean
