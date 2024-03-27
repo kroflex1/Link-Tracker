@@ -14,7 +14,7 @@ public class ClientConfiguration {
     private String githubToken;
     @Value("${github.url}")
     private String githubUrl;
-    @Value("&{stackoverflow.url}")
+    @Value("${stackoverflow.url}")
     private String stackOverflowUrl;
     @Value("${bot.url}")
     private String botLink;
@@ -30,7 +30,10 @@ public class ClientConfiguration {
 
     @Bean
     public StackOverflowClient stackOverflowClient() {
-        return new StackOverflowClient(stackOverflowUrl, new HttpHeaders());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("User-Agent", "LinkBot");
+        headers.add("Accept", "application/json");
+        return new StackOverflowClient(stackOverflowUrl, headers);
     }
 
     @Bean

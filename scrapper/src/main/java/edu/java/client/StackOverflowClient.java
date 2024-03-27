@@ -97,13 +97,16 @@ public class StackOverflowClient extends HttpClient {
         } catch (JsonProcessingException e) {
             return Optional.empty();
         }
+        if (node == null) {
+            return Optional.empty();
+        }
         OffsetDateTime creationDate = TimeManager.convertEpochToOffsetDateTime(node.get("creation_date").asLong());
         String text = node.get("body").asText();
         String link = node.get("link").asText();
         String ownerName = node.get("owner").get("display_name").asText();
         QuestionInformation.AdditionalInformation
-            inf = new QuestionInformation.AdditionalInformation(creationDate, ownerName, text, link);
-        return Optional.of(inf);
+            additionalInf = new QuestionInformation.AdditionalInformation(creationDate, ownerName, text, link);
+        return Optional.of(additionalInf);
     }
 
     private enum AdditionalInformation {
