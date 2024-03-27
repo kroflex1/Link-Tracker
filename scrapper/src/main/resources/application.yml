@@ -1,22 +1,35 @@
 app:
   scheduler:
     enable: true
-    interval: 10000
+    interval: 20000
     force-check-delay: 10000
-
 spring:
-  application:
-    name: scrapper
+  liquibase:
+    enabled: false
+  datasource:
+    driver: "org.postgresql.Driver"
+    url: "jdbc:postgresql://localhost:5432/scrapper"
+    username: "postgres"
+    password: "postgres"
+  main:
+    allow-bean-definition-overriding: true
 
 server:
   port: 8080
+
+springdoc:
+  swagger-ui:
+    path: "/swagger-ui"
 
 logging:
   config: classpath:log4j2-plain.xml
 
 github:
-  token: ...
+  token: 
   url: "https://api.github.com"
 
 stackoverflow:
   url: "https://api.stackexchange.com"
+
+bot:
+  url: "http://localhost:8090"
