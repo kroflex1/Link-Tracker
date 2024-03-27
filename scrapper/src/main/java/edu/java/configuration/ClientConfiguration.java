@@ -22,7 +22,7 @@ public class ClientConfiguration {
     @Bean
     public GitHubClient gitHubClient() {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer" + githubToken);
+        headers.add("Authorization", "Bearer %s".formatted(githubToken));
         headers.add("User-Agent", "LinkBot");
         headers.add("Accept", "application/json");
         return new GitHubClient(githubUrl, headers);
