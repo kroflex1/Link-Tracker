@@ -27,12 +27,6 @@ public class DatabaseConfig {
     @NotEmpty
     @Value("${spring.datasource.driver}")
     String driver;
-    @NotEmpty
-    @Value("${spring.jpa.properties.hibernate.dialect}")
-    String dialect;
-    @NotEmpty
-    @Value("${spring.jpa.hibernate.ddl-auto}")
-    String ddlAuto;
 
     @Bean
     public DataSource dataSource() {
@@ -42,22 +36,5 @@ public class DatabaseConfig {
         driverManagerDataSource.setPassword(password);
         driverManagerDataSource.setDriverClassName(driver);
         return driverManagerDataSource;
-    }
-
-    @Bean
-    public LocalSessionFactoryBean sessionFactory() {
-        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-        sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan("edu.java.dao.repository.jpa.entity");
-        sessionFactory.setHibernateProperties(hibernateProperties());
-        return sessionFactory;
-    }
-
-    @Bean
-    public Properties hibernateProperties() {
-        Properties hibernateProperties = new Properties();
-
-        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", ddlAuto);
-        return hibernateProperties;
     }
 }

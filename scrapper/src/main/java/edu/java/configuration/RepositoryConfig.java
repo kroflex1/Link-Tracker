@@ -12,12 +12,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RepositoryConfig {
     final DataSource dataSource;
-    final SessionFactory sessionFactory;
 
     @Autowired
-    public RepositoryConfig(DataSource dataSource, SessionFactory sessionFactory) {
+    public RepositoryConfig(DataSource dataSource) {
         this.dataSource = dataSource;
-        this.sessionFactory = sessionFactory;
     }
 
     @Bean
