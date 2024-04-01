@@ -32,7 +32,8 @@ public class JdbcLinkService implements LinkService {
         LinkDTO link = new LinkDTO(url, OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
         try {
             linkRepository.add(link);
-        } catch (AlreadyRegisteredLinkException ignored) {
+        } catch (AlreadyRegisteredLinkException e) {
+
         }
         linkAndChatRepository.add(new LinkAndChatDTO(url, tgChatId));
         return link;
@@ -47,7 +48,7 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
-    public void updateLastCheckTime(URI url, OffsetDateTime lastCheckTime) {
+    public void updateLastCheckTime(URI url, OffsetDateTime lastCheckTime) throws IllegalArgumentException {
         LinkDTO linkDTO = linkRepository.get(url);
         linkRepository.update(new LinkDTO(url, linkDTO.getCreatedTime(), lastCheckTime,
             linkDTO.getLastActivityTime()
@@ -69,7 +70,7 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
-    public Collection<LinkDTO> listAllOutdated(Duration duration) {
+    public Collection<LinkDTO> getAllOutdated(Duration duration) {
         return linkRepository.findAllOutdatedLinks(duration);
     }
 }

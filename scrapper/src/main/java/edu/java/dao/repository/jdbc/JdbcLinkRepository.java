@@ -46,7 +46,7 @@ public class JdbcLinkRepository implements LinkRepository {
     @Override
     public void remove(URI link) throws IllegalArgumentException {
         if (jdbcTemplate.update(SQL_DELETE_LINK, link.toString()) == 0) {
-            throw new IllegalArgumentException(String.format("%s cannot be deleted because it wasn`t found", link));
+            throw new IllegalArgumentException("%s cannot be deleted because it wasn`t found".formatted(link));
         }
     }
 
@@ -55,7 +55,7 @@ public class JdbcLinkRepository implements LinkRepository {
         List<LinkDTO> result = jdbcTemplate.query(SQL_GET_BY_URL, LINK_MAPPER, link.toString());
         if (result.size() != 1) {
             throw new IllegalArgumentException(String.format(
-                "Link %s cannot be updated because it wasn`t found",
+                "Link %s wasn`t found",
                 link
             ));
         }

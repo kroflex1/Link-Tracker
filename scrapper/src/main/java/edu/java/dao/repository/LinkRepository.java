@@ -6,7 +6,7 @@ import java.time.Duration;
 import java.util.List;
 
 public interface LinkRepository extends SimpleCrudRepository<URI, LinkDTO> {
-    LinkDTO get(URI url);
+    LinkDTO get(URI url) throws IllegalArgumentException;
 
     List<LinkDTO> findAllOutdatedLinks(Duration duration);
 

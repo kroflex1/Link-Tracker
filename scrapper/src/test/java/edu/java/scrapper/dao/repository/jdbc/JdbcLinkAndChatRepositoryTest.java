@@ -1,4 +1,4 @@
-package edu.java.scrapper.dao.repository;
+package edu.java.scrapper.dao.repository.jdbc;
 
 import edu.java.dao.dto.ChatDTO;
 import edu.java.dao.dto.LinkAndChatDTO;

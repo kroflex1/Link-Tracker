@@ -66,12 +66,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+
 
         <!-- Tests -->
         <dependency>
@@ -153,6 +157,7 @@
             <version>0.1</version>
             <scope>compile</scope>
         </dependency>
+
     </dependencies>
 
 

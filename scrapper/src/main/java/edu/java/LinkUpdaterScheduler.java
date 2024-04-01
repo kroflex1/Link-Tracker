@@ -46,7 +46,7 @@ public class LinkUpdaterScheduler {
 
     @Scheduled(fixedDelayString = "#{@scheduler.interval()}")
     public void update() {
-        for (LinkDTO link : linkService.listAllOutdated(TIME_DURATION_TO_CHECK_LINK)) {
+        for (LinkDTO link : linkService.getAllOutdated(TIME_DURATION_TO_CHECK_LINK)) {
             linkService.updateLastCheckTime(link.getUrl(), OffsetDateTime.now());
 
             Optional<LinkInformant.LinkActivityInformation> activityInformation =
