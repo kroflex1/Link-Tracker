@@ -7,8 +7,12 @@ import edu.java.dao.repository.jpa.entity.Chat;
 import edu.java.exceptions.AlreadyRegisteredChatException;
 import edu.java.exceptions.AlreadyRegisteredDataException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class JpaChatService implements ChatRepository {
 
     private final JpaChatRepository chatRepository;
@@ -36,14 +40,16 @@ public class JpaChatService implements ChatRepository {
 
     @Override
     public List<ChatDTO> findAll() {
-        return chatRepository.findAll(x -> convertEntityToChatDTO(x));
+        List<ChatDTO> result = new ArrayList<>();
+        chatRepository.findAll().forEach(e -> result.add(convertEntityToChatDTO(e)));
+        return result;
     }
 
     private Chat convertCharDTOToEntity(ChatDTO chatDTO) {
         return new Chat(chatDTO.getChatId(), chatDTO.getCreatedAt());
     }
 
-    private ChatDTO convertEntityToChatDTO(Chat entity){
+    private ChatDTO convertEntityToChatDTO(Chat entity) {
         return new ChatDTO(entity.getChatId(), entity.getCreatedAt());
     }
 

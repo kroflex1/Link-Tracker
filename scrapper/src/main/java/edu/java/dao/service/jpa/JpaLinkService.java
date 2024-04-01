@@ -43,11 +43,11 @@ public class JpaLinkService implements LinkService {
         }
         Chat chat = chatRepository.findById(tgChatId).get();
         Link link = linkRepository.findById(url.toString()).get();
-        if (chat.getTrackedLinks().contains(link)) {
-            throw new AlreadyTrackedLinkException(tgChatId, url);
-        }
-        chat.addLink(link);
-        chatRepository.save(chat);
+//        if (chat.getTrackedLinks().contains(link)) {
+//            throw new AlreadyTrackedLinkException(tgChatId, url);
+//        }
+//        chat.addLink(link);
+//        chatRepository.save(chat);
         return convertEntityToLinkDTO(link);
     }
 
@@ -60,7 +60,7 @@ public class JpaLinkService implements LinkService {
         } else if (link.isEmpty()) {
             throw new IllegalArgumentException(NOT_EXIST_LINK_MESSAGE.formatted(url));
         }
-        chat.get().removeLink(link.get());
+//        chat.get().removeLink(link.get());
         chatRepository.save(chat.get());
     }
 

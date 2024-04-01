@@ -11,14 +11,14 @@ import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "chats")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class Chat {
 
@@ -26,13 +26,13 @@ public class Chat {
     @Column(name = "chat_id")
     private Long chatId;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "link_and_chat",
-               joinColumns = @JoinColumn(name = "link"),
-               inverseJoinColumns = @JoinColumn(name = "chat_id")
+               joinColumns = @JoinColumn(name = "chat_id"),
+               inverseJoinColumns = @JoinColumn(name = "link")
     )
     private Set<Link> trackedLinks = new HashSet<>();
 
