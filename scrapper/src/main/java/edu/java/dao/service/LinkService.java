@@ -8,11 +8,11 @@ import java.time.OffsetDateTime;
 import java.util.Collection;
 
 public interface LinkService {
-    LinkDTO add(long tgChatId, URI url) throws AlreadyTrackedLinkException;
+    LinkDTO startTrackLink(long tgChatId, URI url) throws AlreadyTrackedLinkException;
 
-    void remove(long tgChatId, URI url) throws IllegalArgumentException;
+    void stopTrackLink(long tgChatId, URI url) throws IllegalArgumentException;
 
-    Collection<LinkDTO> listAll(long tgChatId);
+    Collection<LinkDTO> getAllTrackedLinksByChat(long tgChatId);
 
     Collection<LinkDTO> getAllOutdated(Duration duration);
 

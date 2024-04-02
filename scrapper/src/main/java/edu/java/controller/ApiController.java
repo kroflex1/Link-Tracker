@@ -54,7 +54,7 @@ public class ApiController {
     @Operation(summary = "Get all tracked links")
     public ListLinksResponse getLinks(@PathVariable Long chatId) {
         List<LinkResponse> trackedLinks = new ArrayList<>();
-        for (LinkDTO link : linkService.listAll(chatId)) {
+        for (LinkDTO link : linkService.getAllTrackedLinksByChat(chatId)) {
             trackedLinks.add(new LinkResponse(chatId, link.getUrl()));
         }
         return new ListLinksResponse(trackedLinks.size(), trackedLinks);
@@ -65,7 +65,7 @@ public class ApiController {
     public LinkResponse addLink(@PathVariable Long chatId, @RequestBody AddLinkRequest linkInf)
         throws AlreadyTrackedLinkException, MalformedURLException, URISyntaxException {
         URI uri = new URL(linkInf.link()).toURI();
-        linkService.add(chatId, uri);
+        linkService.startTrackLink(chatId, uri);
         return new LinkResponse(chatId, uri);
     }
 
@@ -74,7 +74,7 @@ public class ApiController {
     public RemoveLinkResponse removeLinks(@PathVariable Long chatId, @RequestBody AddLinkRequest linkInf)
         throws MalformedURLException, URISyntaxException {
         URI uri = new URL(linkInf.link()).toURI();
-        linkService.remove(chatId, uri);
+        linkService.stopTrackLink(chatId, uri);
         return new RemoveLinkResponse(URI.create(linkInf.link()));
     }
 

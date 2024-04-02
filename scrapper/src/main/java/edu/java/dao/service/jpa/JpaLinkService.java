@@ -8,6 +8,7 @@ import edu.java.dao.repository.jpa.entity.Link;
 import edu.java.dao.service.LinkService;
 import edu.java.exceptions.AlreadyTrackedLinkException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import java.net.URI;
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -16,6 +17,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class JpaLinkService implements LinkService {
     private static final String NOT_EXIST_LINK_MESSAGE = "Can`t find link %s";
     private static final String NOT_EXIST_CHAT_MESSAGE = "Can`t find chat with id=%d";
@@ -29,7 +31,7 @@ public class JpaLinkService implements LinkService {
     }
 
     @Override
-    public LinkDTO add(long tgChatId, URI url) throws AlreadyTrackedLinkException {
+    public LinkDTO startTrackLink(long tgChatId, URI url) throws AlreadyTrackedLinkException {
         if (!linkRepository.existsById(url.toString())) {
             linkRepository.save(new Link(
                 url.toString(),
@@ -43,16 +45,16 @@ public class JpaLinkService implements LinkService {
         }
         Chat chat = chatRepository.findById(tgChatId).get();
         Link link = linkRepository.findById(url.toString()).get();
-//        if (chat.getTrackedLinks().contains(link)) {
-//            throw new AlreadyTrackedLinkException(tgChatId, url);
-//        }
-//        chat.addLink(link);
-//        chatRepository.save(chat);
+        if (chat.getTrackedLinks().contains(link)) {
+            throw new AlreadyTrackedLinkException(tgChatId, url);
+        }
+        chat.addLink(link);
+        chatRepository.save(chat);
         return convertEntityToLinkDTO(link);
     }
 
     @Override
-    public void remove(long tgChatId, URI url) throws IllegalArgumentException {
+    public void stopTrackLink(long tgChatId, URI url) throws IllegalArgumentException {
         Optional<Chat> chat = chatRepository.findById(tgChatId);
         Optional<Link> link = linkRepository.findById(url.toString());
         if (chat.isEmpty()) {
@@ -60,14 +62,19 @@ public class JpaLinkService implements LinkService {
         } else if (link.isEmpty()) {
             throw new IllegalArgumentException(NOT_EXIST_LINK_MESSAGE.formatted(url));
         }
-//        chat.get().removeLink(link.get());
-        chatRepository.save(chat.get());
+        Chat chatEntity = chat.get();
+        Link linkEntity = link.get();
+        chatEntity.removeLink(linkEntity);
     }
 
     @Override
-    public Collection<LinkDTO> listAll(long tgChatId) {
+    public Collection<LinkDTO> getAllTrackedLinksByChat(long tgChatId) {
+        Optional<Chat> chat = chatRepository.findById(tgChatId);
+        if (chat.isEmpty()) {
+            return new ArrayList<>();
+        }
         List<LinkDTO> result = new ArrayList<>();
-        linkRepository.findAll().forEach(e -> result.add(convertEntityToLinkDTO(e)));
+        chat.get().getTrackedLinks().forEach(e -> result.add(convertEntityToLinkDTO(e)));
         return result;
     }
 

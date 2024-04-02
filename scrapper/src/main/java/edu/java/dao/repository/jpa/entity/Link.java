@@ -34,7 +34,7 @@ public class Link {
     @Column(name = "last_activity_time", nullable = false)
     private OffsetDateTime lastActivityTime;
 
-    @ManyToMany(mappedBy = "trackedLinks")
+    @ManyToMany(mappedBy = "trackedLinks", fetch = FetchType.LAZY)
     private Set<Chat> chats = new HashSet<>();
 
     public Link(String link, OffsetDateTime createdAt, OffsetDateTime lastCheckTime, OffsetDateTime lastActivityTime) {

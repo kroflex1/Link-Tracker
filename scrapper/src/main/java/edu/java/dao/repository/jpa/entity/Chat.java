@@ -1,5 +1,6 @@
 package edu.java.dao.repository.jpa.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -47,7 +48,7 @@ public class Chat {
     }
 
     public void removeLink(Link link){
-        trackedLinks.remove(link);
         link.getChats().remove(this);
+        trackedLinks.remove(link);
     }
 }

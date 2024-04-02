@@ -16,7 +16,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+
 public class JdbcLinkService implements LinkService {
     JdbcLinkRepository linkRepository;
     JdbcLinkAndChatRepository linkAndChatRepository;
@@ -28,7 +28,7 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
-    public LinkDTO add(long tgChatId, URI url) throws AlreadyTrackedLinkException {
+    public LinkDTO startTrackLink(long tgChatId, URI url) throws AlreadyTrackedLinkException {
         LinkDTO link = new LinkDTO(url, OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
         try {
             linkRepository.add(link);
@@ -56,12 +56,12 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
-    public void remove(long tgChatId, URI url) throws IllegalArgumentException {
+    public void stopTrackLink(long tgChatId, URI url) throws IllegalArgumentException {
         linkAndChatRepository.remove(new LinkAndChatDTO(url, tgChatId));
     }
 
     @Override
-    public Collection<LinkDTO> listAll(long tgChatId) {
+    public Collection<LinkDTO> getAllTrackedLinksByChat(long tgChatId) {
         List<LinkDTO> links = new ArrayList<>();
         for (LinkAndChatDTO linkAndChat : linkAndChatRepository.finaAll(tgChatId)) {
             links.add(linkRepository.get(linkAndChat.getUrl()));
