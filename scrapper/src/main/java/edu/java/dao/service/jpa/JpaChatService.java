@@ -1,56 +1,60 @@
 package edu.java.dao.service.jpa;
 
 import edu.java.dao.dto.ChatDTO;
-import edu.java.dao.repository.ChatRepository;
+import edu.java.dao.dto.LinkAndChatDTO;
 import edu.java.dao.repository.jpa.JpaChatRepository;
+import edu.java.dao.repository.jpa.JpaLinkRepository;
 import edu.java.dao.repository.jpa.entity.Chat;
+import edu.java.dao.repository.jpa.entity.Link;
+import edu.java.dao.service.ChatService;
 import edu.java.exceptions.AlreadyRegisteredChatException;
-import edu.java.exceptions.AlreadyRegisteredDataException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-@Service
-public class JpaChatService implements ChatRepository {
+public class JpaChatService implements ChatService {
 
     private final JpaChatRepository chatRepository;
+    private final JpaLinkRepository linkRepository;
 
-    @Autowired
-    public JpaChatService(JpaChatRepository chatRepository) {
+    public JpaChatService(JpaChatRepository chatRepository, JpaLinkRepository linkRepository) {
         this.chatRepository = chatRepository;
+        this.linkRepository = linkRepository;
     }
 
     @Override
-    public void add(ChatDTO chatDTO) throws AlreadyRegisteredChatException {
-        if (chatRepository.existsById(chatDTO.getChatId())) {
-            throw new AlreadyRegisteredChatException(chatDTO.getChatId());
+    public void register(long tgChatId) throws AlreadyRegisteredChatException {
+        if (chatRepository.existsById(tgChatId)) {
+            throw new AlreadyRegisteredChatException(tgChatId);
         }
-        chatRepository.save(convertCharDTOToEntity(chatDTO));
+        Chat chat = new Chat(tgChatId, OffsetDateTime.now());
+        chatRepository.save(chat);
     }
 
     @Override
-    public void remove(Long chatId) throws IllegalArgumentException {
-        if (!chatRepository.existsById(chatId)) {
-            throw new IllegalArgumentException("Chat with id=%d wasn`t found".formatted(chatId));
-        }
-        chatRepository.deleteById(chatId);
+    public void unregister(long tgChatId) {
+        chatRepository.deleteById(tgChatId);
     }
 
     @Override
-    public List<ChatDTO> findAll() {
+    public List<ChatDTO> getAllChats() {
         List<ChatDTO> result = new ArrayList<>();
-        chatRepository.findAll().forEach(e -> result.add(convertEntityToChatDTO(e)));
+        chatRepository.findAll().forEach(e -> result.add(new ChatDTO(e.getChatId(), e.getCreatedAt())));
         return result;
     }
 
-    private Chat convertCharDTOToEntity(ChatDTO chatDTO) {
-        return new Chat(chatDTO.getChatId(), chatDTO.getCreatedAt());
+    @Override
+    public List<LinkAndChatDTO> getChatsThatTrackLink(URI url) {
+        Optional<Link> link = linkRepository.findById(url.toString());
+        if (link.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return link.get()
+            .getChats()
+            .stream()
+            .map(e -> new LinkAndChatDTO(url, e.getChatId()))
+            .toList();
     }
-
-    private ChatDTO convertEntityToChatDTO(Chat entity) {
-        return new ChatDTO(entity.getChatId(), entity.getCreatedAt());
-    }
-
 }

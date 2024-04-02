@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -22,6 +24,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class JdbcLinkRepositoryTest extends IntegrationTest {
     @Autowired
     JdbcLinkRepository jdbcLinkRepository;
+
+    @DynamicPropertySource
+    static void jdbcProperties(DynamicPropertyRegistry registry) {
+        registry.add("app.database-access-type", () -> "jdbc");
+    }
 
     @Test
     @Rollback
@@ -80,7 +87,6 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
         assertEquals(expected, actual);
     }
 
-
     @Test
     @Rollback
     void testRemoveLink() throws AlreadyRegisteredLinkException {
@@ -122,7 +128,8 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
         LinkDTO link =
             new LinkDTO(URI.create("http://link"), OffsetDateTime.now(), OffsetDateTime.now(), OffsetDateTime.now());
         jdbcLinkRepository.add(link);
-        LinkDTO updatedLink = new LinkDTO(link.getUrl(),
+        LinkDTO updatedLink = new LinkDTO(
+            link.getUrl(),
             link.getCreatedTime(),
             OffsetDateTime.now().plusDays(1),
             OffsetDateTime.now().plusDays(2)
