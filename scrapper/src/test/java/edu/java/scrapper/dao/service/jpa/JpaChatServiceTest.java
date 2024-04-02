@@ -1,12 +1,15 @@
 package edu.java.scrapper.dao.service.jpa;
 
 import edu.java.dao.dto.ChatDTO;
-import edu.java.dao.repository.jpa.JpaChatRepository;
-import edu.java.dao.repository.jpa.JpaLinkRepository;
-import edu.java.dao.service.jpa.JpaChatService;
+import edu.java.dao.service.ChatService;
+import edu.java.dao.service.LinkService;
 import edu.java.exceptions.AlreadyRegisteredChatException;
 import edu.java.scrapper.IntegrationTest;
-import org.junit.jupiter.api.BeforeAll;
+import java.net.URI;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,12 +17,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -27,9 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Transactional
 public class JpaChatServiceTest extends IntegrationTest {
     @Autowired
-    JpaChatRepository jpaChatRepository;
+    ChatService jpaChatService;
     @Autowired
-    JpaLinkRepository jpaLinkRepository;
+    LinkService jpaLinkService;
 
     @DynamicPropertySource
     static void jdbcProperties(DynamicPropertyRegistry registry) {
@@ -39,7 +36,6 @@ public class JpaChatServiceTest extends IntegrationTest {
     @Test
     @Rollback
     void testRegisterNewChat() {
-        JpaChatService jpaChatService = new JpaChatService(jpaChatRepository, jpaLinkRepository);
         Long chatId = 1L;
         jpaChatService.register(chatId);
 
@@ -52,7 +48,6 @@ public class JpaChatServiceTest extends IntegrationTest {
     @Test
     @Rollback
     void testRegisterAlreadyExistChat() {
-        JpaChatService jpaChatService = new JpaChatService(jpaChatRepository, jpaLinkRepository);
         Long chatId = 1L;
         jpaChatService.register(chatId);
 
@@ -65,7 +60,6 @@ public class JpaChatServiceTest extends IntegrationTest {
     @Test
     @Rollback
     void testUnregisterChat() {
-        JpaChatService jpaChatService = new JpaChatService(jpaChatRepository, jpaLinkRepository);
         Long chatId = 1L;
         jpaChatService.register(chatId);
         assertEquals(1, jpaChatService.getAllChats().size());
@@ -78,7 +72,6 @@ public class JpaChatServiceTest extends IntegrationTest {
     @Test
     @Rollback
     void testGetAllChats() {
-        JpaChatService jpaChatService = new JpaChatService(jpaChatRepository, jpaLinkRepository);
         int numberOfChats = 5;
         Set<Long> expected = new HashSet<>();
         for (long chatId = 0; chatId < numberOfChats; chatId++) {
@@ -93,6 +86,19 @@ public class JpaChatServiceTest extends IntegrationTest {
             .collect(Collectors.toSet());
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    @Rollback
+    void testGetLinksThatTrackChat() {
+        Long chatId = 1L;
+        URI link = URI.create("http://link");
+        jpaChatService.register(chatId);
+        jpaLinkService.startTrackLink(chatId, link);
+
+        URI actual = jpaChatService.getChatsThatTrackLink(link).getFirst().getUrl();
+
+        assertEquals(link, actual);
     }
 
 }

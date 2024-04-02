@@ -3,6 +3,7 @@ app:
     enable: true
     interval: 20000
     force-check-delay: 10000
+  database-access-type: "jpa"
 spring:
   liquibase:
     enabled: false
@@ -11,8 +12,12 @@ spring:
     url: "jdbc:postgresql://localhost:5432/scrapper"
     username: "postgres"
     password: "postgres"
-  main:
-    allow-bean-definition-overriding: true
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+    hibernate:
+      ddl-auto: "validate"
 
 server:
   port: 8080

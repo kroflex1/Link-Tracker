@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class JpaLinkService implements LinkService {
     private static final String NOT_EXIST_LINK_MESSAGE = "Can`t find link %s";

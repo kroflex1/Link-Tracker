@@ -13,6 +13,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 public class JpaChatService implements ChatService {
 
@@ -25,6 +26,7 @@ public class JpaChatService implements ChatService {
     }
 
     @Override
+    @Transactional
     public void register(long tgChatId) throws AlreadyRegisteredChatException {
         if (chatRepository.existsById(tgChatId)) {
             throw new AlreadyRegisteredChatException(tgChatId);
@@ -34,11 +36,13 @@ public class JpaChatService implements ChatService {
     }
 
     @Override
+    @Transactional
     public void unregister(long tgChatId) {
         chatRepository.deleteById(tgChatId);
     }
 
     @Override
+    @Transactional
     public List<ChatDTO> getAllChats() {
         List<ChatDTO> result = new ArrayList<>();
         chatRepository.findAll().forEach(e -> result.add(new ChatDTO(e.getChatId(), e.getCreatedAt())));
@@ -46,6 +50,7 @@ public class JpaChatService implements ChatService {
     }
 
     @Override
+    @Transactional
     public List<LinkAndChatDTO> getChatsThatTrackLink(URI url) {
         Optional<Link> link = linkRepository.findById(url.toString());
         if (link.isEmpty()) {
