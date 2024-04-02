@@ -9,15 +9,11 @@ import edu.java.exceptions.AlreadyRegisteredChatException;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
 public class JdbcChatService implements ChatService {
     private final JdbcChatRepository chatRepository;
     private final JdbcLinkAndChatRepository linkAndChatRepository;
 
-    @Autowired
     public JdbcChatService(JdbcChatRepository chatRepository, JdbcLinkAndChatRepository linkAndChatRepository) {
         this.chatRepository = chatRepository;
         this.linkAndChatRepository = linkAndChatRepository;
@@ -31,6 +27,11 @@ public class JdbcChatService implements ChatService {
     @Override
     public void unregister(long chatId) {
         chatRepository.remove(chatId);
+    }
+
+    @Override
+    public List<ChatDTO> getAllChats() {
+        return chatRepository.findAll();
     }
 
     @Override

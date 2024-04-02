@@ -13,15 +13,11 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 
 public class JdbcLinkService implements LinkService {
     JdbcLinkRepository linkRepository;
     JdbcLinkAndChatRepository linkAndChatRepository;
 
-    @Autowired
     public JdbcLinkService(JdbcLinkRepository linkRepository, JdbcLinkAndChatRepository linkAndChatRepository) {
         this.linkRepository = linkRepository;
         this.linkAndChatRepository = linkAndChatRepository;

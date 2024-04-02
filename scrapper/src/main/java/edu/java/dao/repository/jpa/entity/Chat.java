@@ -1,6 +1,5 @@
 package edu.java.dao.repository.jpa.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,9 +12,7 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "chats")
@@ -47,7 +44,7 @@ public class Chat {
         link.getChats().add(this);
     }
 
-    public void removeLink(Link link){
+    public void removeLink(Link link) {
         link.getChats().remove(this);
         trackedLinks.remove(link);
     }

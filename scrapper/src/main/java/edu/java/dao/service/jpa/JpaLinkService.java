@@ -7,8 +7,6 @@ import edu.java.dao.repository.jpa.entity.Chat;
 import edu.java.dao.repository.jpa.entity.Link;
 import edu.java.dao.service.LinkService;
 import edu.java.exceptions.AlreadyTrackedLinkException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.net.URI;
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -16,15 +14,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Service
 public class JpaLinkService implements LinkService {
     private static final String NOT_EXIST_LINK_MESSAGE = "Can`t find link %s";
     private static final String NOT_EXIST_CHAT_MESSAGE = "Can`t find chat with id=%d";
     private final JpaLinkRepository linkRepository;
     private final JpaChatRepository chatRepository;
 
-    @Autowired
     public JpaLinkService(JpaLinkRepository linkRepository, JpaChatRepository chatRepository) {
         this.linkRepository = linkRepository;
         this.chatRepository = chatRepository;
