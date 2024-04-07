@@ -2,7 +2,7 @@ package edu.java.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import edu.java.client.inforamtion.QuestionInformation;
+import edu.java.client.inforamation.QuestionInformation;
 import edu.java.utils.TimeManager;
 import java.net.URI;
 import java.time.OffsetDateTime;

@@ -2,7 +2,7 @@ package edu.java.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import edu.java.client.inforamtion.RepositoryInformation;
+import edu.java.client.inforamation.RepositoryInformation;
 import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
+import reactor.util.retry.Retry;
 
 @Validated
 public class GitHubClient extends HttpClient {
@@ -24,11 +25,15 @@ public class GitHubClient extends HttpClient {
     );
 
     public GitHubClient(HttpHeaders headers) {
-        this(DEFAULT_URL, headers);
+        super(DEFAULT_URL, headers);
     }
 
     public GitHubClient(String baseUrl, HttpHeaders headers) {
         super(baseUrl, headers);
+    }
+
+    public GitHubClient(String baseUrl, HttpHeaders headers, Retry retryPolicy) {
+        super(baseUrl, headers, retryPolicy);
     }
 
     public Optional<RepositoryInformation> getRepositoryInformation(@NotNull URI url) {

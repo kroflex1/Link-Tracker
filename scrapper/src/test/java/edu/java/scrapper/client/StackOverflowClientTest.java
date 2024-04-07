@@ -5,7 +5,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import edu.java.client.StackOverflowClient;
-import edu.java.client.inforamtion.QuestionInformation;
+import edu.java.client.inforamation.QuestionInformation;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.stream.Stream;

@@ -1,4 +1,4 @@
-package edu.java.client.inforamtion;
+package edu.java.client.inforamation;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 import java.time.OffsetDateTime;

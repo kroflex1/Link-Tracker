@@ -1,7 +1,7 @@
 package edu.java.utils.linkInformant;
 
 import edu.java.client.StackOverflowClient;
-import edu.java.client.inforamtion.QuestionInformation;
+import edu.java.client.inforamation.QuestionInformation;
 import io.micrometer.common.lang.Nullable;
 import java.net.URI;
 import java.time.OffsetDateTime;
