@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
+import edu.java.client.retry.RetryPolicy;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
 public abstract class HttpClient {
-    private static final Retry DEFAULT_RETRY_POLICY = Retry.fixedDelay(2, Duration.ofSeconds(2L));
+    private static final Retry DEFAULT_RETRY_POLICY = RetryPolicy.CONSTANT.getRetry(2, Duration.ofSeconds(2));
     protected final WebClient webClient;
     protected final ObjectMapper objectMapper;
     protected final Retry retryPolicy;
@@ -42,7 +43,6 @@ public abstract class HttpClient {
         this.retryPolicy = retryPolicy;
     }
 
-
     protected String getResponse(
         String path,
         MultiValueMap<String, String> params,
@@ -57,11 +57,11 @@ public abstract class HttpClient {
                 .build())
             .retrieve()
             .onStatus(
-                retryCodes::contains,
+                status -> status == HttpStatus.NOT_FOUND,
                 clientResponse -> Mono.error(new IllegalArgumentException(notFoundMessage))
             )
             .onStatus(
-                HttpStatusCode::is5xxServerError,
+                retryCodes::contains,
                 clientResponse -> Mono.error(new ServiceException("service exception"))
             )
             .bodyToMono(String.class)
@@ -80,6 +80,4 @@ public abstract class HttpClient {
             .retrieve()
             .bodyToMono(String.class);
     }
-
-    private boolean is
 }

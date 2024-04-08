@@ -1,6 +1,5 @@
-package edu.java.configuration.client;
+package edu.java.client.retry;
 
-import edu.java.client.retry.LinearRetry;
 import java.time.Duration;
 import org.hibernate.service.spi.ServiceException;
 import reactor.util.retry.Retry;
@@ -17,6 +16,6 @@ public enum RetryPolicy {
         if (this == RetryPolicy.EXPONENTIAL) {
             return Retry.backoff(maxAttempts, duration).filter(throwable -> throwable instanceof ServiceException);
         }
-        return Retry.fixedDelay(maxAttempts, duration);
+        return Retry.fixedDelay(maxAttempts, duration).filter(throwable -> throwable instanceof ServiceException);
     }
 }

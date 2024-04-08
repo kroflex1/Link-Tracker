@@ -1,6 +1,7 @@
 package edu.java.configuration.client;
 
 import edu.java.client.GitHubClient;
+import edu.java.client.retry.RetryPolicy;
 import io.micrometer.common.lang.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +11,7 @@ import reactor.util.retry.Retry;
 import java.time.Duration;
 
 @Configuration
-public class GitHubClientConfig() {
+public class GitHubClientConfig {
     @Value("${github.token}")
     private String githubToken;
 
