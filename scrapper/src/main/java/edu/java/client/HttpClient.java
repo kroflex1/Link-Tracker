@@ -18,17 +18,12 @@ import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
 public abstract class HttpClient {
-    private static final Retry DEFAULT_RETRY_POLICY = RetryPolicy.CONSTANT.getRetry(2, Duration.ofSeconds(2));
     protected final WebClient webClient;
     protected final ObjectMapper objectMapper;
     protected final Retry retryPolicy;
 
-    public HttpClient(String baseUrl) {
-        this(baseUrl, new HttpHeaders(), DEFAULT_RETRY_POLICY);
-    }
-
-    public HttpClient(String baseUrl, HttpHeaders headers) {
-        this(baseUrl, headers, DEFAULT_RETRY_POLICY);
+    public HttpClient(String baseUrl, Retry retryPolicy) {
+        this(baseUrl, new HttpHeaders(), retryPolicy);
     }
 
     public HttpClient(String baseUrl, HttpHeaders headers, Retry retryPolicy) {
