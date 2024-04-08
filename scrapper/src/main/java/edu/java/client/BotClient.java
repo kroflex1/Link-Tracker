@@ -10,7 +10,7 @@ import reactor.util.retry.Retry;
 
 public class BotClient extends HttpClient {
 
-    private static final Retry DEFAULT_RETRY_POLICY = RetryPolicy.CONSTANT.getRetry(2, Duration.ofSeconds(2));
+    private static final Retry DEFAULT_RETRY_POLICY = RetryPolicy.CONSTANT.createWith(2, Duration.ofSeconds(2));
 
     public BotClient(@NotNull String baseUrl) {
         super(baseUrl, DEFAULT_RETRY_POLICY);

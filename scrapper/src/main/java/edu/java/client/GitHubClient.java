@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import edu.java.client.inforamation.RepositoryInformation;
 import java.net.URI;
 import java.time.Duration;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -26,7 +25,7 @@ public class GitHubClient extends HttpClient {
     private static final String START_PATH = "/repos";
     private static final Pattern PATTERN_FOR_LINK = Pattern.compile("https://github\\.com/(.+)/(.+)");
     private static final String NOT_FOUND_REPOSITORY_MESSAGE = "Repository was not found, or it is private";
-    private static final Retry DEFAULT_RETRY_POLICY = RetryPolicy.CONSTANT.getRetry(2, Duration.ofSeconds(2));
+    private static final Retry DEFAULT_RETRY_POLICY = RetryPolicy.CONSTANT.createWith(2, Duration.ofSeconds(2));
     private static final Set<HttpStatusCode> codesForRetry =
         Set.of(HttpStatusCode.valueOf(500), HttpStatusCode.valueOf(502));
     private static final Map<String, RepositoryInformation.GithubActivity> GITHUB_ACTIVITY_MAPPER = Map.of(

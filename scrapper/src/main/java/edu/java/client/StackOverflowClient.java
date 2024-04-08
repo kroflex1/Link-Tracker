@@ -8,7 +8,6 @@ import edu.java.utils.TimeManager;
 import java.net.URI;
 import java.time.Duration;
 import java.time.OffsetDateTime;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -26,7 +25,7 @@ public class StackOverflowClient extends HttpClient {
     private static final String DEFAULT_URL = "https://api.stackexchange.com";
     private static final String START_PATH = "/questions";
     private static final Pattern PATTERN_FOR_LINK = Pattern.compile("https://stackoverflow\\.com/questions/(\\d+)/.+");
-    private static final Retry DEFAULT_RETRY_POLICY = RetryPolicy.CONSTANT.getRetry(2, Duration.ofSeconds(2));
+    private static final Retry DEFAULT_RETRY_POLICY = RetryPolicy.CONSTANT.createWith(2, Duration.ofSeconds(2));
     private static final Set<HttpStatusCode> codesForRetry =
         Set.of(HttpStatusCode.valueOf(500), HttpStatusCode.valueOf(501));
 

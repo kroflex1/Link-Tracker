@@ -9,7 +9,7 @@ public enum RetryPolicy {
     CONSTANT,
     EXPONENTIAL;
 
-    public Retry getRetry(int maxAttempts, Duration duration) {
+    public Retry createWith(int maxAttempts, Duration duration) {
         if (this == RetryPolicy.LINEAR) {
             return new LinearRetry(maxAttempts, duration);
         }

@@ -1,4 +1,4 @@
-package edu.java.configuration.client;
+package edu.java.configuration.clientConfig;
 
 import edu.java.client.GitHubClient;
 import edu.java.client.retry.RetryPolicy;
@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
-import reactor.util.retry.Retry;
 import java.time.Duration;
 
 @Configuration
@@ -20,15 +19,15 @@ public class GitHubClientConfig {
 
     @Nullable
     @Value("${github.retry-policy}")
-    RetryPolicy retryPolicy;
+    private RetryPolicy retryPolicy;
 
     @Nullable
     @Value("${github.max-attempts}")
-    int maxAttempts;
+    private int maxAttempts;
 
     @Nullable
     @Value("${github.time}")
-    long time;
+    private long time;
 
     @Bean
     public GitHubClient gitHubClient() {
@@ -36,7 +35,9 @@ public class GitHubClientConfig {
         headers.add("Authorization", "Bearer %s".formatted(githubToken));
         headers.add("User-Agent", "LinkBot");
         headers.add("Accept", "application/json");
-        Retry retry = retryPolicy.getRetry(maxAttempts, Duration.ofMillis(time));
-        return new GitHubClient(githubUrl, headers, retry);
+        if (retryPolicy == null) {
+            return new GitHubClient(githubUrl, headers);
+        }
+        return new GitHubClient(githubUrl, headers, retryPolicy.createWith(maxAttempts, Duration.ofMillis(time)));
     }
 }

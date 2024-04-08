@@ -32,9 +32,19 @@ logging:
 github:
   token: ...
   url: "https://api.github.com"
+  retry-policy: "linear"
+  max-attempts: 2
+  time: 3000
+
 
 stackoverflow:
   url: "https://api.stackexchange.com"
+  retry-policy: "linear"
+  max-attempts: 2
+  time: 3000
 
 bot:
   url: "http://localhost:8090"
+  retry-policy: "linear"
+  max-attempts: 2
+  time: 3000
