@@ -32,29 +32,31 @@ public class JpaLinkRepositoryTest extends IntegrationTest {
         int numberOfFreshLinks = 2;
         int numberOfOldLinks = 3;
         OffsetDateTime outdated = OffsetDateTime.now().minusDays(1);
-        List<Link> expected = new ArrayList<>();
-        for (int i = 0; i < numberOfFreshLinks; i++) {
-            jpaLinkRepository.save(new Link(
-                "http://fresh" + i,
+        List<Link> freshLinks = generateLinksWithLastCheckTime(numberOfFreshLinks, OffsetDateTime.now(), "fresh");
+        List<Link> expectedOldLinks =generateLinksWithLastCheckTime(numberOfOldLinks, outdated, "old");
+
+        jpaLinkRepository.saveAll(freshLinks);
+        jpaLinkRepository.saveAll(expectedOldLinks);
+        List<Link> actual = jpaLinkRepository.findAllByLastCheckTimeLessThanEqual(outdated);
+
+        assertEquals(expectedOldLinks.size(), actual.size());
+        assertEquals(expectedOldLinks.stream().map(Link::getLink).toList(), actual.stream().map(Link::getLink).toList());
+    }
+
+    private List<Link> generateLinksWithLastCheckTime(
+        int numberOfLinks,
+        OffsetDateTime lastCheckTime,
+        String linkPathPattern
+    ) {
+        List<Link> result = new ArrayList<>();
+        for (int i = 0; i < numberOfLinks; i++) {
+            result.add(new Link(
+                "http://%s".formatted(linkPathPattern) + i,
                 OffsetDateTime.now(),
-                OffsetDateTime.now(),
+                lastCheckTime,
                 OffsetDateTime.now()
             ));
         }
-        for (int i = 0; i < numberOfOldLinks; i++) {
-            Link oldLink = new Link(
-                "http://old" + i,
-                OffsetDateTime.now(),
-                outdated,
-                OffsetDateTime.now()
-            );
-            expected.add(oldLink);
-            jpaLinkRepository.save(oldLink);
-        }
-
-        List<Link> actual = jpaLinkRepository.findAllByLastCheckTimeLessThanEqual(outdated);
-
-        assertEquals(expected.size(), actual.size());
-        assertEquals(expected.stream().map(Link::getLink).toList(), actual.stream().map(Link::getLink).toList());
+        return result;
     }
 }
