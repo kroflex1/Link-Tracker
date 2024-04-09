@@ -2,9 +2,8 @@ package edu.java.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import edu.java.HttpClient;
 import edu.java.client.inforamation.RepositoryInformation;
-import edu.java.client.retry.RetryPolicy;
+import edu.java.retryPolicy.RetryPolicy;
 import java.net.URI;
 import java.time.Duration;
 import java.util.Map;

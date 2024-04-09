@@ -1,4 +1,4 @@
-package edu.java;
+package edu.java.client;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,11 +8,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
 public abstract class HttpClient {
-    protected final org.springframework.web.reactive.function.client.WebClient webClient;
+    protected final WebClient webClient;
     protected final ObjectMapper objectMapper;
     protected final Retry retryPolicy;
 

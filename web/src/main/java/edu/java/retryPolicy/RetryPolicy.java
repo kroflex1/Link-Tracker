@@ -1,4 +1,4 @@
-package edu.java.client.retry;
+package edu.java.retryPolicy;
 
 import java.time.Duration;
 import org.hibernate.service.spi.ServiceException;
@@ -8,6 +8,8 @@ public enum RetryPolicy {
     LINEAR,
     CONSTANT,
     EXPONENTIAL;
+
+
 
     public Retry createWith(int maxAttempts, Duration duration) {
         if (this == RetryPolicy.LINEAR) {

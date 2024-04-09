@@ -1,7 +1,7 @@
 package edu.java.configuration.clientConfig;
 
 import edu.java.client.GitHubClient;
-import edu.java.client.retry.RetryPolicy;
+import edu.java.retryPolicy.RetryPolicy;
 import io.micrometer.common.lang.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

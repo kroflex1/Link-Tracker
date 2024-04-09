@@ -1,4 +1,4 @@
-package edu.java.client.retry;
+package edu.java.retryPolicy;
 
 import org.hibernate.service.spi.ServiceException;
 import org.reactivestreams.Publisher;
