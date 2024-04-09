@@ -36,7 +36,7 @@ public class JpaChatServiceTest extends IntegrationTest {
     @Test
     @Rollback
     void testRegisterNewChat() {
-        Long chatId = 1L;
+        long chatId = 1L;
         jpaChatService.register(chatId);
 
         List<ChatDTO> chats = jpaChatService.getAllChats();
@@ -48,7 +48,7 @@ public class JpaChatServiceTest extends IntegrationTest {
     @Test
     @Rollback
     void testRegisterAlreadyExistChat() {
-        Long chatId = 1L;
+        long chatId = 1L;
         jpaChatService.register(chatId);
 
         Exception exception = assertThrows(AlreadyRegisteredChatException.class, () ->
@@ -60,12 +60,12 @@ public class JpaChatServiceTest extends IntegrationTest {
     @Test
     @Rollback
     void testUnregisterChat() {
-        Long chatId = 1L;
+        long chatId = 1L;
+
         jpaChatService.register(chatId);
         assertEquals(1, jpaChatService.getAllChats().size());
 
         jpaChatService.unregister(chatId);
-
         assertEquals(0, jpaChatService.getAllChats().size());
     }
 
@@ -74,11 +74,11 @@ public class JpaChatServiceTest extends IntegrationTest {
     void testGetAllChats() {
         int numberOfChats = 5;
         Set<Long> expected = new HashSet<>();
+
         for (long chatId = 0; chatId < numberOfChats; chatId++) {
             expected.add(chatId);
             jpaChatService.register(chatId);
         }
-
         Set<Long> actual = jpaChatService
             .getAllChats()
             .stream()
@@ -91,11 +91,11 @@ public class JpaChatServiceTest extends IntegrationTest {
     @Test
     @Rollback
     void testGetLinksThatTrackChat() {
-        Long chatId = 1L;
+        long chatId = 1L;
         URI link = URI.create("http://link");
+
         jpaChatService.register(chatId);
         jpaLinkService.startTrackLink(chatId, link);
-
         URI actual = jpaChatService.getChatsThatTrackLink(link).getFirst().getUrl();
 
         assertEquals(link, actual);

@@ -34,22 +34,22 @@ public class JpaLinkServiceTest extends IntegrationTest {
     @Autowired JpaChatRepository jpaChatRepository;
     @Autowired JpaLinkRepository jpaLinkRepository;
 
+    @DynamicPropertySource
+    static void jdbcProperties(DynamicPropertyRegistry registry) {
+        registry.add("app.database-access-type", () -> "jpa");
+    }
+
     @Test
     @Rollback
     void testTrackLink() {
         JpaLinkService jpaLinkService = new JpaLinkService(jpaLinkRepository, jpaChatRepository);
         URI link = URI.create("http://somelink");
-        Long tgChatId = 1L;
-        jpaLinkService.startTrackLink(tgChatId, link);
+        long tgChatId = 1L;
 
+        jpaLinkService.startTrackLink(tgChatId, link);
         LinkDTO actual = jpaLinkService.getAllTrackedLinksByChat(tgChatId).stream().toList().getFirst();
 
         assertEquals(link, actual.getUrl());
-    }
-
-    @DynamicPropertySource
-    static void jdbcProperties(DynamicPropertyRegistry registry) {
-        registry.add("app.database-access-type", () -> "jpa");
     }
 
     @Test
@@ -58,6 +58,7 @@ public class JpaLinkServiceTest extends IntegrationTest {
         JpaLinkService jpaLinkService = new JpaLinkService(jpaLinkRepository, jpaChatRepository);
         URI link = URI.create("http://somelink");
         Long tgChatId = 1L;
+
         jpaLinkService.startTrackLink(tgChatId, link);
 
         Exception exception = assertThrows(AlreadyTrackedLinkException.class, () ->
@@ -72,12 +73,12 @@ public class JpaLinkServiceTest extends IntegrationTest {
         int numberOfLinks = 5;
         Long tgChatId = 1L;
         Set<URI> expected = new HashSet<>();
+
         for (int i = 0; i < numberOfLinks; i++) {
             URI link = URI.create("http://somelink" + i);
             expected.add(link);
             jpaLinkService.startTrackLink(tgChatId, link);
         }
-
         Set<URI> actual = jpaLinkService.getAllTrackedLinksByChat(tgChatId)
             .stream()
             .map(LinkDTO::getUrl)
@@ -91,13 +92,13 @@ public class JpaLinkServiceTest extends IntegrationTest {
     @Rollback
     void testManyChatsTrackLinks(Map<Long, Set<URI>> trackedLinks) {
         JpaLinkService jpaLinkService = new JpaLinkService(jpaLinkRepository, jpaChatRepository);
+        Map<Long, Set<URI>> actual = new HashMap<>();
+
         for (Map.Entry<Long, Set<URI>> record : trackedLinks.entrySet()) {
             for (URI link : record.getValue()) {
                 jpaLinkService.startTrackLink(record.getKey(), link);
             }
         }
-
-        Map<Long, Set<URI>> actual = new HashMap<>();
         for (Long chatId : trackedLinks.keySet()) {
             Set<URI> actualTrackedLinks = jpaLinkService
                 .getAllTrackedLinksByChat(chatId)
@@ -115,9 +116,9 @@ public class JpaLinkServiceTest extends IntegrationTest {
     void testStopTrackLink() {
         JpaLinkService jpaLinkService = new JpaLinkService(jpaLinkRepository, jpaChatRepository);
         URI link = URI.create("http://somelink");
-        Long tgChatId = 1L;
-        jpaLinkService.startTrackLink(tgChatId, link);
+        long tgChatId = 1L;
 
+        jpaLinkService.startTrackLink(tgChatId, link);
         jpaLinkService.stopTrackLink(tgChatId, link);
 
         assertTrue(jpaLinkService.getAllTrackedLinksByChat(tgChatId).isEmpty());
@@ -129,9 +130,9 @@ public class JpaLinkServiceTest extends IntegrationTest {
         JpaLinkService jpaLinkService = new JpaLinkService(jpaLinkRepository, jpaChatRepository);
         URI link = URI.create("http://somelink");
         OffsetDateTime expectedLastCheckTime = OffsetDateTime.now().plusHours(1);
+
         jpaLinkService.startTrackLink(1L, link);
         jpaLinkService.updateLastCheckTime(link, expectedLastCheckTime);
-
         OffsetDateTime actual =
             jpaLinkService.getAllTrackedLinksByChat(1L).stream().toList().getFirst().getLastCheckTime();
 
@@ -144,9 +145,9 @@ public class JpaLinkServiceTest extends IntegrationTest {
         JpaLinkService jpaLinkService = new JpaLinkService(jpaLinkRepository, jpaChatRepository);
         URI link = URI.create("http://somelink");
         OffsetDateTime expectedLastActivityTime = OffsetDateTime.now().plusHours(1);
+
         jpaLinkService.startTrackLink(1L, link);
         jpaLinkService.updateLastActivityTime(link, expectedLastActivityTime);
-
         OffsetDateTime actual =
             jpaLinkService.getAllTrackedLinksByChat(1L).stream().toList().getFirst().getLastActivityTime();
 
