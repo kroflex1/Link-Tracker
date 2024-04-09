@@ -131,7 +131,7 @@
         </dependency>
         <dependency>
             <groupId>edu.java</groupId>
-            <artifactId>dto</artifactId>
+            <artifactId>web</artifactId>
             <version>0.1</version>
             <scope>compile</scope>
         </dependency>

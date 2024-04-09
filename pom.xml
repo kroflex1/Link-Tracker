@@ -48,7 +48,7 @@
     <modules>
         <module>bot</module>
         <module>scrapper</module>
-        <module>dto</module>
+        <module>web</module>
     </modules>
 
     <dependencyManagement>

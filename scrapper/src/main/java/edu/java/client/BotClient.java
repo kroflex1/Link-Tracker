@@ -1,5 +1,6 @@
 package edu.java.client;
 
+import edu.java.HttpClient;
 import edu.java.client.retry.RetryPolicy;
 import edu.java.request.LinkUpdateRequest;
 import java.net.URI;

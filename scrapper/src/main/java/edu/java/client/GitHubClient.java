@@ -2,7 +2,9 @@ package edu.java.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import edu.java.HttpClient;
 import edu.java.client.inforamation.RepositoryInformation;
+import edu.java.client.retry.RetryPolicy;
 import java.net.URI;
 import java.time.Duration;
 import java.util.Map;
@@ -10,7 +12,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import edu.java.client.retry.RetryPolicy;
 import org.hibernate.service.spi.ServiceException;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;

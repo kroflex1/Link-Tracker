@@ -1,24 +1,18 @@
-package edu.java.client;
+package edu.java;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.Duration;
-import java.util.HashSet;
 import java.util.Set;
-import edu.java.client.retry.RetryPolicy;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
 public abstract class HttpClient {
-    protected final WebClient webClient;
+    protected final org.springframework.web.reactive.function.client.WebClient webClient;
     protected final ObjectMapper objectMapper;
     protected final Retry retryPolicy;
 
@@ -27,7 +21,7 @@ public abstract class HttpClient {
     }
 
     public HttpClient(String baseUrl, HttpHeaders headers, Retry retryPolicy) {
-        this.webClient = WebClient
+        this.webClient = org.springframework.web.reactive.function.client.WebClient
             .builder()
             .baseUrl(baseUrl)
             .defaultHeaders(httpHeaders -> httpHeaders.addAll(headers))
