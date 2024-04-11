@@ -1,6 +1,5 @@
 package edu.java.configuration.clientConfig;
 
-import edu.java.RateLimitInterceptor;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.BucketConfiguration;
 import java.time.Duration;

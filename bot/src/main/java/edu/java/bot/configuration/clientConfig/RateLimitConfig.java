@@ -1,6 +1,5 @@
-package edu.java.bot.configuration;
+package edu.java.bot.configuration.clientConfig;
 
-import edu.java.RateLimitInterceptor;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.BucketConfiguration;
 import java.time.Duration;
@@ -12,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebMvc
 public class RateLimitConfig implements WebMvcConfigurer {
-    private static final long BUCKET_CAPACITY = 100;
+    private static final long BUCKET_CAPACITY = 500;
     private static final Duration BUCKET_REFILL_TIME = Duration.ofMinutes(1);
     private final BucketConfiguration configuration;
 

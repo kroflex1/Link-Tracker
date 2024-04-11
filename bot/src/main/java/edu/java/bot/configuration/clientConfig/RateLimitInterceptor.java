@@ -1,4 +1,4 @@
-package edu.java;
+package edu.java.bot.configuration.clientConfig;
 
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.BucketConfiguration;

@@ -1,4 +1,4 @@
-package edu.java.bot.configuration;
+package edu.java.bot.configuration.clientConfig;
 
 import edu.java.bot.client.ScrapperClient;
 import org.springframework.beans.factory.annotation.Value;
