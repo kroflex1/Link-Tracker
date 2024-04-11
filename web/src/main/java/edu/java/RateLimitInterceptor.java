@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-public class RateLimitInterceptor implements HandlerInterceptor{
+public class RateLimitInterceptor implements HandlerInterceptor {
     private final BucketConfiguration bucketConfiguration;
     private final Map<String, Bucket> cache = new ConcurrentHashMap<>();
 
