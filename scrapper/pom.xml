@@ -158,12 +158,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>edu.java</groupId>
-            <artifactId>web</artifactId>
-            <version>0.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.bucket4j</groupId>
             <artifactId>bucket4j-core</artifactId>
             <version>8.1.0</version>
