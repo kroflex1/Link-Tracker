@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiController {
     private final TelegramBot telegramBot;
 
-    public ApiController(@Autowired TelegramBot telegramBot) {
+    @Autowired
+    public ApiController(TelegramBot telegramBot) {
         this.telegramBot = telegramBot;
     }
 

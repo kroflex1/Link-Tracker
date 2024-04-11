@@ -26,7 +26,7 @@ public class StackOverflowClient extends HttpClient {
     private static final String START_PATH = "/questions";
     private static final Pattern PATTERN_FOR_LINK = Pattern.compile("https://stackoverflow\\.com/questions/(\\d+)/.+");
     private static final Retry DEFAULT_RETRY_POLICY = RetryPolicy.CONSTANT.createWith(2, Duration.ofSeconds(2));
-    private static final Set<HttpStatusCode> codesForRetry =
+    private static final Set<HttpStatusCode> CODES_FOR_RETRY =
         Set.of(HttpStatusCode.valueOf(500), HttpStatusCode.valueOf(501));
 
     public StackOverflowClient(HttpHeaders headers) {
@@ -59,7 +59,7 @@ public class StackOverflowClient extends HttpClient {
                 String.join("/", START_PATH, Long.toString(questionId)),
                 params,
                 "Not found question",
-                codesForRetry
+                CODES_FOR_RETRY
             );
         } catch (IllegalArgumentException | ServiceException e) {
             return Optional.empty();
@@ -100,7 +100,7 @@ public class StackOverflowClient extends HttpClient {
                 String.join("/", START_PATH, Long.toString(questionId), additionalInfType.pathName),
                 params,
                 String.format("Not found %s for question", additionalInfType.pathName),
-                codesForRetry
+                CODES_FOR_RETRY
             );
         } catch (IllegalArgumentException e) {
             return Optional.empty();

@@ -1,12 +1,12 @@
 package edu.java.retryPolicy;
 
+import java.time.Duration;
 import org.hibernate.service.spi.ServiceException;
 import org.reactivestreams.Publisher;
 import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
-import java.time.Duration;
 
 public class LinearRetry extends Retry {
     private final int maxAttempts;

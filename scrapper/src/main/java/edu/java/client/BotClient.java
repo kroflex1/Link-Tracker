@@ -1,11 +1,10 @@
 package edu.java.client;
 
-import edu.java.retryPolicy.RetryPolicy;
 import edu.java.request.LinkUpdateRequest;
+import edu.java.retryPolicy.RetryPolicy;
 import java.net.URI;
 import java.time.Duration;
 import java.util.List;
-import org.hibernate.service.spi.ServiceException;
 import org.jetbrains.annotations.NotNull;
 import reactor.util.retry.Retry;
 

@@ -3,11 +3,11 @@ package edu.java.configuration.clientConfig;
 import edu.java.client.StackOverflowClient;
 import edu.java.retryPolicy.RetryPolicy;
 import io.micrometer.common.lang.Nullable;
+import java.time.Duration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
-import java.time.Duration;
 
 @Configuration
 public class StackOverflowClientConfig {

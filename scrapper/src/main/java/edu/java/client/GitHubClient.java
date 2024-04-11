@@ -26,7 +26,7 @@ public class GitHubClient extends HttpClient {
     private static final Pattern PATTERN_FOR_LINK = Pattern.compile("https://github\\.com/(.+)/(.+)");
     private static final String NOT_FOUND_REPOSITORY_MESSAGE = "Repository was not found, or it is private";
     private static final Retry DEFAULT_RETRY_POLICY = RetryPolicy.CONSTANT.createWith(2, Duration.ofSeconds(2));
-    private static final Set<HttpStatusCode> codesForRetry =
+    private static final Set<HttpStatusCode> CODES_FOR_RETRY =
         Set.of(HttpStatusCode.valueOf(500), HttpStatusCode.valueOf(502));
     private static final Map<String, RepositoryInformation.GithubActivity> GITHUB_ACTIVITY_MAPPER = Map.of(
         "branch_creation", RepositoryInformation.GithubActivity.BRANCH_CREATION,
@@ -63,7 +63,7 @@ public class GitHubClient extends HttpClient {
                 String.join("/", START_PATH, owner, repositoryName),
                 new LinkedMultiValueMap<>(),
                 NOT_FOUND_REPOSITORY_MESSAGE,
-                codesForRetry
+                CODES_FOR_RETRY
             );
             repositoryInformation = objectMapper.readValue(response, RepositoryInformation.class);
             RepositoryInformation.GithubActivity lastGitHubActivity = getLastGithubActivity(owner, repositoryName);
@@ -82,7 +82,7 @@ public class GitHubClient extends HttpClient {
             String.join("/", START_PATH, owner, repositoryName, "activity"),
             new LinkedMultiValueMap<>(),
             NOT_FOUND_REPOSITORY_MESSAGE,
-            codesForRetry
+            CODES_FOR_RETRY
         );
         JsonNode node = objectMapper.readTree(response);
         return GITHUB_ACTIVITY_MAPPER.getOrDefault(
