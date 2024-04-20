@@ -2,19 +2,21 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.dao.ChatDAO;
-import edu.java.bot.handler.GitHubHandler;
-import edu.java.bot.handler.StackOverflowHandler;
-import edu.java.bot.handler.UrlHandler;
+import edu.java.bot.client.ScrapperClient;
+import edu.java.bot.linkChecker.GitHubLinkChecker;
+import edu.java.bot.linkChecker.LinkChecker;
+import edu.java.bot.linkChecker.StackOverflowLinkChecker;
+import java.net.URI;
 
 public class TrackCommand extends CompositeCommand {
     private static final String OK_MESSAGE = "Теперь ваша ссылка отслеживается";
-    private final UrlHandler urlHandler;
+    private static final String ALREADY_TRACKED_LINK = "Вы уже отслеживаете данную ссылку";
+    private final LinkChecker linkChecker;
 
-    public TrackCommand(ChatDAO chatDAO) {
-        super(chatDAO);
-        urlHandler = new GitHubHandler();
-        urlHandler.setNextUrlHandler(new StackOverflowHandler());
+    public TrackCommand(ScrapperClient scrapperClient) {
+        super(scrapperClient);
+        linkChecker = new GitHubLinkChecker();
+        linkChecker.setNextUrlHandler(new StackOverflowLinkChecker());
     }
 
     @Override
@@ -33,27 +35,36 @@ public class TrackCommand extends CompositeCommand {
     }
 
     @Override
+    @SuppressWarnings("ReturnCount")
     public SendMessage handle(Update update) {
-        String[] partsOfCommand = update.message().text().split(" ");
+        String[] partsOfCommand = update.message().text().split("\s");
         if (partsOfCommand.length != 2) {
-            return new SendMessage(update.message().chat().id(), getWrongLinkFormatMessage());
+            return new SendMessage(update.message().chat().id(), getMessageForWrongLinkFormat());
         }
         String link = partsOfCommand[1];
-        if (!urlHandler.isValidLink(link)) {
-            return new SendMessage(update.message().chat().id(), getWrongLinkFormatMessage());
+        if (!linkChecker.isValidLink(link)) {
+            return new SendMessage(update.message().chat().id(), getMessageForWrongLinkFormat());
         }
+
         Long chatId = update.message().chat().id();
-        chatDAO.addTrackedLink(chatId, link);
-        return new SendMessage(update.message().chat().id(), OK_MESSAGE);
+        try {
+            scrapperClient.trackLink(chatId, URI.create(link));
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage().equals(scrapperClient.ALREADY_TRACKED_LINK_MESSAGE)) {
+                return new SendMessage(chatId, ALREADY_TRACKED_LINK);
+            }
+            return new SendMessage(chatId, "Чтобы начать пользоваться ботом, введите команду /start");
+        }
+        return new SendMessage(chatId, OK_MESSAGE);
     }
 
-    private String getWrongLinkFormatMessage() {
-        StringBuilder text = new StringBuilder("Неверный формат ссылки, бот поддеживает следующие форматы ссылок:\n");
+    private String getMessageForWrongLinkFormat() {
+        StringBuilder text = new StringBuilder("Неверный формат ссылки, бот поддеживает следующие форматы:\n");
         int index = 1;
-        UrlHandler currentUrlHandler = urlHandler;
-        while (currentUrlHandler != null) {
-            text.append(index).append(") ").append(currentUrlHandler.formatDescription()).append("\n");
-            currentUrlHandler = currentUrlHandler.getNextUrlHandler();
+        LinkChecker currentLinkChecker = linkChecker;
+        while (currentLinkChecker != null) {
+            text.append(index).append(") ").append(currentLinkChecker.linkFormatDescription()).append("\n");
+            currentLinkChecker = currentLinkChecker.getNextUrlHandler();
             index++;
         }
         return text.toString();

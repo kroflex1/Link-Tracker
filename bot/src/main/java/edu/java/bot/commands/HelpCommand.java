@@ -2,13 +2,12 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.dao.ChatDAO;
+import edu.java.bot.client.ScrapperClient;
 import java.util.List;
 
 public class HelpCommand extends Command {
-
-    public HelpCommand(ChatDAO chatDAO) {
-        super(chatDAO);
+    public HelpCommand(ScrapperClient scrapperClient) {
+        super(scrapperClient);
     }
 
     @Override
@@ -41,11 +40,11 @@ public class HelpCommand extends Command {
 
     private List<Command> getCommands() {
         return List.of(
-            new HelpCommand(chatDAO),
-            new ListCommand(chatDAO),
-            new StartCommand(chatDAO),
-            new TrackCommand(chatDAO),
-            new UntrackCommand(chatDAO)
+            new HelpCommand(scrapperClient),
+            new ListCommand(scrapperClient),
+            new StartCommand(scrapperClient),
+            new TrackCommand(scrapperClient),
+            new UntrackCommand(scrapperClient)
         );
     }
 }

@@ -1,11 +1,12 @@
 package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.dao.ChatDAO;
+import edu.java.bot.client.ScrapperClient;
 
 public abstract class CompositeCommand extends Command {
-    public CompositeCommand(ChatDAO chatDAO) {
-        super(chatDAO);
+
+    public CompositeCommand(ScrapperClient scrapperClient) {
+        super(scrapperClient);
     }
 
     public abstract String argumentName();

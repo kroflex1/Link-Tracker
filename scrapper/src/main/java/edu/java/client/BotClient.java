@@ -1,26 +1,24 @@
 package edu.java.client;
 
+import edu.java.request.LinkUpdateRequest;
+import edu.java.retryPolicy.RetryPolicy;
 import java.net.URI;
+import java.time.Duration;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.client.MultipartBodyBuilder;
-import org.springframework.util.MultiValueMap;
-import org.springframework.validation.annotation.Validated;
-import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 
-@Validated
 public class BotClient extends HttpClient {
+
+    private static final Retry DEFAULT_RETRY_POLICY =
+        RetryPolicy.CONSTANT.createWith(2, Duration.ofSeconds(2));
+
     public BotClient(@NotNull String baseUrl) {
-        super(baseUrl);
+        super(baseUrl, DEFAULT_RETRY_POLICY);
     }
 
-    public Mono<String> sendUpdate(List<Long> chatsId, URI updatedLink, String description) {
-        MultipartBodyBuilder builder = new MultipartBodyBuilder();
-        builder.part("chatsId", chatsId);
-        builder.part("url", updatedLink.toString());
-        builder.part("description", description);
-        MultiValueMap<String, HttpEntity<?>> body = builder.build();
-        return postRequest("/updates", body);
+    public String sendUpdate(List<Long> chatsId, URI updatedLink, String description) {
+        LinkUpdateRequest body = new LinkUpdateRequest(updatedLink.toString(), description, chatsId);
+        return postRequest("/updates", body).block();
     }
 }

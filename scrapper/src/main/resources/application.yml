@@ -1,15 +1,30 @@
 app:
   scheduler:
     enable: true
-    interval: 10000
+    interval: 20000
     force-check-delay: 10000
-
+  database-access-type: "jpa"
 spring:
-  application:
-    name: scrapper
+  liquibase:
+    enabled: false
+  datasource:
+    driver: "org.postgresql.Driver"
+    url: "jdbc:postgresql://localhost:5432/scrapper"
+    username: "postgres"
+    password: "postgres"
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+    hibernate:
+      ddl-auto: "validate"
 
 server:
   port: 8080
+
+springdoc:
+  swagger-ui:
+    path: "/swagger-ui"
 
 logging:
   config: classpath:log4j2-plain.xml
@@ -17,6 +32,19 @@ logging:
 github:
   token: ...
   url: "https://api.github.com"
+  retry-policy: "linear"
+  max-attempts: 2
+  time: 3000
+
 
 stackoverflow:
   url: "https://api.stackexchange.com"
+  retry-policy: "linear"
+  max-attempts: 2
+  time: 3000
+
+bot:
+  url: "http://localhost:8090"
+  retry-policy: "linear"
+  max-attempts: 2
+  time: 3000

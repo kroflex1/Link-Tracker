@@ -2,17 +2,16 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.dao.ChatDAO;
-import edu.java.bot.model.ChatModel;
-import java.util.Optional;
-import java.util.Set;
+import edu.java.bot.client.ScrapperClient;
+import java.net.URI;
+import java.util.List;
 
 public class ListCommand extends Command {
     private static final String FILLED_LIST_MESSAGE = "Список отслеживаемых ссылок:";
     private static final String EMPTY_LIST_LINKS_MESSAGE = "У вас нет отслеживаемых ссылок";
 
-    public ListCommand(ChatDAO chatDAO) {
-        super(chatDAO);
+    public ListCommand(ScrapperClient scrapperClient) {
+        super(scrapperClient);
     }
 
     @Override
@@ -28,14 +27,18 @@ public class ListCommand extends Command {
     @Override
     public SendMessage handle(Update update) {
         Long chatID = update.message().chat().id();
-        Optional<ChatModel> chat = chatDAO.getChatById(chatID);
-        if (chat.isEmpty() || chat.get().getLinks().isEmpty()) {
+        List<URI> trackedLinks;
+        try {
+            trackedLinks = scrapperClient.getTrackedLinks(chatID);
+        } catch (IllegalArgumentException e) {
             return new SendMessage(update.message().chat().id(), EMPTY_LIST_LINKS_MESSAGE);
         }
-        Set<String> links = chat.get().getLinks();
+        if (trackedLinks.isEmpty()) {
+            return new SendMessage(update.message().chat().id(), EMPTY_LIST_LINKS_MESSAGE);
+        }
         StringBuilder text = new StringBuilder(FILLED_LIST_MESSAGE).append("\n");
-        for (String url : links) {
-            text.append(url).append("\n");
+        for (int i = 0; i < trackedLinks.size(); i++) {
+            text.append(i + 1).append(") ").append(trackedLinks.get(i).toString()).append("\n");
         }
         return new SendMessage(update.message().chat().id(), text.toString());
     }

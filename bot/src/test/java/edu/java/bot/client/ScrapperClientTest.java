@@ -34,9 +34,10 @@ public class ScrapperClientTest {
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
                 .withBody(OBJECT_MAPPER.writeValueAsString(responseBody))));
-
         List<URI> expected = SCRAPPER_CLIENT.getTrackedLinks(1L);
+
         List<URI> actual = responseBody.links().stream().map(LinkResponse::link).toList();
+
         Assertions.assertIterableEquals(actual, expected);
     }
 
@@ -44,6 +45,7 @@ public class ScrapperClientTest {
     public void testCantGetTrackedLinks() {
         stubFor(get("/links/1")
             .willReturn(aResponse().withStatus(400)));
+
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
             SCRAPPER_CLIENT.getTrackedLinks(1L));
         assertEquals("Chat with this id isn`t registered", exception.getMessage());

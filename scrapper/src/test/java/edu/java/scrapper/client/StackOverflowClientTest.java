@@ -1,41 +1,43 @@
 package edu.java.scrapper.client;
 
-import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import edu.java.client.StackOverflowClient;
-import edu.java.dto.QuestionInformation;
-import edu.java.dto.RepositoryInformation;
+import edu.java.client.inforamation.QuestionInformation;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.stream.Stream;
-import edu.java.utils.TimeConvertor;
+import edu.java.retryPolicy.RetryPolicy;
+import edu.java.utils.TimeManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpHeaders;
+import reactor.util.retry.Retry;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
+import static com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @WireMockTest(httpPort = 8080)
 public class StackOverflowClientTest {
+    private static final Retry retryPolicy = RetryPolicy.CONSTANT.createWith(1, Duration.ofSeconds(1));
     private static final StackOverflowClient STACK_OVERFLOW_CLIENT =
-        new StackOverflowClient("http://localhost:8080", new HttpHeaders());
+        new StackOverflowClient("http://localhost:8080", new HttpHeaders(), retryPolicy);
 
     @ParameterizedTest
     @MethodSource("getResponses")
     public void testGetInformationAboutQuestion(
         QuestionInformation questionInf, WireMockRuntimeInfo wmRuntimeInfo
-    ) throws JsonProcessingException {
+    ) {
         WireMock wireMock = wmRuntimeInfo.getWireMock();
         wireMock.loadMappingsFrom("src/test/resources/stackoverflow-wiremock-templates/");
 
@@ -45,7 +47,7 @@ public class StackOverflowClientTest {
     }
 
     @Test
-    public void testCantGetInformationAboutQuestion() throws JsonProcessingException {
+    public void testCantGetInformationAboutQuestion() {
         String pathForQuestion = String.join("/", "/questions", "1");
         stubFor(get(urlPathMatching(pathForQuestion))
             .withQueryParam("site", equalTo("stackoverflow"))
@@ -56,6 +58,7 @@ public class StackOverflowClientTest {
 
         assertTrue(actual.isEmpty());
     }
+
 
     static Stream<Arguments> getResponses() {
         Arguments lastAnswerData = createResponseAndAdditionalInformation(
@@ -80,13 +83,13 @@ public class StackOverflowClientTest {
         String questionText = "How to use python?";
         Long creationEpochTime = 100L;
         Long lastActivityEpochTime = 1000L;
-        OffsetDateTime creationDate = TimeConvertor.convertEpochToOffsetDateTime(creationEpochTime);
-        OffsetDateTime lastActivityDate = TimeConvertor.convertEpochToOffsetDateTime(lastActivityEpochTime);
+        OffsetDateTime creationDate = TimeManager.convertEpochToOffsetDateTime(creationEpochTime);
+        OffsetDateTime lastActivityDate = TimeManager.convertEpochToOffsetDateTime(lastActivityEpochTime);
         QuestionInformation questionInformation = QuestionInformation.builder()
             .id(questionId)
             .text(questionText)
             .creationDate(creationDate)
-            .lastActivityDate(lastActivityDate)
+            .lastUpdateTime(lastActivityDate)
             .lastAnswer(lastAnswer)
             .lastComment(lastComment)
             .build();
@@ -101,7 +104,7 @@ public class StackOverflowClientTest {
         String text,
         String link
     ) {
-        OffsetDateTime dateTime = TimeConvertor.convertEpochToOffsetDateTime(epochTime);
+        OffsetDateTime dateTime = TimeManager.convertEpochToOffsetDateTime(epochTime);
         QuestionInformation.AdditionalInformation additionalInf = new QuestionInformation.AdditionalInformation(
             dateTime,
             ownerName,
